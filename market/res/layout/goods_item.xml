@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:background="@drawable/list_item" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="vertical" >
+
+        <!-- 用户名称、会员认证部分 -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" >
+
+            <!-- 用户名称 -->
+
+            <ImageView
+                android:id="@+id/goods_item_userimg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/header_img_default" />
+
+            <TextView
+                android:id="@+id/goods_item_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="username"
+                android:textColor="#424d54"
+                android:textSize="16dp" />
+
+            <!-- 会员认证 -->
+
+            <ImageView
+                android:id="@+id/goods_item_V"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/v" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right" >
+
+                <!-- 发布时间 -->
+
+                <TextView
+                    android:id="@+id/goods_item_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1小时前"
+                    android:textColor="#efa608"
+                    android:textSize="12dp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <!-- 商品内容 -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <!-- 商品正文内容 -->
+
+            <TextView
+                android:id="@+id/goods_item_content"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="商品介绍商品介绍商品介绍商品介绍商品介绍商品介绍商品介绍商品介绍商品介绍商品介绍"
+                android:textColor="#6b717b"
+                android:textSize="13dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/goods_item_content_pic1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/featured_big_b4" />
+                <ImageView
+                    android:id="@+id/goods_item_content_pic2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+					android:layout_margin="3dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/featured_big_b4" />
+                <ImageView
+                    android:id="@+id/goods_item_content_pic3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"                   
+                    android:layout_weight="1"
+                    android:src="@drawable/featured_big_b4" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 操作部分，喜欢，分享，评论 -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
+            android:orientation="horizontal" >
+
+            <!-- 喜欢 -->
+
+            <ImageView
+                android:id="@+id/goods_item_like"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:src="@drawable/btn_item_like" />
+
+            <TextView
+                android:id="@+id/goods_items_like_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="100" />
+
+            <!-- 评论 -->
+
+            <Button
+                android:id="@+id/goods_item_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#ffffff"
+                android:drawableLeft="@drawable/tm_post_mainpage_comment"
+                android:gravity="center"
+                android:text="100"
+                android:textSize="13dp" />
+
+            <!-- 分享 -->
+
+            <Button
+                android:id="@+id/goods_item_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#ffffff"
+                android:drawableLeft="@drawable/tm_post_mainpage_share"
+                android:gravity="center"
+                android:text="分享"
+                android:textSize="13dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

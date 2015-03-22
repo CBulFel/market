@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#3300ff00"
+    android:orientation="vertical"
+    tools:context=".ui.Fragment_home" >
+
+    <com.mark.android_ui.MyImgScroll
+        android:id="@+id/martket_home_imgscroll"
+        android:layout_width="match_parent"
+        android:layout_height="120dp" >
+    </com.mark.android_ui.MyImgScroll>
+
+    <LinearLayout
+        android:id="@+id/vb"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_marginTop="3dip"
+        android:gravity="center"
+        android:orientation="horizontal" >
+    </LinearLayout>
+
+    <com.mark.android_ui.MyListView
+        android:id="@+id/marketlist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#660000ff"
+        android:cacheColorHint="#00000000"
+        android:descendantFocusability="blocksDescendants"
+        android:fastScrollEnabled="true" >
+    </com.mark.android_ui.MyListView>
+
+</LinearLayout>
