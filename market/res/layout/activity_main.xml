@@ -96,7 +96,7 @@
 
 
     <Button
-        android:id="@+id/plus_btn"
+        android:id="@+id/tab_plus"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignTop="@+id/frameLayout1"

@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -22,8 +23,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	private FrameLayout layout_home,layout_my;
 	//定义图片组件对象
 	private ImageView image_home,image_my;
-	//定义中间按钮图片对象
-	private ImageView image_toggle;
+	//中间我想卖按钮
+	private Button tab_plus;
 	
 	
 	@Override
@@ -68,7 +69,8 @@ private void initView(){
 	
 	image_home=(ImageView)findViewById(R.id.image_home);
 	image_my=(ImageView)findViewById(R.id.image_my);
-	
+	tab_plus=(Button)findViewById(R.id.tab_plus);
+
 	
 }
 /*	
@@ -79,7 +81,7 @@ private void initData(){
 	
 	layout_home.setOnClickListener(this);
 	layout_my.setOnClickListener(this);
-	image_toggle.setOnClickListener(this);
+	tab_plus.setOnClickListener(this);
 	
 	
 }
@@ -97,11 +99,22 @@ public void onClick(View v) {
 	case R.id.layout_my:
 		clickMyBtn();
 		break;
-
+	case R.id.tab_plus:
+		clickPlusBtn();
+		break;
 	}
 	
 }
 
+
+/**
+ * 
+ */
+private void clickPlusBtn() {
+	// TODO Auto-generated method stub
+	//发布商品。商品编辑
+	
+}
 
 /**
  * 
@@ -138,7 +151,7 @@ private void clickMyBtn() {
     //得到Fragment事务管理器  
     FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();  
     fragmentTransaction.setCustomAnimations(R.animator.slide_in_left, R.animator.slide_out_right);
-    //替换当前的页面  
+    //替换当前的页面
     fragmentTransaction.replace(R.id.frame_content, fragment_my);  
     //事务管理提交
     fragmentTransaction.commit();  
