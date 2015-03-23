@@ -25,6 +25,7 @@ import com.mark.market.bean.Task;
 public class MainService extends Service implements Runnable {
 
 	private static Queue<Task> tasks = new LinkedList<Task>();
+	@SuppressWarnings("unused")
 	private static ArrayList<Activity> appActivities = new ArrayList<Activity>();
 	private boolean isRun;
 	private Handler handler;

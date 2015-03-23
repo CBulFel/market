@@ -2,7 +2,6 @@ package com.mark.market.ui;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,20 +9,15 @@ import java.util.List;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
-
-
 
 import com.mark.android_ui.MyImgScroll;
 import com.mark.android_ui.MyListView;
@@ -107,6 +101,7 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 		marketListView.setAdapter(mAdapter);
 	}
 
+	@SuppressWarnings("unused")
 	private class GetDataTask extends AsyncTask<Void, Void, String[]> {
 		private Context context;
 		private int index;

@@ -6,11 +6,9 @@
 
     <FrameLayout
         android:id="@+id/frame_content"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/frameLayout1"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:background="#ffffff" >
     </FrameLayout>
@@ -20,7 +18,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
         android:background="#ffffff" >
 
         <LinearLayout

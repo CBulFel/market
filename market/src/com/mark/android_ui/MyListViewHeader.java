@@ -45,8 +45,9 @@ public class MyListViewHeader extends LinearLayout {
 		initView(context);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void initView(Context context) {
-		// 初始情况，设置下拉刷新view高度为0
+		// 鍒濆鎯呭喌锛岃缃笅鎷夊埛鏂皏iew楂樺害涓�0
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
 				LayoutParams.FILL_PARENT, 0);
 		mContainer = (LinearLayout) LayoutInflater.from(context).inflate(
@@ -73,11 +74,11 @@ public class MyListViewHeader extends LinearLayout {
 	public void setState(int state) {
 		if (state == mState) return ;
 		
-		if (state == STATE_REFRESHING) {	// 显示进度
+		if (state == STATE_REFRESHING) {	// 鏄剧ず杩涘害
 			mArrowImageView.clearAnimation();
 			mArrowImageView.setVisibility(View.INVISIBLE);
 			mProgressBar.setVisibility(View.VISIBLE);
-		} else {	// 显示箭头图片
+		} else {	// 鏄剧ず绠ご鍥剧墖
 			mArrowImageView.setVisibility(View.VISIBLE);
 			mProgressBar.setVisibility(View.INVISIBLE);
 		}

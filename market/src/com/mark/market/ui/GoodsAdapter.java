@@ -9,7 +9,6 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
-import android.text.InputFilter.LengthFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,8 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mark.market.R;
 import com.mark.android_util.AsyncImageLoader;
+import com.mark.market.R;
 import com.mark.market.bean.Good;
 
 /**
@@ -93,6 +92,7 @@ public class GoodsAdapter extends BaseAdapter {
 		return 0;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
@@ -168,6 +168,7 @@ public class GoodsAdapter extends BaseAdapter {
 	 * 
 	 * @param image ImageView 控件
 	 */
+	@SuppressWarnings("unused")
 	private void loadBitmap(String urlStr, ImageView image, int width,
 			int height) {
 		// 异步图片加载类

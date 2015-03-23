@@ -96,6 +96,7 @@ public class MyListView extends ListView implements OnScrollListener {
 		// init header height
 		mHeaderView.getViewTreeObserver().addOnGlobalLayoutListener(
 				new OnGlobalLayoutListener() {
+					@SuppressWarnings("deprecation")
 					@Override
 					public void onGlobalLayout() {
 						mHeaderViewHeight = mHeaderViewContent.getHeight();
