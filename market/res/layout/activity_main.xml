@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:background="#000000" >
+        android:background="#ffffff" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -32,53 +32,28 @@
             <FrameLayout
                 android:id="@+id/layout_home"
                 android:layout_width="fill_parent"
-                android:layout_height="48dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
-                android:background="#222222" >
+                android:background="#ffffff" >
 
                 <ImageView
                     android:id="@+id/image_home"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="top|center"
                     android:layout_marginTop="1.0dip"
-                    android:src="#888888" />
+                    android:src="@drawable/tab_home" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center"
-                    android:layout_marginBottom="6.0dip"
+                    android:layout_marginBottom="3dp"
                     android:text="首页"
-                    android:textColor="#ffffff"
-                    android:textSize="16sp" />
+                    android:textColor="#000000"
+                    android:textSize="12sp" />
             </FrameLayout>
 
-           
-            <!-- <FrameLayout  
-                android:id="@+id/layout_myfeed"  
-                android:layout_width="fill_parent"  
-                android:layout_height="48dp"  
-                android:layout_weight="1"   
-                android:background="#222222">  
-  
-                <ImageView  
-                    android:id="@+id/image_myfeed"  
-                    android:layout_width="match_parent"  
-                    android:layout_height="match_parent"  
-                    android:layout_gravity="top|center"  
-                    android:layout_marginTop="1.0dip"  
-                    android:src="#888888" />  
-  
-                <TextView  
-                    android:layout_width="wrap_content"  
-                    android:layout_height="wrap_content"  
-                    android:layout_gravity="bottom|center"  
-                    android:layout_marginBottom="6.0dip"  
-                    android:text="与我相关"  
-                    android:textColor="#ffffff"  
-                    android:textSize="10sp" />  
-  			</FrameLayout> -->  
            
 
             <FrameLayout
@@ -91,55 +66,52 @@
             <FrameLayout
                 android:id="@+id/layout_my"
                 android:layout_width="fill_parent"
-                android:layout_height="48dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
-                android:background="#222222" >
+                android:background="#ffffff" >
 
-                <ImageView
+               <ImageView
                     android:id="@+id/image_my"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="top|center"
                     android:layout_marginTop="1.0dip"
-                    android:src="#888888" />
+                    android:src="@drawable/tab_my"
+                     />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center"
-                    android:layout_marginBottom="6.0dip"
+                    android:layout_marginBottom="3dp"
                     android:text="我的"
-                    android:textColor="#ffffff"
-                    android:textSize="16sp" />
+                    android:textColor="#000000"
+                    android:textSize="12sp" />
             </FrameLayout>
             
         </LinearLayout>
     </FrameLayout>
 
-    <ImageView
-        android:id="@+id/toggle_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:src="#ff0000" />
 
-    <ImageView
+
+
+    <Button
         android:id="@+id/plus_btn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignTop="@+id/frameLayout1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="6dip"
-        android:src="#00ffff" />
+        android:background="@drawable/tab_sale"
+         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/frameLayout1"
+        android:layout_alignBottom="@+id/frameLayout1"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
         android:text="我想卖"
         android:textColor="#ffffff"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
 
 </RelativeLayout>

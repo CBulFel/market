@@ -4,10 +4,11 @@
         android:state_enabled="true"
         android:state_checked="true"
         
-        android:drawable="@drawable/tm_ic_like_selected"></item>
+        android:drawable="@drawable/tm_brand_followinfo_followed"></item>
     <item
-		android:state_enabled="false"
-        android:drawable="@drawable/tm_ic_like_normal"
+		android:state_enabled="true"
+		android:state_checked="false"
+        android:drawable="@drawable/tm_brand_followinfo_unfollowed"
         ></item>
 
 </selector>

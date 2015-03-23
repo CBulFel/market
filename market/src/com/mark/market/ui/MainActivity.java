@@ -1,11 +1,6 @@
 package com.mark.market.ui;
 
 
-import java.io.IOException;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -17,7 +12,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.mark.market.R;
-import com.mark.market.util.HttpconnectUtil;
 
 public class MainActivity extends FragmentActivity implements OnClickListener{
 
@@ -29,7 +23,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 	//定义图片组件对象
 	private ImageView image_home,image_my;
 	//定义中间按钮图片对象
-	private ImageView image_toggle,image_plus;
+	private ImageView image_toggle;
 	
 	
 	@Override
@@ -75,8 +69,6 @@ private void initView(){
 	image_home=(ImageView)findViewById(R.id.image_home);
 	image_my=(ImageView)findViewById(R.id.image_my);
 	
-	image_toggle=(ImageView)findViewById(R.id.toggle_btn);
-	image_plus=(ImageView)findViewById(R.id.plus_btn);
 	
 }
 /*	
@@ -105,9 +97,7 @@ public void onClick(View v) {
 	case R.id.layout_my:
 		clickMyBtn();
 		break;
-	case R.id.toggle_btn:
-		clickToggleBtn();
-		break;
+
 	}
 	
 }
@@ -139,10 +129,6 @@ private void clickHomeBtn() {
 
 }
 
-private void clickToggleBtn() {
-	// TODO Auto-generated method stub
-
-}
 
 private void clickMyBtn() {
 	// TODO Auto-generated method stub

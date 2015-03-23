@@ -57,8 +57,7 @@ public class GoodsAdapter extends BaseAdapter {
 		public ImageView item_content_pic1;
 		public ImageView item_content_pic2;
 		public ImageView item_content_pic3;
-		public ImageView item_like;
-		public TextView item_like_num;
+		public Button item_like;
 		public Button item_comment;
 		public Button item_share;
 
@@ -118,10 +117,9 @@ public class GoodsAdapter extends BaseAdapter {
 					.findViewById(R.id.goods_item_content_pic2);
 			holder.item_content_pic3 = (ImageView) convertView
 					.findViewById(R.id.goods_item_content_pic3);
-			holder.item_like = (ImageView) convertView
+			holder.item_like = (Button) convertView
 					.findViewById(R.id.goods_item_like);
-			holder.item_like_num = (TextView) convertView
-					.findViewById(R.id.goods_items_like_num);
+
 			holder.item_comment = (Button) convertView
 					.findViewById(R.id.goods_item_comment);
 			holder.item_share = (Button) convertView
@@ -140,7 +138,7 @@ public class GoodsAdapter extends BaseAdapter {
 		holder.item_username.setText("ะกร๗");
 		holder.item_content_pic1.setImageResource(R.drawable.featured_big_b1);
 		//loadBitmap(good.getGimg1(), holder.item_content_pic1, 0, 0);
-		holder.item_like_num.setText("23");
+		holder.item_like.setText("23");
 		holder.item_comment.setText("45");
 		holder.item_share.setOnClickListener(new OnClickListener() {
 			
