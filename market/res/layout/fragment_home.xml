@@ -7,20 +7,7 @@
     android:orientation="vertical"
     tools:context=".ui.Fragment_home" >
 
-    <com.mark.android_ui.MyImgScroll
-        android:id="@+id/martket_home_imgscroll"
-        android:layout_width="match_parent"
-        android:layout_height="120dp" >
-    </com.mark.android_ui.MyImgScroll>
 
-    <LinearLayout
-        android:id="@+id/vb"
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:layout_marginTop="3dip"
-        android:gravity="center"
-        android:orientation="horizontal" >
-    </LinearLayout>
 
     <com.mark.android_ui.MyListView
         android:id="@+id/marketlist"

@@ -27,7 +27,7 @@ import com.mark.market.bean.Good;
 
 public class Fragment_home extends Fragment implements MyListViewListener {
 
-	// listview¿Ø¼þ
+	// listviewï¿½Ø¼ï¿½
 	public static MyListView marketListView;
 	private GoodsAdapter mAdapter;
 	private LinkedList<Good> goods = new LinkedList<Good>();
@@ -35,10 +35,10 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 
 
 
-	// ImgScroll²¿·Ö¿Ø¼þ
-	MyImgScroll myPager; // Í¼Æ¬ÈÝÆ÷
-	LinearLayout ovalLayout; // Ô²µãÈÝÆ÷
-	private List<View> listViews; // Í¼Æ¬×é
+	// ImgScrollï¿½ï¿½ï¿½Ö¿Ø¼ï¿½
+	MyImgScroll myPager; // Í¼Æ¬ï¿½ï¿½ï¿½ï¿½
+	LinearLayout ovalLayout; // Ô²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	private List<View> listViews; // Í¼Æ¬ï¿½ï¿½
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,16 +46,17 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 		// TODO Auto-generated method stub
 		View view = inflater.inflate(R.layout.fragment_home, null);
 		marketListView = (MyListView) view.findViewById(R.id.marketlist);
-
-		myPager = (MyImgScroll) view.findViewById(R.id.martket_home_imgscroll);
-		ovalLayout = (LinearLayout) view.findViewById(R.id.vb);
-		// ³õÊ¼»¯
+		
+		View mview=inflater.inflate(R.layout.scrollimg, null);
+		myPager = (MyImgScroll) mview.findViewById(R.id.martket_home_imgscroll);
+		ovalLayout = (LinearLayout) mview.findViewById(R.id.vb);
+		// ï¿½ï¿½Ê¼ï¿½ï¿½
 		init();
-		// ÉèÖÃimgScroll¿ªÊ¼¹ö¶¯
+		// ï¿½ï¿½ï¿½ï¿½imgScrollï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½
 		myPager.start(getActivity(), listViews, 4000, ovalLayout,
 				R.layout.ad_bottom_item, R.id.ad_item_v,
 				R.drawable.dot_focused, R.drawable.dot_normal);
-
+		marketListView.addHeaderView(mview);
 		return view;
 
 	}
@@ -70,7 +71,7 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 	private void init() {
 
 		/*
-		 * imgScroll¿Ø¼þµÄ³õÊ¼»¯
+		 * imgScrollï¿½Ø¼ï¿½ï¿½Ä³ï¿½Ê¼ï¿½ï¿½
 		 */
 
 		listViews = new ArrayList<View>();
@@ -79,9 +80,9 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 		for (int i = 0; i < imageResId.length; i++) {
 			ImageView imageView = new ImageView(getActivity());
 			imageView.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {// ÉèÖÃÍ¼Æ¬µã»÷ÊÂ¼þ
+				public void onClick(View v) {// ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
 					Toast.makeText(getActivity(),
-							"µã»÷ÁË:" + myPager.getCurIndex(), Toast.LENGTH_SHORT)
+							"ï¿½ï¿½ï¿½ï¿½ï¿½:" + myPager.getCurIndex(), Toast.LENGTH_SHORT)
 							.show();
 				}
 			});
@@ -91,7 +92,7 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 		}
 
 		/*
-		 * Listview¿Ø¼þµÄ³õÊ¼»¯
+		 * Listviewï¿½Ø¼ï¿½ï¿½Ä³ï¿½Ê¼ï¿½ï¿½
 		 */
 		for(int i=0;i<=12;i++)
 			goods.add(new Good());
@@ -126,11 +127,11 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 		@Override
 		protected void onPostExecute(String[] result) {
 			if (index == 0) {
-				// ½«×Ö·û´®¡°Added after refresh¡±Ìí¼Óµ½¶¥²¿
+				// ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½Added after refreshï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½
 				//mListItems.addFirst("Added after refresh...");
 
 				SimpleDateFormat format = new SimpleDateFormat(
-						"yyyyÄêMMÔÂddÈÕ  HH:mm");
+						"yyyyï¿½ï¿½MMï¿½ï¿½ddï¿½ï¿½  HH:mm");
 				String date = format.format(new Date());
 				// Call onRefreshComplete when the list has been refreshed.
 				marketListView.setRefreshTime(date);
