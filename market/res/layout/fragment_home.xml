@@ -16,7 +16,7 @@
         android:background="#660000ff"
         android:cacheColorHint="#00000000"
         android:descendantFocusability="blocksDescendants"
-        android:fastScrollEnabled="true" >
+         >
     </com.mark.android_ui.MyListView>
 
 </LinearLayout>

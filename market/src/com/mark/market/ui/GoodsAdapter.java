@@ -26,7 +26,7 @@ import com.mark.market.bean.Good;
 /**
  * @author mazhao
  * 
- * @describe ÉÌÆ·listÊÊÅäÆ÷
+ * @describe å•†å“Listçš„Adapter
  */
 public class GoodsAdapter extends BaseAdapter {
 
@@ -35,15 +35,17 @@ public class GoodsAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
 	private ViewHolder holder;
 
-	// ÓÃÓÚÊµÏÖÉÌÆ·ListÖĞµÄÍ¼Æ¬»º´æ
-	private final int maxMemory = (int) Runtime.getRuntime().maxMemory();// »ñÈ¡µ±Ç°Ó¦ÓÃ³ÌĞòËù·ÖÅäµÄ×î´óÄÚ´æ
-	private final int cacheSize = maxMemory / 5;// Ö»·Ö5·ÖÖ®Ò»ÓÃÀ´×öÍ¼Æ¬»º´æ
+	// ç”¨äºå®ç°å•†å“Listä¸­çš„å›¾ç‰‡ç¼“å­˜
+	//è·å–å½“å‰åº”ç”¨ç¨‹åºæ‰€åˆ†é…çš„æœ€å¤§å†…å­˜
+	private final int maxMemory = (int) Runtime.getRuntime().maxMemory();
+	//åªåˆ†5åˆ†ä¹‹ä¸€ç”¨æ¥åšå›¾ç‰‡ç¼“å­˜  
+	private final int cacheSize = maxMemory / 5;
 
 	private LruCache<String, Bitmap> mLruCache = new LruCache<String, Bitmap>(
 			cacheSize) {
 		protected int sizeOf(String key, Bitmap bitmap) {
-			// ¸´Ğ´sizeof()·½·¨
-			return bitmap.getRowBytes() * bitmap.getHeight() / 1024; // ÕâÀïÊÇ°´¶àÉÙKBÀ´Ëã
+			// å¤å†™sizeof()æ–¹æ³•
+			return bitmap.getRowBytes() * bitmap.getHeight() / 1024; //è¿™é‡Œæ˜¯æŒ‰å¤šå°‘KBæ¥ç®—
 		}
 	};
 
@@ -64,7 +66,7 @@ public class GoodsAdapter extends BaseAdapter {
 
 	/**
 	 * @param context
-	 * @param goodsÉÌÆ·ÁĞ±í
+	 * @param goodså•†å“åˆ—è¡¨
 	 */
 	public GoodsAdapter(Context context, List<Good> goods) {
 		super();
@@ -100,7 +102,7 @@ public class GoodsAdapter extends BaseAdapter {
 		if (convertView == null) {
 			convertView = mInflater.inflate(R.layout.goods_item, null);
 			holder = new ViewHolder();
-			// »ñÈ¡ÒªÏÔÊ¾µÄ×é¼ş£¬×¢ÒâfindViewByIdµÄµ÷ÓÃ¶ÔÏóÊÇÉÏÃæÌî³äÁËItemµÄ²¼¾ÖµÄ¶ÔÏóView
+			// è·å¾—å„ä¸ªç»„ä»¶ï¼Œæ³¨æ„è¿™é‡Œgetviewbyidæ˜¯é€šè¿‡ä¼ å…¥çš„æœ¬æ¡ç›®çš„convertView
 			holder.item_userimg = (ImageView) convertView
 					.findViewById(R.id.goods_item_userimg);
 			holder.item_username = (TextView) convertView
@@ -131,11 +133,11 @@ public class GoodsAdapter extends BaseAdapter {
 		}
 
 		/*
-		 * ×é¼şÌí¼ÓÄÚÈİ
+		 *ç»„ä»¶å¡«å……å†…å®¹
 		 * 
 		 */
 		holder.item_userimg.setImageResource(R.drawable.header_img_default);
-		holder.item_username.setText("Ğ¡Ã÷");
+		holder.item_username.setText("å°æ˜");
 		holder.item_content_pic1.setImageResource(R.drawable.featured_big_b1);
 		//loadBitmap(good.getGimg1(), holder.item_content_pic1, 0, 0);
 		holder.item_like.setText("23");
@@ -145,8 +147,8 @@ public class GoodsAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				/*·ÖÏíµ½¸÷¸öÆ½Ì¨*/
-				Toast.makeText(context, "·ÖÏíµ½--£¡", Toast.LENGTH_LONG).show();
+				/*ä¸€é”®åˆ†äº«ï¼Œå¾…å®Œæˆ*/
+				Toast.makeText(context, "ï¿½ï¿½ï¿½ï¿½--ï¿½ï¿½", Toast.LENGTH_LONG).show();
 			}
 		});
 		
@@ -163,45 +165,42 @@ public class GoodsAdapter extends BaseAdapter {
 		
 	}
 	
-	/*
-	 * @param urlStr ËùĞèÒª¼ÓÔØµÄÍ¼Æ¬µÄurl£¬ÒÔStringĞÎÊ½´«½øÀ´£¬¿ÉÒÔ°ÑÕâ¸öurl×÷Îª»º´æÍ¼Æ¬µÄkey
-	 * 
-	 * @param image ImageView ¿Ø¼ş
+	/* 
+	 * @param urlStr æ‰€éœ€è¦åŠ è½½çš„å›¾ç‰‡çš„urlï¼Œä»¥Stringå½¢å¼ä¼ è¿›æ¥ï¼Œå¯ä»¥æŠŠè¿™ä¸ªurlä½œä¸ºç¼“å­˜å›¾ç‰‡çš„key
+	 * @param image ImageView æ§ä»¶
 	 */
-	@SuppressWarnings("unused")
-	private void loadBitmap(String urlStr, ImageView image, int width,
-			int height) {
-		// Òì²½Í¼Æ¬¼ÓÔØÀà
-		AsyncImageLoader asyncLoader = new AsyncImageLoader(image, mLruCache,
-				width, height);
-		// Ê×ÏÈ´ÓÄÚ´æ»º´æÖĞ»ñÈ¡Í¼Æ¬
+	private void loadBitmap(String urlStr, ImageView image,int width,int height) {
+		//å¼‚æ­¥å›¾ç‰‡åŠ è½½ç±»
+		AsyncImageLoader asyncLoader = new AsyncImageLoader(image, mLruCache,width,height);
+		//é¦–å…ˆä»å†…å­˜ç¼“å­˜ä¸­è·å–å›¾ç‰‡
 		Bitmap bitmap = asyncLoader.getBitmapFromMemoryCache(urlStr);
-		// Èç¹û»º´æÖĞ´æÔÚÕâÕÅÍ¼Æ¬ÔòÖ±½ÓÉèÖÃ¸øImageView
+		//å¦‚æœç¼“å­˜ä¸­å­˜åœ¨è¿™å¼ å›¾ç‰‡åˆ™ç›´æ¥è®¾ç½®ç»™ImageView
 		if (bitmap != null) {
 			image.setImageBitmap(bitmap);
 		} else {
-			image.setImageResource(R.drawable.user_head);// ·ñÔòÏÈÉèÖÃ³ÉÄ¬ÈÏµÄÍ¼Æ¬
-			asyncLoader.execute(urlStr);// È»ºóÖ´ĞĞÒì²½ÈÎÎñAsycnTaskÈ¥ÍøÉÏ¼ÓÔØÍ¼Æ¬
+			image.setImageResource(R.drawable.user_head);//å¦åˆ™å…ˆè®¾ç½®æˆé»˜è®¤çš„å›¾ç‰‡
+			asyncLoader.execute(urlStr);//ç„¶åæ‰§è¡Œå¼‚æ­¥ä»»åŠ¡AsycnTaskå»ç½‘ä¸ŠåŠ è½½å›¾ç‰‡
 		}
 	}
-
+	
 	/*
-	 * Ò»¸ö¹¤¾ß·½·¨£º×÷ÓÃÊÇ°ÑÏµÍ³Ê±¼ä ×ª»»³Éµ±Ç°Ê±¼äµÄ Ç°*·ÖÖÓ£¬Ç°*Ğ¡Ê±
+	 * ä¸€ä¸ªå·¥å…·æ–¹æ³•ï¼šä½œç”¨æ˜¯æŠŠç³»ç»Ÿæ—¶é—´ è½¬æ¢æˆå½“å‰æ—¶é—´çš„ å‰*åˆ†é’Ÿï¼Œå‰*å°æ—¶
 	 */
 	@SuppressWarnings("deprecation")
-	public String dealTime(String time) {
-		Date now = new Date();
-		long lnow = now.getTime() / 1000;
+	public String dealTime(String time)
+	{
+		Date now=new Date();
+		long lnow = now.getTime()/1000; 
 
-		long ldate = Date.parse(time) / 1000;
-		Date date = new Date(ldate);
-
-		if ((lnow - ldate) < 60)
-			return (lnow - ldate) + "ÃëÇ°";
-		else if ((lnow - ldate) < 60 * 60)
-			return ((lnow - ldate) / 60) + "·ÖÖÓÇ°";
+		long ldate = Date.parse(time)/1000;
+		Date date=new Date(ldate);
+		
+		if((lnow-ldate)<60)
+			return (lnow-ldate)+"ç§’å‰";
+		else if((lnow-ldate)<60*60)
+			return ((lnow-ldate)/60)+"åˆ†é’Ÿå‰";
 		else
-			return date.getHours() + ":" + date.getMinutes();
+			return date.getHours()+":"+date.getMinutes();
 	}
 
 }
