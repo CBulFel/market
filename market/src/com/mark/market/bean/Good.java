@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * @author mazhao
  *
- *ÉÌÆ·ÊµÌåÀà
+ *å•†å“å®ä½“ç±»
  */
 public class Good {
 
@@ -16,8 +16,8 @@ public class Good {
 	private User user;
 	private String gname;
 	private String gcategory;
-	private String gdegree;//ĞÂ¾É³Ì¶È
-	//¼Û¸ñÇø¼ä
+	private String gdegree;//æ–°æ—§ç¨‹åº¦
+	//ä»·æ ¼åŒºé—´
 	private Double gprice;
 	private Double gprePrice;
 	
@@ -34,7 +34,7 @@ public class Good {
 	private Integer gcommentNum;
 	private Date gstartTime;
 	private Date gendTime;
-	private Boolean gvalid;//ÊÇ·ñÓĞĞ§
+	private Boolean gvalid;//æ˜¯å¦å¯ç”¨
 	private Date gtime;
 	private Set<GComment> gcomments = new HashSet<GComment>(0);
 	public Good() {

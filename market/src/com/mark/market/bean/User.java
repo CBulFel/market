@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * @author mazhao
  * 
- *ÓÃ»§ÊµÌåÀà
+ *					ç”¨æˆ·å®žä½“ç±»
  */
 public class User {
 
@@ -24,7 +24,7 @@ public class User {
 	private String usex;
 	private String uphone;
 	private String uemail;
-	//×¢²áÊ±¼ä
+	//×¢ï¿½ï¿½Ê±ï¿½ï¿½
 	private Date utime;
 	
 	private Boolean uvalid;
