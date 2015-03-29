@@ -8,14 +8,20 @@ package com.mark.market.logic;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+
 import com.mark.market.bean.Task;
+import com.mark.market.bean.User;
+import com.mark.market.ui.MarketAcitivity;
 
 /**
  * @author mazhao Describe
@@ -23,7 +29,7 @@ import com.mark.market.bean.Task;
 public class MainService extends Service implements Runnable {
 
 	private static Queue<Task> tasks = new LinkedList<Task>();
-	private static ArrayList<Activity> appActivities = new ArrayList<Activity>();
+	private static ArrayList<Activity> appActivity = new ArrayList<Activity>();
 	private boolean isRun;
 	private Handler handler;
 
@@ -39,13 +45,19 @@ public class MainService extends Service implements Runnable {
 			@Override
 			public void handleMessage(Message msg) {
 				// TODO Auto-generated method stub
-				super.handleMessage(msg);
+				MarketAcitivity activity = null;
 				switch (msg.what) {
 				case Task.MARKET_LOGIN:
+					activity = (MarketAcitivity) getActivityByName("LoginActivity");
+					activity.refresh(Task.MARKET_LOGIN, msg.obj);
 					break;
 				case Task.GET_USERINFO:
+					activity=(MarketAcitivity)getActivityByName("AuthActivity");
+					activity.refresh(Task.GET_USERINFO,msg.obj);
 					break;
 				case Task.GET_GOODS:
+					activity=(MarketAcitivity)getActivityByName("MainActivity");
+					activity.refresh(Task.GET_GOODS, msg.obj);
 					break;
 				case Task.UPDATE_GOODS:
 					break;
@@ -89,19 +101,33 @@ public class MainService extends Service implements Runnable {
 		}
 	}
 
-	// UI线程新开任务的接口
-	public static void newTask(Task task) {
+	// UI线程新开任务的接口,需传入context上下文，方便refresh操作
+	public static void newTask(Activity activity,Task task) {
+		
 		tasks.add(task);
+		appActivity.add(activity);
 	}
 
 	// UI新开任务时，需要传入Activity实例，为了refresh操作
-	public static void addActivty(Activity activity) {
+	/*public static void addContext(Context context) {
 		appActivities.add(activity);
-	}
+	}*/
 
 	// 任务完成后，应该remove对应的Activity实例，防止下次同一Activity的不同实例refresh混淆
-	public static void reMoveActivty(Activity activity) {
-		appActivities.remove(activity);
+	public static void reMoveActivity(Context context) {
+		appActivity.remove(context);
+	}
+
+	// 通过name获取新开任务时传递过来的Activity实例
+	public Object getActivityByName(String name) {
+		if (!appActivity.isEmpty()) {
+			for (Activity activity : appActivity) {
+				if (activity.getClass().getName().indexOf(name) > 0) {
+					return activity;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -116,13 +142,19 @@ public class MainService extends Service implements Runnable {
 		switch (task.getTaskID()) {
 
 		case Task.MARKET_LOGIN:
+		{
 			/*
 			 * 登录任务
 			 */
+			User user=(User) task.getParams().get("User");
+			
+			
+		
+		}
 			break;
 		case Task.GET_USERINFO:
 			/*
-			 * 加载更多
+			 *获得本地存储用户信息
 			 */
 			break;
 		case Task.GET_GOODS:

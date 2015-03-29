@@ -11,33 +11,33 @@ import android.R.string;
 
 /**
  * @author mazhao
- * @describ ÈÎÎñÊµÌåÀà
+ * @describ ä»»åŠ¡å®ä½“ç±»
  */
 public class Task {
-	//µÇÂ½
+	//ï¿½ç™»å½•
 	public static final int MARKET_LOGIN=1;
-	//»ñµÃÓÃ»§ĞÅÏ¢
+	//è·å¾—ç™»å½•ç”¨æˆ·ä¿¡æ¯
 	public static final int GET_USERINFO=2;
-	//»ñµÃÉÌÆ·ÁĞ±í
+	//ï¿½è·å¾—å•†å“åˆ—è¡¨ï¼ŒåŒåˆ·æ–°
 	public static final int GET_GOODS=3;
-	//¸üĞÂÉÌÆ·ÁĞ±í
+	//åˆ·æ–°å•†å“åˆ—è¡¨
 	public static final int UPDATE_GOODS=5;
-	//¼ÓÔØ¸ü¶à
+	//åŠ è½½æ›´å¤š
 	public static final int LOADMORE=4;
-	//ÈÎÎñID
+	//ä»»åŠ¡ID
 	private int taskID;
-	//ÈÎÎñ²ÎÊı
-	private Map<string ,Object> Params;
+	//ä»»åŠ¡å‚æ•°
+	private Map<String, Object> Params;
 	
 	
 	
 	
 	/**
-	 * ¹¹Ôì·½·¨
-	 * @param taskID ÈÎÎñID
-	 * @param params ÈÎÎñ²ÎÊı
+	 * ï¿½ï¿½ï¿½ì·½ï¿½ï¿½
+	 * @param taskID ï¿½ï¿½ï¿½ï¿½ID
+	 * @param params ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
-	public Task(int taskID, Map<string, Object> params) {
+	public Task(int taskID, Map<String, Object> params) {
 		super();
 		this.taskID = taskID;
 		Params = params;
@@ -49,10 +49,10 @@ public class Task {
 	public void setTaskID(int taskID) {
 		this.taskID = taskID;
 	}
-	public Map<string, Object> getParams() {
+	public Map<String, Object> getParams() {
 		return Params;
 	}
-	public void setParams(Map<string, Object> params) {
+	public void setParams(Map<String, Object> params) {
 		Params = params;
 	}
 	

@@ -14,7 +14,11 @@ import java.util.Set;
  */
 public class User {
 
-	
+	public static final String TB_USER="UserInfo";
+	public static final String USERID="uid";
+	public static final String USERNAME="uname";
+	public static final String USERPWD="upwd";
+
 	private static final long serialVersionUID = 4034229220029303154L;
 	private String uid;
 	private int ultUid;
@@ -57,6 +61,29 @@ public class User {
 	
 	
 	
+	/**
+	 * 
+	 */
+	public User() {
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+	/**
+	 * @param userId2
+	 * @param userName2
+	 * @param pwd
+	 */
+	public User(String userId2, String userName2, String pwd) {
+		// TODO Auto-generated constructor stub
+		this.uid=userId2;
+		this.uname=userName2;
+		this.upwd=pwd;
+	}
+
+
+
 	public String getUid() {
 		return uid;
 	}

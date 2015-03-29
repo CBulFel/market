@@ -1,6 +1,7 @@
 package com.mark.market.ui;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -19,11 +20,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 
 	private Fragment_home fragment_home;
 	private Fragment_my fragment_my;
-	//¶¨Òå²¼¾Ö¶ÔÏó
+	//ï¿½ï¿½ï¿½å²¼ï¿½Ö¶ï¿½ï¿½ï¿½
 	private FrameLayout layout_home,layout_my;
-	//¶¨ÒåÍ¼Æ¬×é¼þ¶ÔÏó
+	//ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	private ImageView image_home,image_my;
-	//ÖÐ¼äÎÒÏëÂô°´Å¥
+	//ï¿½Ð¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¥
 	private Button tab_plus;
 	
 	
@@ -35,7 +36,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		initView();
 		initData();
 		
-//Ä¬ÈÏ½øÈëÊ×Ò³
+//Ä¬ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½Ò³
 		clickHomeBtn();
 	}
 
@@ -51,19 +52,15 @@ public class MainActivity extends FragmentActivity implements OnClickListener{
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
 		return super.onOptionsItemSelected(item);
 	}
 
 
 /*	
-	³õÊ¼»¯×é¼þ
+	ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½
 	*/
 private void initView(){
-	//ÊµÀý»¯¸÷×é¼þ¶ÔÏó
+	//Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	layout_home=(FrameLayout)findViewById(R.id.layout_home);
 	layout_my=(FrameLayout)findViewById(R.id.layout_my);
 	
@@ -74,7 +71,7 @@ private void initView(){
 	
 }
 /*	
-³õÊ¼»¯Êý¾Ý,ÕâÀïÖ÷ÒªÊÇÎª¿Ø¼þÌí¼Ó¼àÌýÊÂ¼þ
+ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½Îªï¿½Ø¼ï¿½ï¿½ï¿½Ó¼ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
 */
 
 private void initData(){
@@ -112,8 +109,9 @@ public void onClick(View v) {
  */
 private void clickPlusBtn() {
 	// TODO Auto-generated method stub
-	//·¢²¼ÉÌÆ·¡£ÉÌÆ·±à¼­
-	
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ·ï¿½ï¿½ï¿½ï¿½Æ·ï¿½à¼­
+	Intent intent=new Intent(this, GoodsEdit.class);
+	startActivity(intent);
 }
 
 /**
@@ -122,14 +120,14 @@ private void clickPlusBtn() {
 private void clickHomeBtn() {
 	// TODO Auto-generated method stub
 	if(!layout_home.isSelected()){
-		//ÊµÀý»¯FragmentÒ³Ãæ  
+		//Êµï¿½ï¿½ï¿½ï¿½FragmentÒ³ï¿½ï¿½  
     fragment_home = new Fragment_home();  
-    //µÃµ½FragmentÊÂÎñ¹ÜÀíÆ÷  
+    //ï¿½Ãµï¿½Fragmentï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  
     FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
     fragmentTransaction.setCustomAnimations(R.animator.slide_in_left, R.animator.slide_out_right);
-    //Ìæ»»µ±Ç°µÄÒ³Ãæ  
+    //ï¿½æ»»ï¿½ï¿½Ç°ï¿½ï¿½Ò³ï¿½ï¿½  
     fragmentTransaction.replace(R.id.frame_content, fragment_home);  
-    //ÊÂÎñ¹ÜÀíÌá½»  
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½á½»  
     fragmentTransaction.commit();  
     
     layout_home.setSelected(true);
@@ -146,14 +144,14 @@ private void clickHomeBtn() {
 private void clickMyBtn() {
 	// TODO Auto-generated method stub
 	if(!layout_my.isSelected())
-	{//ÊµÀý»¯FragmentÒ³Ãæ  
+	{//Êµï¿½ï¿½ï¿½ï¿½FragmentÒ³ï¿½ï¿½  
     fragment_my = new Fragment_my();  
-    //µÃµ½FragmentÊÂÎñ¹ÜÀíÆ÷  
+    //ï¿½Ãµï¿½Fragmentï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  
     FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();  
     fragmentTransaction.setCustomAnimations(R.animator.slide_in_left, R.animator.slide_out_right);
-    //Ìæ»»µ±Ç°µÄÒ³Ãæ
+    //ï¿½æ»»ï¿½ï¿½Ç°ï¿½ï¿½Ò³ï¿½ï¿½
     fragmentTransaction.replace(R.id.frame_content, fragment_my);  
-    //ÊÂÎñ¹ÜÀíÌá½»
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½á½»
     fragmentTransaction.commit();  
     layout_my.setSelected(true);  
     image_my.setSelected(true);
