@@ -5,16 +5,20 @@
 
     <ImageView
         android:id="@+id/myimg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="60dp"
+        android:layout_height="100dp" 
+        android:layout_margin="5dp"
+        android:scaleType="centerInside"
+        android:background="#dddddd"/>
 
     <Button
         android:id="@+id/mybutton"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:background="@drawable/myview"
+        android:gravity="center"
         android:text="X"
-        android:textColor="#FFFFFF"
-        android:textSize="18dp" />
+        android:textColor="#ffffff"
+        android:textSize="14dp" />
 
 </FrameLayout>

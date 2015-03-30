@@ -274,8 +274,6 @@ public class MyListView extends ListView implements OnScrollListener {
 			Log.e("list", "TOUCH MOVE");
 			final float deltaY = ev.getRawY() - mLastY;
 			mLastY = ev.getRawY();
-			System.out.println("数据监测:" + getFirstVisiblePosition() + "---->"
-					+ getLastVisiblePosition());
 			if (getFirstVisiblePosition() == 0
 					&& (mHeaderView.getVisiableHeight() > 0 || deltaY > 0)) {
 				// the first item is showing, header has shown or pull down.
@@ -311,7 +309,6 @@ public class MyListView extends ListView implements OnScrollListener {
 			}
 			break;
 		}
-		Log.e("list", ""+super.onTouchEvent(ev));
 		return super.onTouchEvent(ev);
 	}
 

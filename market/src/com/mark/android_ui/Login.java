@@ -65,11 +65,11 @@ public class Login extends LinearLayout implements OnClickListener {
 		
 	}
 
-	public String getLogin_name() {
+	public String getUname() {
 		return login_name.getText().toString();
 	}
 
-	public String getLogin_pwd() {
+	public String getUpwd() {
 		return MD5Util.MD5(login_pwd.getText().toString());
 	}
 

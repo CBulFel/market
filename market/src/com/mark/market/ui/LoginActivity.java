@@ -46,7 +46,7 @@ public class LoginActivity extends Activity implements MarketAcitivity , LoginLi
 		MainService.newTask(task);
 		MainService.addActivty(LoginActivity.this);*/
 		
-		User user=Login.getUser();
+		User user=new User(null, login.getUname(), login.getUpwd());
 		//新开任务：登录操作
 		Map<String,Object> params=new HashMap<String,Object>();
 		params.put("User", user);
