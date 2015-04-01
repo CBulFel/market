@@ -14,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -102,15 +103,7 @@ public class Fragment_home extends Fragment implements MyListViewListener,
 		marketListView.setPullLoadEnable(true);
 		marketListView.setMyListViewListener(this);
 		marketListView.setAdapter(mAdapter);
-		marketListView.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				// TODO Auto-generated method stub
-				Toast.makeText(getActivity(), "商品-->"+arg2, Toast.LENGTH_SHORT).show();
-			}
-		});
+		
 	}
 
 

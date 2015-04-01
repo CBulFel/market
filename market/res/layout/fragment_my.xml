@@ -6,7 +6,7 @@
     android:orientation="vertical" >
 <RelativeLayout 
     android:layout_width="match_parent"
-    android:layout_height="160dp"
+    android:layout_height="140dp"
     android:background="@drawable/tm_bg_profile_banner_savvy"
     
     >
@@ -14,7 +14,6 @@
         android:id="@+id/my_headimg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_centerInParent="true"
         />
     <TextView 
@@ -27,6 +26,13 @@
 		
         />
 </RelativeLayout>
-
+<GridView 
+    android:id="@+id/my_goods"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:numColumns="2"
+	android:layout_marginLeft="5dp"
+	android:layout_marginRight="5dp"
+	    ></GridView>
 
 </LinearLayout>
