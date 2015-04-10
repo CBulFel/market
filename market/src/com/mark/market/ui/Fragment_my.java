@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.mark.android_ui.CircularImage;
 import com.mark.market.R;
+import com.mark.market.adapter.MyGoodsAdapter;
 import com.mark.market.bean.Good;
 
 public class Fragment_my extends Fragment {

@@ -3,13 +3,12 @@
  * TODO
  *
  */
-package com.mark.market.ui;
+package com.mark.market.adapter;
 
 import java.util.List;
 
 import com.mark.market.R;
 import com.mark.market.bean.Good;
-import com.mark.market.ui.GoodsAdapter.ViewHolder;
 import com.mark.market.util.Tools;
 
 import android.content.Context;

@@ -1,10 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.market.MainActivity" >
+    tools:context="com.mark.market.MainActivity" >
     
     <item 
-        android:id="@+id/action_search"
+        android:id="@+id/menu_search"
         android:orderInCategory="1"
         android:icon="@drawable/icon_search"
         android:title="search"

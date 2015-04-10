@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3300ff00"
     android:orientation="vertical"
     tools:context=".ui.Fragment_home" >
 
@@ -13,7 +12,6 @@
         android:id="@+id/marketlist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#660000ff"
         android:cacheColorHint="#00000000"
         android:descendantFocusability="blocksDescendants"
          >

@@ -1,4 +1,4 @@
-package com.mark.market.ui;
+package com.mark.market.adapter;
 
 import java.util.ArrayList;
 

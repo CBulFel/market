@@ -24,6 +24,7 @@ import com.mark.android_ui.MyImgScroll;
 import com.mark.android_ui.MyListView;
 import com.mark.android_ui.MyListView.MyListViewListener;
 import com.mark.market.R;
+import com.mark.market.adapter.GoodsAdapter;
 import com.mark.market.bean.Good;
 import com.mark.market.bean.Task;
 import com.mark.market.logic.MainService;

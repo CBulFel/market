@@ -14,16 +14,18 @@ import android.R.string;
  * @describ 任务实体类
  */
 public class Task {
-	//�登录
+	//登录
 	public static final int MARKET_LOGIN=1;
 	//获得登录用户信息
 	public static final int GET_USERINFO=2;
-	//�获得商品列表，同刷新
+	//获得商品列表，同刷新
 	public static final int GET_GOODS=3;
 	//刷新商品列表
-	public static final int UPDATE_GOODS=5;
+	public static final int UPDATE_GOODS=4;
 	//加载更多
-	public static final int LOADMORE=4;
+	public static final int LOADMORE=5;
+	//通过商品ID获取商品详情
+	public static final int GETGOODBYGID=6;
 	//任务ID
 	private int taskID;
 	//任务参数

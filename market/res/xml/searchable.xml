@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<searchable xmlns:android="http://schemas.android.com/apk/res/android" 
-    android:label="@string/label"
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
     android:hint="@string/search_hint"
-
-    >
-
+    android:includeInGlobalSearch="true"
+    android:label="@string/label"
+    android:searchSuggestAuthority="com.mark.market.util.SearchSuggestionsProvider"
+    android:searchSuggestIntentAction="android.intent.action.SEARCH"
+    android:searchSuggestSelection=" ?"
+    android:searchSuggestThreshold="1" >
 
 </searchable>

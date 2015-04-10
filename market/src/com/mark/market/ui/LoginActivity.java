@@ -2,11 +2,15 @@ package com.mark.market.ui;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 import com.mark.android_ui.Login;
 import com.mark.android_ui.Login.LoginListener;
 import com.mark.market.R;
@@ -19,9 +23,27 @@ public class LoginActivity extends Activity implements MarketAcitivity , LoginLi
 
 	private Login login;
 
+	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		// Actionbar设置
+				ActionBar actionbar = getActionBar();
+				/*ActionBar.LayoutParams Lparams = new ActionBar.LayoutParams(
+						ActionBar.LayoutParams.MATCH_PARENT,
+						ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
+				View actionbarLayout = LayoutInflater.from(this).inflate(
+						R.layout.title, null);
+				TextView title=(TextView)actionbarLayout.findViewById(R.id.actionbar_title);
+				title.setText("商品详情");
+				actionbar.setDisplayShowCustomEnabled(true);
+				actionbar.setCustomView(actionbarLayout, Lparams);*/
+				actionbar.setDisplayShowHomeEnabled(false);
+				actionbar.setDisplayHomeAsUpEnabled(true);
+				//actionbar.setHomeAsUpIndicator(R.drawable.actionbar_backbtn);
+				actionbar.setHomeButtonEnabled(true);
+				actionbar.setTitle("商品详情");
+		
 		login = (Login) findViewById(R.id.login_form);
 		login.setLoginListener(this);
 	}

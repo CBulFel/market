@@ -19,7 +19,7 @@ import org.json.JSONObject;
 
 /**
  * @author mazhao
- * @describÍøÂçÁ¬½Ó²Ù×÷Àà
+ * @describe ç½‘ç»œè¿žæŽ¥ç›¸å…³ç±»
  */
 public class HttpconnectUtil {
 	private static String url = "http://fytest.duapp.com/person";
@@ -35,8 +35,10 @@ public class HttpconnectUtil {
 
 
 
+	@SuppressWarnings("deprecation")
 	public static JSONObject getobject() throws ClientProtocolException, IOException, JSONException {
 		JSONObject json=null;
+
 		HttpGet get = new HttpGet(url);
 		HttpClient client = new DefaultHttpClient();
 		System.out.println("http error");

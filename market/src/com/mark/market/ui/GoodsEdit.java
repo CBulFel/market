@@ -2,7 +2,9 @@ package com.mark.market.ui;
 
 import java.io.File;
 import java.util.ArrayList;
-
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -10,11 +12,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,11 +29,15 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.Gallery;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import com.mark.market.R;
+import com.mark.market.adapter.MyAdapter;
 
-public class GoodsEdit extends Activity {
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+@SuppressLint("NewApi")
+public class GoodsEdit extends Activity implements MarketAcitivity {
+	private TextView title;
 	private Gallery Mygallery;
 	private ArrayList<Bitmap> groupbit;
 	private Bitmap selectbit;
@@ -46,7 +54,21 @@ public class GoodsEdit extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		ActionBar actionbar=getActionBar();
+		actionbar.setHomeButtonEnabled(true);
+		actionbar.setDisplayShowTitleEnabled(false);
+		actionbar.setDisplayShowHomeEnabled(true);
+		actionbar.setDisplayUseLogoEnabled(false);
+		actionbar.setDisplayHomeAsUpEnabled(true);
+		actionbar.setIcon(R.drawable.actionbar_backbtn);
+		
+		
 		setContentView(R.layout.activity_goodsedit);
+		View actionbarLayout = LayoutInflater.from(this).inflate(R.layout.title, null);
+		actionbar.setDisplayShowCustomEnabled(true);
+		actionbar.setCustomView(actionbarLayout); 
+		title=(TextView)actionbarLayout.findViewById(R.id.actionbar_title);
+		title.setText("发布商品");
 		add = (Button) findViewById(R.id.myadd);
 		Mygallery = (Gallery) findViewById(R.id.mygallery);
 		groupbit = new ArrayList<Bitmap>();
@@ -130,7 +152,7 @@ public class GoodsEdit extends Activity {
 	public void addImgAlert() {
 		AlertDialog.Builder bu = new AlertDialog.Builder(this);
 		bu.setTitle("请选择图片");
-		bu.setPositiveButton("从图库中选择", new DialogInterface.OnClickListener() {
+		bu.setPositiveButton("图库", new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -141,7 +163,7 @@ public class GoodsEdit extends Activity {
 						PHOTO_REQUEST_GALLERY);
 			}
 		});
-		bu.setNegativeButton("手机拍照相片", new DialogInterface.OnClickListener() {
+		bu.setNegativeButton("拍照", new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -266,6 +288,15 @@ public class GoodsEdit extends Activity {
 
 
 		return super.onOptionsItemSelected(item);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.mark.market.ui.MarketAcitivity#refresh(int, java.lang.Object[])
+	 */
+	@Override
+	public void refresh(int taskID, Object... objects) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -29,5 +29,6 @@
 
     <string name="title_activity_my">MyActivity</string>
     <string name="title_activity_gooddetail">Gooddetail</string>
+    <string name="title_activity_search">SearchActivity</string>
 
 </resources>
