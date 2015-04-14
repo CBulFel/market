@@ -7,8 +7,6 @@ package com.mark.market.bean;
 
 import java.util.Map;
 
-import android.R.string;
-
 /**
  * @author mazhao
  * @describ 任务实体类
@@ -25,7 +23,9 @@ public class Task {
 	//加载更多
 	public static final int LOADMORE=5;
 	//通过商品ID获取商品详情
-	public static final int GETGOODBYGID=6;
+	public static final int GET_DETAIL_BY_GID=6;
+	//搜索任务
+	public static final int GOODS_SEARCH=7;
 	//任务ID
 	private int taskID;
 	//任务参数
@@ -35,9 +35,9 @@ public class Task {
 	
 	
 	/**
-	 * ���췽��
-	 * @param taskID ����ID
-	 * @param params �������
+	 * 构造函数
+	 * @param taskID 任务ID
+	 * @param params 任务参数
 	 */
 	public Task(int taskID, Map<String, Object> params) {
 		super();

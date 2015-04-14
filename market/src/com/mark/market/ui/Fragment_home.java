@@ -6,15 +6,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -29,9 +28,9 @@ import com.mark.market.bean.Good;
 import com.mark.market.bean.Task;
 import com.mark.market.logic.MainService;
 
-public class Fragment_home extends Fragment implements MyListViewListener,
-		MarketAcitivity {
-
+@SuppressLint("InflateParams")
+public class Fragment_home extends Fragment implements MyListViewListener {
+	private static final String TAG = "market";
 	// listview控件
 	public static MyListView marketListView;
 	private GoodsAdapter mAdapter;
@@ -84,10 +83,10 @@ public class Fragment_home extends Fragment implements MyListViewListener,
 			ImageView imageView = new ImageView(getActivity());
 			imageView.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					//点击监听事件
+					// 点击监听事件
 					Toast.makeText(getActivity(),
-							"点击了:" + myPager.getCurIndex(),
-							Toast.LENGTH_SHORT).show();
+							"点击了:" + myPager.getCurIndex(), Toast.LENGTH_SHORT)
+							.show();
 				}
 			});
 			imageView.setImageResource(imageResId[i]);
@@ -104,54 +103,44 @@ public class Fragment_home extends Fragment implements MyListViewListener,
 		marketListView.setPullLoadEnable(true);
 		marketListView.setMyListViewListener(this);
 		marketListView.setAdapter(mAdapter);
-		
+
 	}
 
-
-	
-	
 	@Override
 	public void onRefresh() {
 		// 下拉刷新操作
-		Task task=new Task(Task.GET_GOODS, null);
-		MainService.newTask(this.getActivity(),task);
-		
-		
-		
-		
-		
-		
-		
-		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("index", "20");
+		Task task = new Task(Task.GET_GOODS, params);
+		MainService.newTask(getActivity(), task);
+
 	}
 
 	@Override
 	public void onLoadMore() {
 		// 加载更多操作
-		Map<String, Object> params =new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("index", "20");
-		Task task=new Task(Task.LOADMORE, params);
+		Task task = new Task(Task.LOADMORE, params);
 		MainService.newTask(getActivity(), task);
-		
-		
+
 	}
 
-	public void refreshcomplete(){
-		//刷新完成后的操作
+	public void refreshcomplete() {
+		// 刷新完成后的操作
 		marketListView.stopRefresh();
 		marketListView.stopLoadMore();
 		marketListView.setRefreshTime("刚刚");
-	
+		Log.w(TAG, "refresh sucess!");
+
 	}
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.mark.market.ui.MarketAcitivity#refresh(int, java.lang.Object[])
-	 */
-	@Override
-	public void refresh(int taskID, Object... objects) {
-		// TODO Auto-generated method stub
-		
+
+	
+	public void loadmorecomplete() {
+		//加载更多完成后的操作
+		marketListView.stopRefresh();
+		marketListView.stopLoadMore();
+		Log.w(TAG, "loadmore success!");
 	}
 
 }

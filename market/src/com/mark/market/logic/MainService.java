@@ -5,29 +5,29 @@
  */
 package com.mark.market.logic;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.util.Log;
 
 import com.mark.market.bean.Task;
-import com.mark.market.bean.User;
 import com.mark.market.ui.MarketAcitivity;
 
 /**
  * @author mazhao Describe
  */
 public class MainService extends Service implements Runnable {
-
+	private static final String TAG="market";
 	private static Queue<Task> tasks = new LinkedList<Task>();
 	private static ArrayList<Activity> appActivity = new ArrayList<Activity>();
 	private boolean isRun;
@@ -38,21 +38,22 @@ public class MainService extends Service implements Runnable {
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
-
+		Log.w(TAG, "mainservice launched!");
 		// 任务队列的 任务处理完成的消息
 		handler = new Handler() {
 
 			@Override
 			public void handleMessage(Message msg) {
 				// TODO Auto-generated method stub
+				Log.w(TAG, "get message"+msg.what);
 				MarketAcitivity activity = null;
 				switch (msg.what) {
 				case Task.MARKET_LOGIN:
 					activity = (MarketAcitivity) getActivityByName("LoginActivity");
 					activity.refresh(Task.MARKET_LOGIN, msg.obj);
 					break;
-				case Task.GET_USERINFO:
-					activity=(MarketAcitivity)getActivityByName("AuthActivity");
+				case Task.GET_DETAIL_BY_GID:
+					activity=(MarketAcitivity)getActivityByName("Gooddetail");
 					activity.refresh(Task.GET_USERINFO,msg.obj);
 					break;
 				case Task.GET_GOODS:
@@ -62,6 +63,8 @@ public class MainService extends Service implements Runnable {
 				case Task.UPDATE_GOODS:
 					break;
 				case Task.LOADMORE:
+					activity=(MarketAcitivity)getActivityByName("MainActivity");
+					activity.refresh(Task.LOADMORE, msg.obj);
 					break;
 				default:
 					break;
@@ -101,7 +104,7 @@ public class MainService extends Service implements Runnable {
 		}
 	}
 
-	// UI线程新开任务的接口,需传入context上下文，方便refresh操作
+	// UI线程新开任务的接口,需传入相应activity，方便refresh操作
 	public static void newTask(Activity activity,Task task) {
 		
 		tasks.add(task);
@@ -114,7 +117,7 @@ public class MainService extends Service implements Runnable {
 	}*/
 
 	// 任务完成后，应该remove对应的Activity实例，防止下次同一Activity的不同实例refresh混淆
-	public static void reMoveActivity(Context context) {
+	public static void removeActivity(Context context) {
 		appActivity.remove(context);
 	}
 
@@ -133,6 +136,7 @@ public class MainService extends Service implements Runnable {
 	/**
 	 * @param task
 	 *            Tasks处理Tasks堆栈中的task
+	 * @throws IOException 
 	 */
 	private void doTask(Task task) {
 		// TODO Auto-generated method stub
@@ -146,37 +150,56 @@ public class MainService extends Service implements Runnable {
 			/*
 			 * 登录任务
 			 */
-			User user=(User) task.getParams().get("User");
-			
-			
-		
+			Log.w(TAG, "login->do");
+		/*try {
+			msg.obj=HttpconnectUtil.getResult("192.168.1.158/8080/market/login/loginAction2_loginJSON.do", task.getParams());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+
 		}
 			break;
 		case Task.GET_USERINFO:
 			/*
 			 *获得本地存储用户信息
 			 */
+			Log.w(TAG, "get userinfo->do");
 			break;
 		case Task.GET_GOODS:
 			/*
 			 * 获得商品列表
 			 */
+		{
+			Log.w(TAG, "get goods->do");
+			/*String url="192.168.1.158/8080/market/index/indexAction2_indexJSON.do";
+			try {
+				msg.obj=HttpconnectUtil.getResult(url, null);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				Log.e(TAG, e.getMessage());
+			}*/
+		}
+
 			break;
-		case Task.UPDATE_GOODS:
+		case Task.GET_DETAIL_BY_GID:
+			Log.w(TAG, "get detail by Gid->do");
 			/*
-			 * 更新商品列表
+			 * 获取商品详情
 			 */
 			break;
 		case Task.LOADMORE:
 			/*
 			 * 加载更多
 			 */
+			Log.w(TAG, "loadmore->do");
 			break;
 		default:
 			break;
 
 		}
-
+		handler.sendMessage(msg);
 	}
 
 }

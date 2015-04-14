@@ -26,10 +26,13 @@ import android.widget.ImageView;
 import android.widget.SearchView;
 
 import com.mark.market.R;
+import com.mark.market.bean.Task;
 
-@SuppressLint("NewApi")
-public class MainActivity extends FragmentActivity implements OnClickListener {
+@SuppressLint({ "NewApi", "InflateParams" })
+public class MainActivity extends FragmentActivity implements OnClickListener,
+		MarketAcitivity {
 
+	private static final String TAG = "market";
 	private Fragment_home fragment_home;
 	private Fragment_my fragment_my;
 	// 定义tab布局
@@ -68,93 +71,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 		// 默认进入home页面
 		clickHomeBtn();
-	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		MenuItem search=menu.findItem(R.id.menu_search);
-		search.setOnActionExpandListener(new OnActionExpandListener() {
-			
-			@Override
-			public boolean onMenuItemActionExpand(MenuItem item) {
-				// TODO Auto-generated method stub
-				Intent intent=new Intent(MainActivity.this, SearchActivity.class);
-				startActivity(intent);
-				return false;
-			}
-			
-			@Override
-			public boolean onMenuItemActionCollapse(MenuItem item) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-		});
-		// 获取SearchView对象
-		searchView = (SearchView) menu.findItem(R.id.menu_search)
-				.getActionView();
-		if (searchView == null) {
-			Log.e("SearchView", "Fail to get Search View.");
-			return true;
-		}
-		// 简单配置searchview
-		searchView.setIconified(true);
-		searchView.setSubmitButtonEnabled(true);// 显示搜索提交按钮
-		// 利用反射配置searchview
-		try {
-			initsearchView();
-		} catch (NoSuchFieldException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// 获取搜索服务管理器
-		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		// searchable activity的component name，由此系统可通过intent进行唤起
-		ComponentName cn = new ComponentName(this, SearchActivity.class);
-		// 通过搜索管理器，从searchable
-		// activity中获取相关搜索信息，就是searchable的xml设置。如果返回null，表示该activity不存在，或者不是searchable
-		SearchableInfo info = searchManager.getSearchableInfo(cn);
-		if (info == null) {
-			Log.e("SearchableInfo", "Fail to get search info.");
-		}
-		// 将searchable activity的搜索信息与search view关联
-		searchView.setSearchableInfo(info);
-
-		return true;
-	}
-
-	/**
-	 * @throws NoSuchFieldException
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @describe 利用反射对searchview进行自定义，修改背景等
-	 */
-	@SuppressWarnings("deprecation")
-	private void initsearchView() throws NoSuchFieldException,
-			IllegalAccessException, IllegalArgumentException {
-		// TODO Auto-generated method stub
-		Class<?> argClass = searchView.getClass();
-		// 配置mSearchPlate背景
-		Field ownField = argClass.getDeclaredField("mSearchPlate");
-		// setAccessible 它是用来设置是否有权限访问反射类中的私有属性的，只有设置为true时才可以访问，默认为false
-		ownField.setAccessible(true);
-		View mView = (View) ownField.get(searchView);
-		mView.setBackground(getResources().getDrawable(R.drawable.search_palte));
-		// 配置搜索按钮
-		ownField = argClass.getDeclaredField("mGoButton");
-		ownField.setAccessible(true);
-		ImageView subView = (ImageView) ownField.get(searchView);
-		subView.setImageDrawable(getResources().getDrawable(
-				R.drawable.search_btn));
-		
 	}
 
 	@Override
@@ -265,6 +182,117 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			layout_home.setSelected(false);
 			image_home.setSelected(false);
 		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.mark.market.ui.MarketAcitivity#refresh(int, java.lang.Object[])
+	 */
+	@Override
+	public void refresh(int taskID, Object... objects) {
+		// TODO Auto-generated method stub
+		Log.w(TAG, "refresh UI!->MainActivity");
+		switch (taskID) {
+		case Task.GET_GOODS: {
+			Log.w(TAG, "refresh UI! -> after refresh");
+			fragment_home.refreshcomplete();
+		}
+			break;
+		case Task.LOADMORE: {
+			Log.w(TAG, "refresh UI! -> after loadmore");
+			fragment_home.loadmorecomplete();
+		}
+			break;
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		MenuItem search = menu.findItem(R.id.menu_search);
+		search.setOnActionExpandListener(new OnActionExpandListener() {
+
+			@Override
+			public boolean onMenuItemActionExpand(MenuItem item) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(MainActivity.this,
+						SearchActivity.class);
+				startActivity(intent);
+				return false;
+			}
+
+			@Override
+			public boolean onMenuItemActionCollapse(MenuItem item) {
+				// TODO Auto-generated method stub
+				return true;
+			}
+		});
+		// 获取SearchView对象
+		searchView = (SearchView) menu.findItem(R.id.menu_search)
+				.getActionView();
+		if (searchView == null) {
+			Log.e("SearchView", "Fail to get Search View.");
+			return true;
+		}
+		// 简单配置searchview
+		// searchView.setIconified(true);
+		searchView.setSubmitButtonEnabled(true);// 显示搜索提交按钮
+		// 利用反射配置searchview
+		try {
+			initsearchView();
+		} catch (NoSuchFieldException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// 获取搜索服务管理器
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		// searchable activity的component name，由此系统可通过intent进行唤起
+		ComponentName cn = new ComponentName(this, SearchActivity.class);
+		// 通过搜索管理器，从searchable
+		// activity中获取相关搜索信息，就是searchable的xml设置。如果返回null，表示该activity不存在，或者不是searchable
+		SearchableInfo info = searchManager.getSearchableInfo(cn);
+		if (info == null) {
+			Log.e("SearchableInfo", "Fail to get search info.");
+		}
+		// 将searchable activity的搜索信息与search view关联
+		searchView.setSearchableInfo(info);
+
+		return true;
+	}
+
+	/**
+	 * @throws NoSuchFieldException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 * @describe 利用反射对searchview进行自定义，修改背景等
+	 */
+	@SuppressWarnings("deprecation")
+	private void initsearchView() throws NoSuchFieldException,
+			IllegalAccessException, IllegalArgumentException {
+		// TODO Auto-generated method stub
+		Class<?> argClass = searchView.getClass();
+		// 配置mSearchPlate背景
+		Field ownField = argClass.getDeclaredField("mSearchPlate");
+		// setAccessible 它是用来设置是否有权限访问反射类中的私有属性的，只有设置为true时才可以访问，默认为false
+		ownField.setAccessible(true);
+		View mView = (View) ownField.get(searchView);
+		mView.setBackground(getResources().getDrawable(R.drawable.search_palte));
+		// 配置搜索按钮
+		ownField = argClass.getDeclaredField("mGoButton");
+		ownField.setAccessible(true);
+		ImageView subView = (ImageView) ownField.get(searchView);
+		subView.setImageDrawable(getResources().getDrawable(
+				R.drawable.search_btn));
 
 	}
 

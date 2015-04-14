@@ -15,14 +15,12 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,12 +28,12 @@ import android.widget.Toast;
 
 import com.mark.android_ui.MyImgScroll;
 import com.mark.market.R;
-import com.mark.market.R.id;
 import com.mark.market.adapter.CommentsAdapter;
 import com.mark.market.bean.GComment;
 import com.mark.market.bean.Task;
 import com.mark.market.logic.MainService;
 
+@SuppressLint("InflateParams")
 public class Gooddetail extends Activity implements MarketAcitivity {
 
 	private ListView list_comments;
@@ -108,7 +106,7 @@ public class Gooddetail extends Activity implements MarketAcitivity {
 		// 新开任务通过商品ID获取商品详情
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("Gid", Gid);
-		Task task = new Task(Task.GETGOODBYGID, params);
+		Task task = new Task(Task.GET_DETAIL_BY_GID, params);
 		MainService.newTask(this, task);
 		init();
 

@@ -2,6 +2,7 @@ package com.mark.market.ui;
 
 import java.io.File;
 import java.util.ArrayList;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
@@ -31,6 +32,7 @@ import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.mark.market.R;
 import com.mark.market.adapter.MyAdapter;
 

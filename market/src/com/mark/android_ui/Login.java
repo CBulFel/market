@@ -1,3 +1,5 @@
+
+
 package com.mark.android_ui;
 
 import android.annotation.SuppressLint;
@@ -6,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -80,7 +83,6 @@ public class Login extends LinearLayout implements OnClickListener {
 	public void setLoginListener(LoginListener l) {
 		this.mloginlistener = l;
 	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -97,7 +99,9 @@ public class Login extends LinearLayout implements OnClickListener {
 			getContext().startActivity(intent);
 			break;
 		case R.id.login_btn:
+			
 			mloginlistener.loginauth();
+			
 			break;
 		default:
 			break;
