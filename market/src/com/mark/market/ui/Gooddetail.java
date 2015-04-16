@@ -10,14 +10,20 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.TaskStackBuilder;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -125,10 +131,14 @@ public class Gooddetail extends Activity implements MarketAcitivity {
 			ImageView imageView = new ImageView(this);
 			imageView.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-
-					Toast.makeText(Gooddetail.this,
-							"点击了:" + detail_img.getCurIndex(),
-							Toast.LENGTH_SHORT).show();
+					AlertDialog alert = new AlertDialog.Builder(Gooddetail.this)
+							.create();
+					alert.show();
+					alert.setTitle("查看");
+					alert.getWindow().setLayout(v.getWidth(), v.getHeight());
+					alert.getWindow().setGravity(Gravity.CENTER);
+					alert.getWindow().setBackgroundDrawable(
+							((ImageView) v).getDrawable());
 				}
 			});
 			imageView.setImageResource(imageResId[i]);

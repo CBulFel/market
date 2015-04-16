@@ -10,17 +10,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.mark.android_ui.Login;
 import com.mark.android_ui.Login.LoginListener;
+import com.mark.android_ui.MyprogressDialog;
 import com.mark.market.R;
 import com.mark.market.bean.Task;
+import com.mark.market.bean.User;
 import com.mark.market.logic.MainService;
 import com.mark.market.util.LoginSessionUtil;
 
 public class LoginActivity extends Activity implements MarketAcitivity,
 		LoginListener {
+	private static final String LOGIN_SUCCESS = "success";
+	private static final String LOGIN_FAIL = "fail";
 	private static final String TAG = "market";
 	private Login login;
+	private MyprogressDialog progressdialog=null;
 
 	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +52,11 @@ public class LoginActivity extends Activity implements MarketAcitivity,
 		actionbar.setTitle("登录");
 
 		login = (Login) findViewById(R.id.login_form);
-
 		Intent intent = new Intent();
 		intent.setClass(this, MainService.class);
 		startService(intent);
 		login.setLoginListener(this);
+		progressdialog = new MyprogressDialog(this);
 	}
 
 	/*
@@ -62,9 +69,11 @@ public class LoginActivity extends Activity implements MarketAcitivity,
 		// TODO Auto-generated method stub
 		// 当前如果有登录用户就直接登录
 
+		progressdialog.show();
 		if (null != LoginSessionUtil.getLoginUser(this)) {
 			Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 			startActivity(intent);
+			progressdialog.cancel();
 			finish();
 		}
 
@@ -94,14 +103,19 @@ public class LoginActivity extends Activity implements MarketAcitivity,
 	public void refresh(int taskID, Object... objects) {
 		// TODO Auto-generated method stub
 		Log.w(TAG, "loginactivity->refresh!");
-	/*	if (objects != null) {
-			String result =objects.toString();
-			JSONObject json = JSONObject.fromObject(result);
-			User user = new User((String) json.get("uid"),
-					(String) json.get("uname"), (String) json.get("upwd"),
-					(String) json.get("uemail"));
-			LoginSessionUtil.SaveLoginUser(this, user);
-		}*/
+		/*
+		 * if (objects != null) { String result = objects.toString(); JSONObject
+		 * json = JSON.parseObject(result); if
+		 * (json.get("msg").toString().equals(LOGIN_SUCCESS)) { Intent intent =
+		 * new Intent(LoginActivity.this, MainActivity.class);
+		 * startActivity(intent); finish(); User user = new User((String)
+		 * json.get("uid"), (String) json.get("uname"), (String)
+		 * json.get("upwd"), (String) json.get("uemail"));
+		 * LoginSessionUtil.SaveLoginUser(this, user); } }
+		 */
+
+		progressdialog.cancel();
+		Log.w(TAG, "object is null,in loginactivity refresh()!");
 		Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 		startActivity(intent);
 		finish();

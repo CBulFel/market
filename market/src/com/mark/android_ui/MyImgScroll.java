@@ -16,14 +16,14 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 /**
- * Í¼Æ¬¹ö¶¯Àà
+ * Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  * 
  * @author Administrator
  * 
  */
 public class MyImgScroll extends ViewPager {
-	Activity mActivity; // ÉÏÏÂÎÄ
-	List<View> mListViews; // Í¼Æ¬×é
+	Activity mActivity; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	List<View> mListViews; // Í¼Æ¬ï¿½ï¿½
 	int mScrollTime = 0;
 	Timer timer;
 	int oldIndex = 0;
@@ -34,24 +34,24 @@ public class MyImgScroll extends ViewPager {
 	}
 
 	/**
-	 * ¿ªÊ¼¹ã¸æ¹ö¶¯
+	 * ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param mainActivity
-	 *            ÏÔÊ¾¹ã¸æµÄÖ÷½çÃæ
+	 *            ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * @param imgList
-	 *            Í¼Æ¬ÁÐ±í, ²»ÄÜÎªnull ,×îÉÙÒ»ÕÅ
+	 *            Í¼Æ¬ï¿½Ð±ï¿½, ï¿½ï¿½ï¿½ï¿½Îªnull ,ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
 	 * @param scrollTime
-	 *            ¹ö¶¯¼ä¸ô ,0Îª²»¹ö¶¯
+	 *            ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ,0Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * @param ovalLayout
-	 *            Ô²µãÈÝÆ÷,¿ÉÎª¿Õ,LinearLayoutÀàÐÍ
+	 *            Ô²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½Îªï¿½ï¿½,LinearLayoutï¿½ï¿½ï¿½ï¿½
 	 * @param ovalLayoutId
-	 *            ovalLayoutÎª¿ÕÊ± Ð´0, Ô²µãlayout XMl
+	 *            ovalLayoutÎªï¿½ï¿½Ê± Ð´0, Ô²ï¿½ï¿½layout XMl
 	 * @param ovalLayoutItemId
-	 *            ovalLayoutÎª¿ÕÊ± Ð´0,Ô²µãlayout XMl Ô²µãXMlÏÂView ID
+	 *            ovalLayoutÎªï¿½ï¿½Ê± Ð´0,Ô²ï¿½ï¿½layout XMl Ô²ï¿½ï¿½XMlï¿½ï¿½View ID
 	 * @param focusedId
-	 *            ovalLayoutÎª¿ÕÊ± Ð´0, Ô²µãlayout XMl Ñ¡ÖÐÊ±µÄ¶¯»­
+	 *            ovalLayoutÎªï¿½ï¿½Ê± Ð´0, Ô²ï¿½ï¿½layout XMl Ñ¡ï¿½ï¿½Ê±ï¿½Ä¶ï¿½ï¿½ï¿½
 	 * @param normalId
-	 *            ovalLayoutÎª¿ÕÊ± Ð´0, Ô²µãlayout XMl Õý³£Ê±±³¾°
+	 *            ovalLayoutÎªï¿½ï¿½Ê± Ð´0, Ô²ï¿½ï¿½layout XMl ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
 	 */
 	public void start(Activity mainActivity, List<View> imgList,
 			int scrollTime, LinearLayout ovalLayout, int ovalLayoutId,
@@ -59,16 +59,16 @@ public class MyImgScroll extends ViewPager {
 		mActivity = mainActivity;
 		mListViews = imgList;
 		mScrollTime = scrollTime;
-		// ÉèÖÃÔ²µã
+		// ï¿½ï¿½ï¿½ï¿½Ô²ï¿½ï¿½
 		setOvalLayout(ovalLayout, ovalLayoutId, ovalLayoutItemId, focusedId,
 				normalId);
-		this.setAdapter(new MyPagerAdapter());// ÉèÖÃÊÊÅäÆ÷
+		this.setAdapter(new MyPagerAdapter());// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		if (scrollTime != 0 && imgList.size() > 1) {
-			// ÉèÖÃ»¬¶¯¶¯»­Ê±¼ä  ,Èç¹ûÓÃÄ¬ÈÏ¶¯»­Ê±¼ä¿É²»ÓÃ ,·´Éä¼¼ÊõÊµÏÖ
+			// ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½  ,ï¿½ï¿½ï¿½ï¿½ï¿½Ä¬ï¿½Ï¶ï¿½ï¿½ï¿½Ê±ï¿½ï¿½É²ï¿½ï¿½ï¿½ ,ï¿½ï¿½ï¿½ä¼¼ï¿½ï¿½Êµï¿½ï¿½
 		//	 new FixedSpeedScroller(mActivity).setDuration(this, 700);
 	
 			startTimer();
-			// ´¥ÃþÊ±Í£Ö¹¹ö¶¯
+			// ï¿½ï¿½ï¿½ï¿½Ê±Í£Ö¹ï¿½ï¿½ï¿½ï¿½
 			this.setOnTouchListener(new OnTouchListener() {
 				public boolean onTouch(View v, MotionEvent event) {
 					if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -82,11 +82,11 @@ public class MyImgScroll extends ViewPager {
 		} 
 		if (mListViews.size() > 1) {
 			this.setCurrentItem((Integer.MAX_VALUE / 2)
-					- (Integer.MAX_VALUE / 2) % mListViews.size());// ÉèÖÃÑ¡ÖÐÎªÖÐ¼ä/Í¼Æ¬ÎªºÍµÚ0ÕÅÒ»Ñù
+					- (Integer.MAX_VALUE / 2) % mListViews.size());// ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½Îªï¿½Ð¼ï¿½/Í¼Æ¬Îªï¿½Íµï¿½0ï¿½ï¿½Ò»ï¿½ï¿½
 		}
 	}
 
-	// ÉèÖÃÔ²µã
+	// ï¿½ï¿½ï¿½ï¿½Ô²ï¿½ï¿½
 	private void setOvalLayout(final LinearLayout ovalLayout, int ovalLayoutId,
 			final int ovalLayoutItemId, final int focusedId, final int normalId) {
 		if (ovalLayout != null) {
@@ -95,16 +95,16 @@ public class MyImgScroll extends ViewPager {
 				ovalLayout.addView(inflater.inflate(ovalLayoutId, null));
 				
 			}
-			//Ñ¡ÖÐµÚÒ»¸ö
+			//Ñ¡ï¿½Ðµï¿½Ò»ï¿½ï¿½
 			ovalLayout.getChildAt(0).findViewById(ovalLayoutItemId)
 			.setBackgroundResource(focusedId);
 			this.setOnPageChangeListener(new OnPageChangeListener() {
 				public void onPageSelected(int i) {
 					curIndex = i % mListViews.size();
-                    //È¡ÏûÔ²µãÑ¡ÖÐ
+                    //È¡ï¿½ï¿½Ô²ï¿½ï¿½Ñ¡ï¿½ï¿½
 					ovalLayout.getChildAt(oldIndex).findViewById(ovalLayoutItemId)
 							.setBackgroundResource(normalId);
-					 //Ô²µãÑ¡ÖÐ
+					 //Ô²ï¿½ï¿½Ñ¡ï¿½ï¿½
 					ovalLayout.getChildAt(curIndex).findViewById(ovalLayoutItemId)
 					.setBackgroundResource(focusedId);
 					oldIndex = curIndex;
@@ -119,14 +119,14 @@ public class MyImgScroll extends ViewPager {
 		}
 	}
 	/**
-	 * È¡µÃµ±Ã÷Ñ¡ÖÐÏÂ±ê
+	 * È¡ï¿½Ãµï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½Â±ï¿½
 	 * @return
 	 */
     public int getCurIndex() {
 		return curIndex;
 	}
 	/**
-	 * Í£Ö¹¹ö¶¯
+	 * Í£Ö¹ï¿½ï¿½ï¿½ï¿½
 	 */
 	public void stopTimer() {
 		if (timer != null) {
@@ -136,7 +136,7 @@ public class MyImgScroll extends ViewPager {
 	}
 
 	/**
-	 * ¿ªÊ¼¹ö¶¯
+	 * ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½
 	 */
 	public void startTimer() {
 		timer = new Timer();
@@ -152,7 +152,7 @@ public class MyImgScroll extends ViewPager {
 		}, mScrollTime, mScrollTime);
 	}
 
-	// ÊÊÅäÆ÷ //Ñ­»·ÉèÖÃ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ //Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	private class MyPagerAdapter extends PagerAdapter {
 		public void finishUpdate(View arg0) {
 		}
@@ -162,7 +162,7 @@ public class MyImgScroll extends ViewPager {
 		}
 
 		public int getCount() {
-			if (mListViews.size() == 1) {// Ò»ÕÅÍ¼Æ¬Ê±²»ÓÃÁ÷¶¯
+			if (mListViews.size() == 1) {// Ò»ï¿½ï¿½Í¼Æ¬Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				return mListViews.size();
 			}
 			return Integer.MAX_VALUE;

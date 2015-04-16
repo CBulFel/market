@@ -1,6 +1,7 @@
 package com.mark.market.ui;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -25,7 +26,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SearchView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.mark.market.R;
+import com.mark.market.bean.Good;
 import com.mark.market.bean.Task;
 
 @SuppressLint({ "NewApi", "InflateParams" })
@@ -194,15 +199,22 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 	public void refresh(int taskID, Object... objects) {
 		// TODO Auto-generated method stub
 		Log.w(TAG, "refresh UI!->MainActivity");
+		JSONObject json = JSON.parseObject(objects.toString());
+		Log.w(TAG, json.toJSONString());
+		JSONArray jsonarray = json.getJSONArray("goods");
+		List<Good> goodsjson = JSON.parseArray(jsonarray.toJSONString(),
+				Good.class);
+		Log.w(TAG, "goods from JSON num->" + goodsjson.size());
+
 		switch (taskID) {
 		case Task.GET_GOODS: {
 			Log.w(TAG, "refresh UI! -> after refresh");
-			fragment_home.refreshcomplete();
+			fragment_home.refreshcomplete(goodsjson);
 		}
 			break;
 		case Task.LOADMORE: {
 			Log.w(TAG, "refresh UI! -> after loadmore");
-			fragment_home.loadmorecomplete();
+			fragment_home.loadmorecomplete(goodsjson);
 		}
 			break;
 		}

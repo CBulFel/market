@@ -151,6 +151,12 @@ public class MainService extends Service implements Runnable {
 			 * 登录任务
 			 */
 			Log.w(TAG, "login->do");
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		/*try {
 			msg.obj=HttpconnectUtil.getResult("192.168.1.158/8080/market/login/loginAction2_loginJSON.do", task.getParams());
 		} catch (IOException e) {
