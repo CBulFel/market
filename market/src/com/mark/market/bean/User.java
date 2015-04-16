@@ -28,7 +28,7 @@ public class User {
 	private String usex;
 	private String uphone;
 	private String uemail;
-	//ע��ʱ��
+
 	private Date utime;
 	
 	private Boolean uvalid;
@@ -70,18 +70,21 @@ public class User {
 
 
 
-	/**
-	 * @param userId2
-	 * @param userName2
-	 * @param pwd
-	 */
-	public User(String userId2, String userName2, String pwd) {
+
+	public User(String uid2, String uname2, String upwd2, String uemail2) {
 		// TODO Auto-generated constructor stub
-		this.uid=userId2;
-		this.uname=userName2;
-		this.upwd=pwd;
+		this.uid=uid2;
+		this.uname=uname2;
+		this.upwd=upwd2;
+		this.uemail=uemail2;
 	}
 
+	public User(String uid2, String uname2, String upwd2) {
+		// TODO Auto-generated constructor stub
+		this.uid=uid2;
+		this.uname=uname2;
+		this.upwd=upwd2;
+	}
 
 
 	public String getUid() {

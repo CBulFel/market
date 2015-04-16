@@ -204,10 +204,10 @@ public class GoodsEdit extends Activity implements MarketAcitivity {
 		i.putExtra("crop", "true");
 		i.putExtra("outputX", 250);
 		i.putExtra("outputY", 250);
-		i.putExtra("outputFormat", "JPEG");// ͼƬ��ʽ
-		i.putExtra("noFaceDetection", true);// ȡ������ʶ��
+		i.putExtra("outputFormat", "JPEG");
+		i.putExtra("noFaceDetection", true);
 		i.putExtra("return-data", true);
-		// ����һ�����з���ֵ��Activity��������ΪPHOTO_REQUEST_CUT
+
 		// System.out.println("剪切"+"  "+1);
 		GoodsEdit.this.startActivityForResult(i, PHOTO_CUT);
 	}
@@ -238,7 +238,7 @@ public class GoodsEdit extends Activity implements MarketAcitivity {
 			break;
 		case 3: {
 			if (data != null) {
-
+				
 				Bitmap bitmap = data.getParcelableExtra("data");
 				// my.setImageBitmap(bitmap);
 				groupbit.add(bitmap);
@@ -247,6 +247,7 @@ public class GoodsEdit extends Activity implements MarketAcitivity {
 				// System.out.println(bitmap+"  "+3);
 				// my.setImageBitmap(groupbit.get(number));
 				// number++;
+				
 
 			}
 			try {

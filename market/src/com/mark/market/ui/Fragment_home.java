@@ -103,7 +103,16 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 		marketListView.setPullLoadEnable(true);
 		marketListView.setMyListViewListener(this);
 		marketListView.setAdapter(mAdapter);
-
+/*		Map<String, Object> map = new HashMap<String, Object>();
+		JSONArray jsonlist=JSONArray.fromObject(goods);
+		map.put("goods", jsonlist.toString());
+		JSONObject json = JSONObject.fromObject(map);
+		Log.w(TAG, "goods put in!->"+json.toString());*/
+		/*
+		 * List<Good> goodsfromJSON = new ArrayList<Good>(); Map<String, Object>
+		 * param = (Map<String, Object>) JSONObject .toBean(json); goodsfromJSON
+		 * = (List<Good>) param.get("goods");
+		 */
 	}
 
 	@Override
@@ -135,9 +144,8 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 
 	}
 
-	
 	public void loadmorecomplete() {
-		//加载更多完成后的操作
+		// 加载更多完成后的操作
 		marketListView.stopRefresh();
 		marketListView.stopLoadMore();
 		Log.w(TAG, "loadmore success!");

@@ -43,6 +43,7 @@ public class MainService extends Service implements Runnable {
 		handler = new Handler() {
 
 			@Override
+			
 			public void handleMessage(Message msg) {
 				// TODO Auto-generated method stub
 				Log.w(TAG, "get message"+msg.what);
@@ -142,7 +143,6 @@ public class MainService extends Service implements Runnable {
 		// TODO Auto-generated method stub
 		Message msg = handler.obtainMessage();
 		msg.what = task.getTaskID();
-
 		switch (task.getTaskID()) {
 
 		case Task.MARKET_LOGIN:
@@ -181,6 +181,7 @@ public class MainService extends Service implements Runnable {
 				Log.e(TAG, e.getMessage());
 			}*/
 		}
+		
 
 			break;
 		case Task.GET_DETAIL_BY_GID:
@@ -201,5 +202,5 @@ public class MainService extends Service implements Runnable {
 		}
 		handler.sendMessage(msg);
 	}
-
-}
+	
+}		

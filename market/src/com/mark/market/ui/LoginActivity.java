@@ -3,7 +3,6 @@ package com.mark.market.ui;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -15,7 +14,6 @@ import com.mark.android_ui.Login;
 import com.mark.android_ui.Login.LoginListener;
 import com.mark.market.R;
 import com.mark.market.bean.Task;
-import com.mark.market.bean.User;
 import com.mark.market.logic.MainService;
 import com.mark.market.util.LoginSessionUtil;
 
@@ -96,12 +94,14 @@ public class LoginActivity extends Activity implements MarketAcitivity,
 	public void refresh(int taskID, Object... objects) {
 		// TODO Auto-generated method stub
 		Log.w(TAG, "loginactivity->refresh!");
-		if (objects != null) {
-			String result = objects.toString();
+	/*	if (objects != null) {
+			String result =objects.toString();
 			JSONObject json = JSONObject.fromObject(result);
-			User user = (User) JSONObject.toBean(json, User.class);
+			User user = new User((String) json.get("uid"),
+					(String) json.get("uname"), (String) json.get("upwd"),
+					(String) json.get("uemail"));
 			LoginSessionUtil.SaveLoginUser(this, user);
-		}
+		}*/
 		Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 		startActivity(intent);
 		finish();

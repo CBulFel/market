@@ -11,6 +11,6 @@ public interface MarketAcitivity {
 	//public void init();
 	
 	//任务完成后的UI界面更新操作
-	public void refresh(int taskID,Object...objects);
+	public void refresh(int taskID,Object... objects);
 	
 }
