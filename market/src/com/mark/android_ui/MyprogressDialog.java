@@ -10,6 +10,7 @@ import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -46,6 +47,8 @@ public class MyprogressDialog extends Dialog {
 		animation = (AnimationDrawable) imgview.getDrawable();
 		if (msg != null) {
 			msgview.setText(msg);
+		}else{
+			msgview.setVisibility(View.GONE);
 		}
 		animation.start();
 	}

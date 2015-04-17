@@ -2,93 +2,97 @@ package com.mark.market.ui;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.view.Display;
+import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Gallery;
-import android.widget.TextView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.mark.market.R;
 import com.mark.market.adapter.MyAdapter;
+import com.mark.market.bean.Task;
+import com.mark.market.logic.MainService;
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-@SuppressLint("NewApi")
-public class GoodsEdit extends Activity implements MarketAcitivity {
-	private TextView title;
-	private Gallery Mygallery;
-	private ArrayList<Bitmap> groupbit;
-	private Bitmap selectbit;
-	private Button add, delete;
-	private MyAdapter myadapter;
-	private AlertDialog mydialog;
-	private int number;
+public class GoodsEdit extends Activity implements MarketAcitivity,
+		OnClickListener {
+	private static String TAG="goodedit";
 	private static int PHOTO_REQUEST_GALLERY = 1;
 	private static int PHOTO_REQUEST_CAREMA = 2;
 	private static int PHOTO_CUT = 3;
 	private static final String PHOTO_FILE_NAME = "temp_photo.jpg";
+	private static final String httpurl = "http://192.168.1.158:8080/market/post/postAction2_postJSON.do";
+	private Gallery Mygallery;
+	private ArrayList<Bitmap> groupbit;
+	private String[] categorys;
+	private Bitmap selectbit;
+	private Button button_addphoto, button_delphoto, sale;
+	private MyAdapter myadapter;
+	private AlertDialog mydialog;
+	private int number;
+	private Map<String,Object> goodinfo;
 	private File tempFile;
-
+	private viewholder holder;
+	static class viewholder{
+		public EditText edit_title;
+		public EditText edit_describ;
+		public EditText edit_price;
+		public EditText edit_preprice;
+		public Spinner edit_category;
+	}
+	
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ActionBar actionbar=getActionBar();
-		actionbar.setHomeButtonEnabled(true);
-		actionbar.setDisplayShowTitleEnabled(false);
-		actionbar.setDisplayShowHomeEnabled(true);
-		actionbar.setDisplayUseLogoEnabled(false);
-		actionbar.setDisplayHomeAsUpEnabled(true);
-		actionbar.setIcon(R.drawable.actionbar_backbtn);
-		
-		
 		setContentView(R.layout.activity_goodsedit);
-		View actionbarLayout = LayoutInflater.from(this).inflate(R.layout.title, null);
-		actionbar.setDisplayShowCustomEnabled(true);
-		actionbar.setCustomView(actionbarLayout); 
-		title=(TextView)actionbarLayout.findViewById(R.id.actionbar_title);
-		title.setText("发布商品");
-		add = (Button) findViewById(R.id.myadd);
+		ActionBar actionbar = getActionBar();
+		actionbar.setDisplayShowHomeEnabled(false);
+		actionbar.setDisplayHomeAsUpEnabled(true);
+		// actionbar.setHomeAsUpIndicator(R.drawable.actionbar_backbtn);
+		actionbar.setHomeButtonEnabled(true);
+		actionbar.setTitle("编辑宝贝");
+		holder.edit_title=(EditText)findViewById(R.id.title);
+		holder.edit_describ=(EditText)findViewById(R.id.edit_describ);
+		holder.edit_price=(EditText)findViewById(R.id.edit_price);
+		holder.edit_preprice=(EditText)findViewById(R.id.edit_preprice);
+		holder.edit_category=(Spinner)findViewById(R.id.edit_category);
+		
+		button_addphoto = (Button) findViewById(R.id.myadd);
 		Mygallery = (Gallery) findViewById(R.id.mygallery);
+		sale = (Button) findViewById(R.id.good_edit_sale);
 		groupbit = new ArrayList<Bitmap>();
 		myadapter = new MyAdapter(this, groupbit);
+		goodinfo=new HashMap<String, Object>();
 		Mygallery.setAdapter(myadapter);
+		Resources res=getResources();
+		categorys=res.getStringArray(R.array.category);
+		Log.w(TAG, holder.edit_category.getSelectedItem().toString());
 		// 添加图片
-		add.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO 自动生成的方法存根
-				if(groupbit.size()<6){
-				addImgAlert();
-				mydialog.show();
-				}else{
-					Toast.makeText(GoodsEdit.this, "最多只能添加6张图片呦～", Toast.LENGTH_SHORT).show();
-				}
-			}
-		});
+		button_addphoto.setOnClickListener(this);
+		sale.setOnClickListener(this);
 		// 查看图片
 		Mygallery.setOnItemClickListener(new OnItemClickListener() {
 
@@ -96,25 +100,15 @@ public class GoodsEdit extends Activity implements MarketAcitivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO 自动生成的方法存根
-				/*
-				 * LayoutInflater li=getLayoutInflater(); View
-				 * vi=li.inflate(R.layout.alertimg, null); showimg=(ImageView)
-				 * vi.findViewById(R.id.showimage);
-				 */
 				selectbit = groupbit.get(position);
-				WindowManager manager = getWindowManager();
-				Display display = manager.getDefaultDisplay();
-				int width = display.getWidth();
-				int height = display.getHeight();
 				AlertDialog alert = new AlertDialog.Builder(GoodsEdit.this)
 						.create();
 				alert.show();
 				alert.setTitle("查看");
-				alert.getWindow().setLayout(width / 2, height / 2);
+				alert.getWindow().setLayout(selectbit.getWidth(), selectbit.getWidth());
 				alert.getWindow().setGravity(Gravity.CENTER);
 				alert.getWindow().setBackgroundDrawable(
 						new BitmapDrawable(selectbit));
-
 			}
 		});
 		/*
@@ -126,10 +120,10 @@ public class GoodsEdit extends Activity implements MarketAcitivity {
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO 自动生成的方法存根
-				delete = (Button) view.findViewById(R.id.mybutton);
+				button_delphoto = (Button) view.findViewById(R.id.mybutton);
 
 				number = position;
-				delete.setOnClickListener(new OnClickListener() {
+				button_delphoto.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
@@ -144,28 +138,29 @@ public class GoodsEdit extends Activity implements MarketAcitivity {
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
-				// TODO 自动生成的方法存根
+				// TODO Auto-generated method stub
 
 			}
+
 		});
 
 	}
 
 	public void addImgAlert() {
-		AlertDialog.Builder bu = new AlertDialog.Builder(this);
-		bu.setTitle("请选择图片");
-		bu.setPositiveButton("图库", new DialogInterface.OnClickListener() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("请选择图片");
+		builder.setPositiveButton("图库", new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO 自动生成的方法存根
-				Intent i = new Intent(Intent.ACTION_PICK);
-				i.setType("image/*");
-				GoodsEdit.this.startActivityForResult(i,
+				Intent intent = new Intent(Intent.ACTION_PICK);
+				intent.setType("image/*");
+				GoodsEdit.this.startActivityForResult(intent,
 						PHOTO_REQUEST_GALLERY);
 			}
 		});
-		bu.setNegativeButton("拍照", new DialogInterface.OnClickListener() {
+		builder.setNegativeButton("拍照", new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -177,19 +172,15 @@ public class GoodsEdit extends Activity implements MarketAcitivity {
 					Uri ui = Uri.fromFile(tempFile);
 					i.putExtra(MediaStore.EXTRA_OUTPUT, ui);
 				}
-				GoodsEdit.this.startActivityForResult(i,
-						PHOTO_REQUEST_CAREMA);
+				GoodsEdit.this.startActivityForResult(i, PHOTO_REQUEST_CAREMA);
 			}
 		});
-		mydialog = bu.create();
+		mydialog = builder.create();
 
 	}
 
 	public Boolean hasSd() {
-		/*
-		 * if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED
-		 * )) { return true; }else{return false;}
-		 */
+
 		if (Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
 			return true;
@@ -199,17 +190,17 @@ public class GoodsEdit extends Activity implements MarketAcitivity {
 	}
 
 	public void cut(Uri ui) {
-		Intent i = new Intent("com.android.camera.action.CROP");
-		i.setDataAndType(ui, "image/*");
-		i.putExtra("crop", "true");
-		i.putExtra("outputX", 250);
-		i.putExtra("outputY", 250);
-		i.putExtra("outputFormat", "JPEG");
-		i.putExtra("noFaceDetection", true);
-		i.putExtra("return-data", true);
+		Intent intent = new Intent("com.android.camera.action.CROP");
+		intent.setDataAndType(ui, "image/*");
+		intent.putExtra("crop", "true");
+		intent.putExtra("outputX", 250);
+		intent.putExtra("outputY", 250);
+		intent.putExtra("outputFormat", "JPEG");
+		intent.putExtra("noFaceDetection", true);
+		intent.putExtra("return-data", true);
 
 		// System.out.println("剪切"+"  "+1);
-		GoodsEdit.this.startActivityForResult(i, PHOTO_CUT);
+		GoodsEdit.this.startActivityForResult(intent, PHOTO_CUT);
 	}
 
 	@Override
@@ -238,17 +229,10 @@ public class GoodsEdit extends Activity implements MarketAcitivity {
 			break;
 		case 3: {
 			if (data != null) {
-				
 				Bitmap bitmap = data.getParcelableExtra("data");
-				// my.setImageBitmap(bitmap);
 				groupbit.add(bitmap);
 				myadapter = new MyAdapter(GoodsEdit.this, groupbit);
 				Mygallery.setAdapter(myadapter);
-				// System.out.println(bitmap+"  "+3);
-				// my.setImageBitmap(groupbit.get(number));
-				// number++;
-				
-
 			}
 			try {
 				tempFile.delete();
@@ -259,47 +243,59 @@ public class GoodsEdit extends Activity implements MarketAcitivity {
 			break;
 
 		}
-		/*
-		 * if(requestCode==1){ System.out.println("回应后："+" 1 "+data);
-		 * if(data!=null) { Uri ui=data.getData(); cut(ui);
-		 * System.out.println(number+"  "+1); }else if(requestCode==2){
-		 * System.out.println("回应后"+" 2 "+hasSd()); if(hasSd()){
-		 * cut(Uri.fromFile(tempFile)); System.out.println(number+"  "+2); }else
-		 * { Toast.makeText(MainActivity.this, "没有SD卡无法存储", 0).show(); } }else
-		 * if(requestCode==3){ System.out.println("回应后："+" 3 "+data);
-		 * if(data!=null){ Bitmap bitmap = data.getParcelableExtra("data");
-		 * groupbit[number]=bitmap; number++; System.out.println(number+"  "+3);
-		 * }try{ tempFile.delete(); }catch(Exception e){ e.printStackTrace(); }
-		 * } }
-		 */
 		super.onActivityResult(requestCode, resultCode, data);
 
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-
-
-		return super.onOptionsItemSelected(item);
-	}
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.mark.market.ui.MarketAcitivity#refresh(int, java.lang.Object[])
 	 */
 	@Override
 	public void refresh(int taskID, Object... objects) {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.view.View.OnClickListener#onClick(android.view.View)
+	 */
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
+		case R.id.myadd: {
+			if (groupbit.size() < 6) {
+				addImgAlert();
+				mydialog.show();
+			} else {
+				Toast.makeText(GoodsEdit.this, "最多只能添加6张图片呦～",
+						Toast.LENGTH_SHORT).show();
+			}
+
+		}
+			break;
+		case R.id.good_edit_sale: {
+			goodinfo.put("Gtitle", holder.edit_title.getText());
+			goodinfo.put("Gdescrib", holder.edit_describ.getText());
+			goodinfo.put("Gprice", holder.edit_price.getText());
+			goodinfo.put("Gpreprice", holder.edit_preprice.getText());
+			goodinfo.put("Gcategory", categorys[holder.edit_category.getSelectedItemPosition()]);
+			
+			Map<String,Object>params=new HashMap<String, Object>();
+			params.put("info", goodinfo);
+			params.put("imgs", groupbit);
+			Task task=new Task(Task.SALE_GOOD, params);
+			MainService.newTask(this, task);
+			
+			
+			
+		}
+			break;
+		}
 	}
 
 }

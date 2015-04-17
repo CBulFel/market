@@ -19,14 +19,6 @@
     <string name="xlistview_header_last_time">上次更新时间：</string>
     <string name="xlistview_footer_hint_normal">查看更多</string>
     <string name="xlistview_footer_hint_ready">松开载入更多</string>
-
-    <string-array name="classout">
-        <item>分类—其他闲置</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-    </string-array>
-
     <string name="title_activity_my">MyActivity</string>
     <string name="title_activity_gooddetail">Gooddetail</string>
     <string name="title_activity_search">SearchActivity</string>

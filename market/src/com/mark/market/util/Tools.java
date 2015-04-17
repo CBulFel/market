@@ -5,6 +5,7 @@
  */
 package com.mark.market.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.graphics.Bitmap;
@@ -59,12 +60,12 @@ public class Tools {
 	/*
 	 * 一个工具方法：作用是把系统时间 转换成当前时间的 前*分钟，前*小时
 	 */
-	public static String dealTime(String time) {
+	public static String dealTime(Date date) {
 		Date now = new Date();
+		
 		long lnow = now.getTime() / 1000;
 
-		long ldate = Date.parse(time) / 1000;
-		Date date = new Date(ldate);
+		long ldate = date.getTime()/1000;
 
 		if ((lnow - ldate) < 60)
 			return (lnow - ldate) + "秒前";
@@ -73,5 +74,13 @@ public class Tools {
 		else
 			return date.getHours() + ":" + date.getMinutes();
 	}
-
+/*
+ * 把指定时间显示为年：月：日 时：分格式
+ * 
+ * */
+	public static String formattime(Date date){
+		SimpleDateFormat sdformat=new SimpleDateFormat("yy:mm:dd hh:mm");
+		return sdformat.format(date);
+		
+	}
 }

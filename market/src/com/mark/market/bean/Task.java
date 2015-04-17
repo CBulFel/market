@@ -26,6 +26,8 @@ public class Task {
 	public static final int GET_DETAIL_BY_GID=6;
 	//搜索任务
 	public static final int GOODS_SEARCH=7;
+	//发布商品
+	public static final int SALE_GOOD=8;
 	//任务ID
 	private int taskID;
 	//任务参数

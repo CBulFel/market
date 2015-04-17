@@ -8,7 +8,10 @@ package com.mark.market.logic;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
+
+import org.apache.http.client.ClientProtocolException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -22,6 +25,7 @@ import android.util.Log;
 
 import com.mark.market.bean.Task;
 import com.mark.market.ui.MarketAcitivity;
+import com.mark.market.util.HttpconnectUtil;
 
 /**
  * @author mazhao Describe
@@ -67,6 +71,13 @@ public class MainService extends Service implements Runnable {
 					activity=(MarketAcitivity)getActivityByName("MainActivity");
 					activity.refresh(Task.LOADMORE, msg.obj);
 					break;
+				case Task.GOODS_SEARCH:
+					activity=(MarketAcitivity)getActivityByName("SearchActivity");
+					activity.refresh(Task.LOADMORE, msg.obj);
+					break;
+				case Task.SALE_GOOD:
+					activity=(MarketAcitivity)getActivityByName("GoodsEdit");
+					activity.refresh(Task.SALE_GOOD, msg.obj);
 				default:
 					break;
 				}
@@ -152,7 +163,7 @@ public class MainService extends Service implements Runnable {
 			 */
 			Log.w(TAG, "login->do");
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -178,14 +189,14 @@ public class MainService extends Service implements Runnable {
 			 */
 		{
 			Log.w(TAG, "get goods->do");
-			/*String url="192.168.1.158/8080/market/index/indexAction2_indexJSON.do";
+			String url="http://192.168.1.158:8080/market/index/indexAction2_indexJSON.do";
 			try {
 				msg.obj=HttpconnectUtil.getResult(url, null);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				Log.e(TAG, e.getMessage());
-			}*/
+			}
 		}
 		
 
@@ -202,6 +213,34 @@ public class MainService extends Service implements Runnable {
 			 */
 			Log.w(TAG, "loadmore->do");
 			break;
+		case Task.GOODS_SEARCH:
+		//搜索商品
+		{
+			try {
+				msg.obj=HttpconnectUtil.getResult("", task.getParams());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				Log.e(TAG, e.getMessage());
+			}
+			
+		}
+			break;
+		case Task.SALE_GOOD:
+			//发布商品
+		{
+			Map<String,Object> params=task.getParams();
+			try {
+				HttpconnectUtil.postfile("", params);
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		break;
 		default:
 			break;
 

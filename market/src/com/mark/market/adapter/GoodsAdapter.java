@@ -3,36 +3,29 @@
  */
 package com.mark.market.adapter;
 
-import java.util.Date;
 import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.sax.StartElementListener;
-import android.support.v4.util.LruCache;
+import android.graphics.Bitmap.Config;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mark.android_util.AsyncImageLoader;
 import com.mark.market.R;
 import com.mark.market.bean.Good;
 import com.mark.market.ui.Gooddetail;
+import com.mark.market.util.Tools;
 
 /**
  * @author mazhao
@@ -54,6 +47,9 @@ public class GoodsAdapter extends BaseAdapter implements OnClickListener{
 		public ImageView item_userimg;
 		public TextView item_username;
 		public TextView item_time;
+		public TextView item_palce;
+		public TextView item_price;//最低价
+		public TextView item_preprice;//最高价
 		public TextView item_content;
 		public ImageView item_content_pic1;
 		public ImageView item_content_pic2;
@@ -114,6 +110,12 @@ public class GoodsAdapter extends BaseAdapter implements OnClickListener{
 					.findViewById(R.id.goods_item_username);
 			holder.item_time = (TextView) convertView
 					.findViewById(R.id.goods_item_time);
+			holder.item_palce=(TextView)convertView.findViewById(R.id.goods_item_place);
+			holder.item_price=(TextView)convertView.findViewById(R.id.goods_item_price);
+			holder.item_preprice=(TextView)convertView.findViewById(R.id.goods_item_preprice);
+			
+			
+			
 			holder.item_content = (TextView) convertView
 					.findViewById(R.id.goods_item_content);
 			holder.item_content_pic1 = (ImageView) convertView
@@ -144,12 +146,32 @@ public class GoodsAdapter extends BaseAdapter implements OnClickListener{
 		 * 组件填充内容
 		 */
 		holder.item_userimg.setImageResource(R.drawable.header_img_default);
-		holder.item_username.setText("小明");
-		holder.item_content_pic1.setImageResource(R.drawable.featured_big_b1);
-		// loadBitmap(good.getGimg1(), holder.item_content_pic1, 0, 0);
-		holder.item_like.setChecked(true);
-		holder.item_like.setText("23");
-		holder.item_comment.setText("45");
+		holder.item_username.setText(good.getUser().getUname());
+		if(good.getGimg1()!=null){
+		Tools.loadBitmap("http://192.168.1.158:8080"+good.getGimg1(), holder.item_content_pic1, 0, 0);
+		}else{
+			holder.item_content_pic1.setVisibility(View.GONE);
+		}
+		if(good.getGimg2()!=null){
+			Tools.loadBitmap("http://192.168.1.158:8080"+good.getGimg2(), holder.item_content_pic2, 0, 0);
+			}else{
+				holder.item_content_pic2.setVisibility(View.GONE);
+			}
+		if(good.getGimg3()!=null){
+			Tools.loadBitmap("http://192.168.1.158:8080"+good.getGimg3(), holder.item_content_pic3, 0, 0);
+			}else{
+				holder.item_content_pic3.setVisibility(View.GONE);
+			}
+		holder.item_time.setText(good.getGtime().toString());
+		holder.item_price.setText(good.getGprice().toString());
+		holder.item_preprice.setText(good.getGprePrice().toString());
+		holder.item_palce.setText(good.getGplace());
+		holder.item_time.setText(Tools.formattime(good.getGtime()));
+		
+		holder.item_like.setChecked(false);
+		holder.item_like.setText(good.getGcollectNum().toString());
+		holder.item_comment.setText(good.getGcommentNum().toString());
+		holder.item_content.setText(good.getGdescription());
 		holder.layout_item.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -160,7 +182,6 @@ public class GoodsAdapter extends BaseAdapter implements OnClickListener{
 				context.startActivity(intent);
 			}
 		});
-		holder.layout_like.setOnClickListener(this);
 		holder.layout_comment.setOnClickListener(this);
 		holder.layout_share.setOnClickListener(this);
 		holder.item_like.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -175,8 +196,8 @@ public class GoodsAdapter extends BaseAdapter implements OnClickListener{
 		return convertView;
 	}
 
-	public void addgoods(Good good) {
-		goods.add(good);
+	public void addgoods(List<Good> goods_more) {
+		goods.addAll(goods_more);
 
 	}
 
@@ -193,9 +214,6 @@ public class GoodsAdapter extends BaseAdapter implements OnClickListener{
 			Intent intent=new Intent(context,Gooddetail.class);
 			intent.putExtra("Gid", good.getGid());
 			context.startActivity(intent);
-			break;
-		case R.id.like:
-			Toast.makeText(context, "真心～请点击红心", Toast.LENGTH_SHORT).show();
 			break;
 		case  R.id.comment:
 			Toast.makeText(context, "评论---->待完成", Toast.LENGTH_SHORT).show();

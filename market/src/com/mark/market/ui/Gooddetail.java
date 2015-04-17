@@ -23,10 +23,15 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.CheckBox;
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,7 +45,7 @@ import com.mark.market.bean.Task;
 import com.mark.market.logic.MainService;
 
 @SuppressLint("InflateParams")
-public class Gooddetail extends Activity implements MarketAcitivity {
+public class Gooddetail extends Activity implements MarketAcitivity, OnClickListener {
 
 	private ListView list_comments;
 
@@ -60,6 +65,9 @@ public class Gooddetail extends Activity implements MarketAcitivity {
 		public TextView detail_place;
 		public TextView detail_price;
 		public TextView detail_preprice;
+		public CheckBox detail_like;
+		public LinearLayout detail_comment;
+		public LinearLayout detail_share;
 
 	}
 
@@ -72,15 +80,6 @@ public class Gooddetail extends Activity implements MarketAcitivity {
 		setContentView(R.layout.activity_gooddetail);
 		// Actionbar设置
 		ActionBar actionbar = getActionBar();
-		/*ActionBar.LayoutParams Lparams = new ActionBar.LayoutParams(
-				ActionBar.LayoutParams.MATCH_PARENT,
-				ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
-		View actionbarLayout = LayoutInflater.from(this).inflate(
-				R.layout.title, null);
-		TextView title=(TextView)actionbarLayout.findViewById(R.id.actionbar_title);
-		title.setText("商品详情");
-		actionbar.setDisplayShowCustomEnabled(true);
-		actionbar.setCustomView(actionbarLayout, Lparams);*/
 		actionbar.setDisplayShowHomeEnabled(false);
 		actionbar.setDisplayHomeAsUpEnabled(true);
 		//actionbar.setHomeAsUpIndicator(R.drawable.actionbar_backbtn);
@@ -105,6 +104,16 @@ public class Gooddetail extends Activity implements MarketAcitivity {
 		holder.detail_price = (TextView) view.findViewById(R.id.detail_price);
 		holder.detail_preprice = (TextView) view
 				.findViewById(R.id.detail_preprice);
+		
+		
+		
+		
+		holder.detail_like=(CheckBox)findViewById(R.id.detail_like);
+		holder.detail_comment=(LinearLayout)findViewById(R.id.comment);
+		holder.detail_share=(LinearLayout)findViewById(R.id.share);
+		
+		
+		
 		list_comments = (ListView) findViewById(R.id.detail_comments);
 		// 获取intent中的Gid
 		Intent intent = getIntent();
@@ -123,7 +132,19 @@ public class Gooddetail extends Activity implements MarketAcitivity {
 	}
 
 	private void init() {
-		listimgs = new ArrayList<View>();
+		holder.detail_comment.setOnClickListener(this);
+		holder.detail_share.setOnClickListener(this);
+	holder.detail_like.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				// TODO Auto-generated method stub
+				if(isChecked) Toast.makeText(Gooddetail.this, "收藏---->待完成", Toast.LENGTH_SHORT).show();
+				else Toast.makeText(Gooddetail.this, "取消收藏---->待完成", Toast.LENGTH_SHORT).show();
+			}
+		});	
+	
+	listimgs = new ArrayList<View>();
 		int[] imageResId = new int[] { R.drawable.scrollimg_img1,
 				R.drawable.scrollimg_img2, R.drawable.scrollimg_img3,
 				R.drawable.scrollimg_img4, R.drawable.scrollimg_img5 };
@@ -139,6 +160,8 @@ public class Gooddetail extends Activity implements MarketAcitivity {
 					alert.getWindow().setGravity(Gravity.CENTER);
 					alert.getWindow().setBackgroundDrawable(
 							((ImageView) v).getDrawable());
+					/*((ImageView) v).setScaleType(ScaleType.CENTER_INSIDE);
+					alert.addContentView((ImageView) v, new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));*/
 				}
 			});
 			imageView.setImageResource(imageResId[i]);
@@ -182,6 +205,24 @@ public class Gooddetail extends Activity implements MarketAcitivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	/* (non-Javadoc)
+	 * @see android.view.View.OnClickListener#onClick(android.view.View)
+	 */
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch(v.getId()){
+
+		case  R.id.comment:
+			Toast.makeText(Gooddetail.this, "评论---->待完成", Toast.LENGTH_SHORT).show();
+			break;
+		case R.id.share:
+			Toast.makeText(Gooddetail.this, "分享---->待完成", Toast.LENGTH_SHORT).show();
+			break;
+			default:break;
+		}
 	}
 
 }

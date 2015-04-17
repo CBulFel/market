@@ -10,15 +10,15 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 
 /**
- * ͼƬ������
  * 
- * @author Administrator
+ * @author mazhao
  * 
  */
 public class MyImgScroll extends ViewPager {
@@ -28,13 +28,13 @@ public class MyImgScroll extends ViewPager {
 	Timer timer;
 	int oldIndex = 0;
 	int curIndex = 0;
+	private static String TAG = "market imgScroll";
 
 	public MyImgScroll(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 
 	/**
-	 * ��ʼ������
 	 * 
 	 * @param mainActivity
 	 *            ��ʾ����������
@@ -59,14 +59,11 @@ public class MyImgScroll extends ViewPager {
 		mActivity = mainActivity;
 		mListViews = imgList;
 		mScrollTime = scrollTime;
-		// ����Բ��
 		setOvalLayout(ovalLayout, ovalLayoutId, ovalLayoutItemId, focusedId,
 				normalId);
 		this.setAdapter(new MyPagerAdapter());// ����������
 		if (scrollTime != 0 && imgList.size() > 1) {
-			// ���û�������ʱ��  ,�����Ĭ�϶���ʱ��ɲ��� ,���似��ʵ��
-		//	 new FixedSpeedScroller(mActivity).setDuration(this, 700);
-	
+
 			startTimer();
 			// ����ʱֹͣ����
 			this.setOnTouchListener(new OnTouchListener() {
@@ -79,7 +76,7 @@ public class MyImgScroll extends ViewPager {
 					return false;
 				}
 			});
-		} 
+		}
 		if (mListViews.size() > 1) {
 			this.setCurrentItem((Integer.MAX_VALUE / 2)
 					- (Integer.MAX_VALUE / 2) % mListViews.size());// ����ѡ��Ϊ�м�/ͼƬΪ�͵�0��һ��
@@ -90,23 +87,25 @@ public class MyImgScroll extends ViewPager {
 	private void setOvalLayout(final LinearLayout ovalLayout, int ovalLayoutId,
 			final int ovalLayoutItemId, final int focusedId, final int normalId) {
 		if (ovalLayout != null) {
-			LayoutInflater inflater=LayoutInflater.from(mActivity);
+			LayoutInflater inflater = LayoutInflater.from(mActivity);
 			for (int i = 0; i < mListViews.size(); i++) {
 				ovalLayout.addView(inflater.inflate(ovalLayoutId, null));
-				
+
 			}
-			//ѡ�е�һ��
+			// ѡ�е�һ��
 			ovalLayout.getChildAt(0).findViewById(ovalLayoutItemId)
-			.setBackgroundResource(focusedId);
+					.setBackgroundResource(focusedId);
 			this.setOnPageChangeListener(new OnPageChangeListener() {
 				public void onPageSelected(int i) {
 					curIndex = i % mListViews.size();
-                    //ȡ��Բ��ѡ��
-					ovalLayout.getChildAt(oldIndex).findViewById(ovalLayoutItemId)
+					// ȡ��Բ��ѡ��
+					ovalLayout.getChildAt(oldIndex)
+							.findViewById(ovalLayoutItemId)
 							.setBackgroundResource(normalId);
-					 //Բ��ѡ��
-					ovalLayout.getChildAt(curIndex).findViewById(ovalLayoutItemId)
-					.setBackgroundResource(focusedId);
+					// Բ��ѡ��
+					ovalLayout.getChildAt(curIndex)
+							.findViewById(ovalLayoutItemId)
+							.setBackgroundResource(focusedId);
 					oldIndex = curIndex;
 				}
 
@@ -118,13 +117,14 @@ public class MyImgScroll extends ViewPager {
 			});
 		}
 	}
+
 	/**
-	 * ȡ�õ���ѡ���±�
 	 * @return
 	 */
-    public int getCurIndex() {
+	public int getCurIndex() {
 		return curIndex;
 	}
+
 	/**
 	 * ֹͣ����
 	 */
@@ -169,11 +169,15 @@ public class MyImgScroll extends ViewPager {
 		}
 
 		public Object instantiateItem(View v, int i) {
-			if (((ViewPager) v).getChildCount() == mListViews.size()) {
+		/*	if (((ViewPager) v).getChildCount() == mListViews.size()) {
 				((ViewPager) v)
 						.removeView(mListViews.get(i % mListViews.size()));
-			}
-			((ViewPager) v).addView(mListViews.get(i % mListViews.size()), 0);
+			}*/
+			((ViewPager) v)
+			.removeView(mListViews.get(i % mListViews.size()));
+				((ViewPager) v).addView(mListViews.get(i % mListViews.size()),
+						0);
+			
 			return mListViews.get(i % mListViews.size());
 		}
 

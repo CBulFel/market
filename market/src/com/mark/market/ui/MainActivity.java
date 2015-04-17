@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +26,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -37,6 +39,8 @@ import com.mark.market.bean.Task;
 public class MainActivity extends FragmentActivity implements OnClickListener,
 		MarketAcitivity {
 
+	private static long exitTime = 0;
+	private static long waitTime = 2000;
 	private static final String TAG = "market";
 	private Fragment_home fragment_home;
 	private Fragment_my fragment_my;
@@ -77,14 +81,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 		// 默认进入home页面
 		clickHomeBtn();
 
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		return super.onOptionsItemSelected(item);
 	}
 
 	/*
@@ -129,6 +125,25 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 			break;
 		}
 
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+
+		if (event.getAction() == KeyEvent.ACTION_DOWN
+				&& keyCode == KeyEvent.KEYCODE_BACK) {
+			long currentTime = System.currentTimeMillis();
+			if (currentTime - exitTime >= waitTime) {
+				Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+				exitTime = currentTime;
+			} else {
+				finish();
+				android.os.Process.killProcess(android.os.Process.myPid());
+			}
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	/**
@@ -198,10 +213,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 	@Override
 	public void refresh(int taskID, Object... objects) {
 		// TODO Auto-generated method stub
-		Log.w(TAG, "refresh UI!->MainActivity");
-		JSONObject json = JSON.parseObject(objects.toString());
+		String result = (String) objects[0];
+		Log.w(TAG, "refresh UI!->MainActivity" + result);
+
+		JSONObject json = JSON.parseObject(result);
 		Log.w(TAG, json.toJSONString());
 		JSONArray jsonarray = json.getJSONArray("goods");
+		Log.w(TAG, jsonarray.toJSONString());
 		List<Good> goodsjson = JSON.parseArray(jsonarray.toJSONString(),
 				Good.class);
 		Log.w(TAG, "goods from JSON num->" + goodsjson.size());

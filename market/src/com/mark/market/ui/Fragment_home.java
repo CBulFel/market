@@ -24,6 +24,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.mark.android_ui.MyImgScroll;
 import com.mark.android_ui.MyListView;
+import com.mark.android_ui.MyprogressDialog;
 import com.mark.android_ui.MyListView.MyListViewListener;
 import com.mark.market.R;
 import com.mark.market.adapter.GoodsAdapter;
@@ -38,7 +39,7 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 	public static MyListView marketListView;
 	private GoodsAdapter mAdapter;
 	private List<Good> goods = new ArrayList<Good>();
-
+	private MyprogressDialog progressdialog=null;
 	// ImgScroll控件
 	MyImgScroll myPager; // 图片滚动控件
 	LinearLayout ovalLayout; // 下方的小圆点
@@ -54,12 +55,14 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 		View mview = inflater.inflate(R.layout.scrollimg, null);
 		myPager = (MyImgScroll) mview.findViewById(R.id.martket_home_imgscroll);
 		ovalLayout = (LinearLayout) mview.findViewById(R.id.vb);
+		progressdialog=new MyprogressDialog(getActivity());
+		progressdialog.show();
 		// 初始化组件
 		init();
-		// 设置imgScroll开始滚动
+/*		// 设置imgScroll开始滚动
 		myPager.start(getActivity(), listImgs, 4000, ovalLayout,
 				R.layout.ad_bottom_item, R.id.ad_item_v,
-				R.drawable.dot_focused, R.drawable.dot_normal);
+				R.drawable.dot_focused, R.drawable.dot_normal);*/
 		marketListView.addHeaderView(mview);
 		return view;
 
@@ -74,14 +77,18 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 
 	private void init() {
 
+		/*Map<String, Object> params = new HashMap<String, Object>();
+		params.put("index", "20");
+		Task task = new Task(Task.GET_GOODS, params);
+		MainService.newTask(getActivity(), task);*/
 		/*
 		 * imgScroll初始化
 		 */
 
 		listImgs = new ArrayList<View>();
-		int[] imageResId = new int[] { R.drawable.scrollimg_img1,
-				R.drawable.scrollimg_img2, R.drawable.scrollimg_img3,
-				R.drawable.scrollimg_img4, R.drawable.scrollimg_img5 };
+		int[] imageResId = new int[] { R.drawable.banner1,
+				R.drawable.banner2, R.drawable.banner3,
+				R.drawable.banner4 };
 		for (int i = 0; i < imageResId.length; i++) {
 			ImageView imageView = new ImageView(getActivity());
 			imageView.setOnClickListener(new OnClickListener() {
@@ -100,18 +107,19 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 		/*
 		 * Listview初始化
 		 */
-		for (int i = 0; i <= 12; i++)
+		/*for (int i = 0; i <= 12; i++)
 			goods.add(new Good());
 		mAdapter = new GoodsAdapter(getActivity(), goods);
 		marketListView.setPullLoadEnable(true);
 		marketListView.setMyListViewListener(this);
-		marketListView.setAdapter(mAdapter);
+		marketListView.setAdapter(mAdapter);*/
 		
 	}
 
 	@Override
 	public void onRefresh() {
 		// 下拉刷新操作
+		//progressdialog.show();
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("index", "20");
 		Task task = new Task(Task.GET_GOODS, params);
@@ -122,7 +130,10 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 
 	@Override
 	public void onLoadMore() {
+		
 		// 加载更多操作
+		//progressdialog.show();
+		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("index", "20");
 		Task task = new Task(Task.LOADMORE, params);
@@ -131,7 +142,15 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 	}
 
 	public void refreshcomplete(List<Good> goods_new) {
+		
 		// 刷新完成后的操作
+		//开始图片滚动
+		progressdialog.cancel();
+		myPager.start(getActivity(), listImgs, 4000, ovalLayout,
+				R.layout.ad_bottom_item, R.id.ad_item_v,
+				R.drawable.dot_focused, R.drawable.dot_normal);
+		
+
 		goods=goods_new;
 		marketListView.setAdapter(new GoodsAdapter(getActivity(), goods));
 		marketListView.stopRefresh();
@@ -142,8 +161,9 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 
 	public void loadmorecomplete(List<Good> goods_more) {
 		// 加载更多完成后的操作
-		goods.addAll(goods_more);
-		marketListView.setAdapter(new GoodsAdapter(getActivity(), goods));
+		progressdialog.cancel();
+		mAdapter.addgoods(goods_more);
+		marketListView.setAdapter(mAdapter);
 		marketListView.stopRefresh();
 		marketListView.stopLoadMore();
 		Log.w(TAG, "loadmore success!");

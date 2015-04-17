@@ -17,7 +17,7 @@ public class Good {
 	private String gname;
 	private String gcategory;
 	private String gdegree;//新旧程度
-	//价格区间
+	//价格区间gprice最低价，gprePrice最高价
 	private Double gprice;
 	private Double gprePrice;
 	

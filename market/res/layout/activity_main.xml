@@ -51,8 +51,6 @@
                     android:textSize="12sp" />
             </FrameLayout>
 
-           
-
             <FrameLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -67,14 +65,13 @@
                 android:layout_weight="1"
                 android:background="#ffffff" >
 
-               <ImageView
+                <ImageView
                     android:id="@+id/image_my"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|center"
                     android:layout_marginTop="1.0dip"
-                    android:src="@drawable/tab_my"
-                     />
+                    android:src="@drawable/tab_my" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -85,12 +82,8 @@
                     android:textColor="#000000"
                     android:textSize="12sp" />
             </FrameLayout>
-            
         </LinearLayout>
     </FrameLayout>
-
-
-
 
     <Button
         android:id="@+id/tab_plus"
@@ -98,17 +91,27 @@
         android:layout_height="match_parent"
         android:layout_alignTop="@+id/frameLayout1"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/tab_sale"
-         />
+        android:background="@drawable/tab_sale" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@+id/frameLayout1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="18dp"
+        android:gravity="center_vertical|clip_horizontal"
+        android:text=" + "
+        android:textColor="#ffffff"
+        android:textSize="40sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/frameLayout1"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="2dp"
         android:text="我想卖"
         android:textColor="#ffffff"
-        android:textSize="16sp" />
+        android:textSize="12sp" />
 
 </RelativeLayout>

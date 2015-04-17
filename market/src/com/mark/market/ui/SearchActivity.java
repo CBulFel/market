@@ -1,6 +1,10 @@
 package com.mark.market.ui;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -20,20 +24,29 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.mark.market.R;
+import com.mark.market.adapter.GoodsAdapter;
+import com.mark.market.bean.Good;
+import com.mark.market.bean.Task;
+import com.mark.market.logic.MainService;
 import com.mark.market.util.SearchSuggestionsProvider;
 
 public class SearchActivity extends Activity implements MarketAcitivity {
 
-	private TextView text;
+	private static String TAG="market searchactivity";
+	private ListView result;
 	private SearchView searchView;
 	private String queryString;
-
+	private GoodsAdapter madapter;
+	private List<Good> goods = new ArrayList<Good>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,7 +57,7 @@ public class SearchActivity extends Activity implements MarketAcitivity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setTitle("搜索");
-		text = (TextView) findViewById(R.id.text);
+		result = (ListView) findViewById(R.id.search_result);
 		Intent intent = getIntent();
 		// 如果是通过ACTION_SEARCH来调用，即如果通过搜索调用
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -186,11 +199,16 @@ public class SearchActivity extends Activity implements MarketAcitivity {
 		if (queryString == null)
 			return;
 		// 保存搜索记录
-		text.setText(queryString);
+		
 		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
 				SearchSuggestionsProvider.AUTHORITY,
 				SearchSuggestionsProvider.MODE);
 		suggestions.saveRecentQuery(queryString, null);
+		Map<String,Object> params=new HashMap<String, Object>();
+		params.put("searchtext", queryString);
+		Task task=new Task(Task.GOODS_SEARCH, params);
+		MainService.newTask(this, task);
+			
 	}
 
 	/*
@@ -201,6 +219,16 @@ public class SearchActivity extends Activity implements MarketAcitivity {
 	@Override
 	public void refresh(int taskID, Object... objects) {
 		// TODO Auto-generated method stub
-
+		String res=(String)objects[0];
+		JSONObject json = JSON.parseObject(res);
+		Log.w(TAG, json.toJSONString());
+		JSONArray jsonarray = json.getJSONArray("goods");
+		Log.w(TAG, jsonarray.toJSONString());
+		List<Good> goodsjson = JSON.parseArray(jsonarray.toJSONString(),
+				Good.class);
+		goods.addAll(goodsjson);
+		madapter=new GoodsAdapter(this, goods);
+		result.setAdapter(madapter);
+		
 	}
 }

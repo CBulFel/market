@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="category">
+        <item>闲置数码</item>
+        <item>书籍杂志</item>
+        <item>家具日用</item>
+        <item>服鞋配饰</item>
+        <item>技术商铺</item>
+    </string-array>
+
+</resources>

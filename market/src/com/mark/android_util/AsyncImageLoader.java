@@ -4,18 +4,18 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.support.v4.util.LruCache;
+import android.util.Log;
 import android.widget.ImageView;
 
 /**
  * @author mazhao
  * @version 1.0
- * @describe Òì²½¼ÓÔØÍ¼Æ¬Àà(°üº¬Í¼Æ¬µÄÄÚ´æ»º´æÊµÏÖ)
+ * @describe å¼‚æ­¥åŠ è½½å›¾ç‰‡ç±»(åŒ…å«å›¾ç‰‡çš„å†…å­˜ç¼“å­˜å®ç°)
  */
 public class AsyncImageLoader extends AsyncTask<String, Void, Bitmap> {
 
@@ -25,9 +25,9 @@ public class AsyncImageLoader extends AsyncTask<String, Void, Bitmap> {
     private int height;
     
     /*
-     * ¹¹Ôì·½·¨£¬ĞèÒª°ÑImageView¿Ø¼şºÍLruCache ¶ÔÏó´«½øÀ´ 
-     * @param image ¼ÓÔØÍ¼Æ¬µ½´Ë {@code}ImageView 
-     * @param lruCache »º´æÍ¼Æ¬µÄ¶ÔÏó 
+     * æ„é€ æ–¹æ³•ï¼Œéœ€è¦æŠŠImageViewæ§ä»¶å’ŒLruCache å¯¹è±¡ä¼ è¿›æ¥ 
+     * @param image åŠ è½½å›¾ç‰‡åˆ°æ­¤ {@code}ImageView 
+     * @param lruCache ç¼“å­˜å›¾ç‰‡çš„å¯¹è±¡ 
      */ 
     public AsyncImageLoader(ImageView image, LruCache<String, Bitmap> lruCache,int width,int height) {  
         super();  
@@ -39,6 +39,7 @@ public class AsyncImageLoader extends AsyncTask<String, Void, Bitmap> {
   
     protected Bitmap doInBackground(String... params) {  
         Bitmap bitmap = null;  
+       
         bitmap = getBitmap(params[0]); 
         if(width!=0&height!=0)
         	bitmap= scaleImg(bitmap, width, height);
@@ -51,19 +52,21 @@ public class AsyncImageLoader extends AsyncTask<String, Void, Bitmap> {
         image.setImageBitmap(bitmap);  
     }  
     
-    //µ÷ÓÃLruCacheµÄput ·½·¨½«Í¼Æ¬¼ÓÈëÄÚ´æ»º´æÖĞ£¬Òª¸øÕâ¸öÍ¼Æ¬Ò»¸ökey ·½±ãÏÂ´Î´Ó»º´æÖĞÈ¡³öÀ´  
+    //è°ƒç”¨LruCacheçš„put æ–¹æ³•å°†å›¾ç‰‡åŠ å…¥å†…å­˜ç¼“å­˜ä¸­ï¼Œè¦ç»™è¿™ä¸ªå›¾ç‰‡ä¸€ä¸ªkey æ–¹ä¾¿ä¸‹æ¬¡ä»ç¼“å­˜ä¸­å–å‡ºæ¥  
     private void addBitmapToMemoryCache(String key, Bitmap bitmap) {  
+    	
         if (getBitmapFromMemoryCache(key) == null) {  
+        	 Log.w("market lrucache", key);
             lruCache.put(key, bitmap);  
         }  
     }  
     
-    //µ÷ÓÃLrucacheµÄget ·½·¨´ÓÄÚ´æ»º´æÖĞÈ¥Í¼Æ¬  
+    //è°ƒç”¨Lrucacheçš„get æ–¹æ³•ä»å†…å­˜ç¼“å­˜ä¸­å»å›¾ç‰‡  
     public Bitmap getBitmapFromMemoryCache(String key) {  
         return lruCache.get(key);  
     }  
     
-  //ÍøÂçÏÂÔØbiturl µØÖ·µÄÍ¼Æ¬×ÊÔ´£¬·µ»ØBitmap
+  //ç½‘ç»œä¸‹è½½biturl åœ°å€çš„å›¾ç‰‡èµ„æºï¼Œè¿”å›Bitmap
   	public static Bitmap getBitmap(String biturl)
   	{
   		Bitmap bitmap=null;
@@ -79,22 +82,22 @@ public class AsyncImageLoader extends AsyncTask<String, Void, Bitmap> {
   		return bitmap;
   	}
   	
-  	//±ä»»Ô­BitmapÎª newWidthºÍnewHeight´óĞ¡µÄBitmap·µ»Ø 
+  	//å˜æ¢åŸBitmapä¸º newWidthå’ŒnewHeightå¤§å°çš„Bitmapè¿”å› 
   	public static Bitmap scaleImg(Bitmap bm, int newWidth, int newHeight) 
   	{
-  	    // »ñµÃÍ¼Æ¬µÄ¿í¸ß
+  	    // è·å¾—å›¾ç‰‡çš„å®½é«˜
   	    int width = bm.getWidth();
   	    int height = bm.getHeight();
-  	    // ÉèÖÃÏëÒªµÄ´óĞ¡
+  	    // è®¾ç½®æƒ³è¦çš„å¤§å°
   	    int newWidth1 = newWidth;
   	    int newHeight1 = newHeight;
-  	    // ¼ÆËãËõ·Å±ÈÀı
+  	    // è®¡ç®—ç¼©æ”¾æ¯”ä¾‹
   	    float scaleWidth = ((float) newWidth1) / width;
   	    float scaleHeight = ((float) newHeight1) / height;
-  	    // È¡µÃÏëÒªËõ·ÅµÄmatrix²ÎÊı
+  	    // å–å¾—æƒ³è¦ç¼©æ”¾çš„matrixå‚æ•°
   	    Matrix matrix = new Matrix();
   	    matrix.postScale(scaleWidth, scaleHeight);
-  	    // µÃµ½ĞÂµÄÍ¼Æ¬
+  	    // å¾—åˆ°æ–°çš„å›¾ç‰‡
   	    Bitmap newbm = Bitmap.createBitmap(bm, 0, 0, width, height, matrix,true);
   	    return newbm;
   	 }

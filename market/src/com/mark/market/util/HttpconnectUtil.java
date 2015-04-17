@@ -59,9 +59,8 @@ public class HttpconnectUtil {
 		super();
 	}
 
-	@SuppressWarnings("deprecation")
 	public static String getResult(String url, Map<String, Object> param)
-			throws IOException {
+			throws IOException  {
 		String result = null;
 		post = new HttpPost(url);
 		List<NameValuePair> pairList = new ArrayList<NameValuePair>();
@@ -81,7 +80,7 @@ public class HttpconnectUtil {
 		response = client.execute(post);
 		if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 			result = EntityUtils.toString(response.getEntity());
-			result = Base64.decodeBase64(result.getBytes()).toString();
+			//result = Base64.decodeBase64(result.getBytes()).toString();
 			System.out.println("HttpconnectUtil get " + result);
 
 		} else {
@@ -89,7 +88,7 @@ public class HttpconnectUtil {
 		}
 		return result;
 	}
-
+//利用流上传文件
 	public static boolean upload(String url1, File file) throws IOException {
 		URL url = new URL(url1);
 		HttpURLConnection connect = (HttpURLConnection) url.openConnection();
@@ -111,10 +110,25 @@ public class HttpconnectUtil {
 	/*
 	 * @author mazhao
 	 * 
-	 * @describe 上传文件方法
+	 * @describe 利用httppost上传文件方法
 	 */
-	public static String postfile(String url, ArrayList<Bitmap> imgs)
+	public static String postfile(String url, Map<String,Object>params)
 			throws ClientProtocolException, IOException {
+		ArrayList<Bitmap> imgs=(ArrayList<Bitmap>) params.get("imgs");
+		Map<String,Object> param=(Map<String, Object>) params.get("info");
+		List<NameValuePair> pairList = new ArrayList<NameValuePair>();
+		if (param != null) {
+			Set set = param.keySet();
+			Iterator iterator = set.iterator();
+			while (iterator.hasNext()) {
+				Object key = iterator.next();
+				Object value = param.get(key);
+				pairList.add(new BasicNameValuePair(key.toString(), value
+						.toString()));
+			}
+
+			post.setEntity(new UrlEncodedFormEntity(pairList, "UTF-8"));
+		}
 		FileBody body = null;
 		String result = null;
 		post = new HttpPost(url);
@@ -123,12 +137,7 @@ public class HttpconnectUtil {
 			File file = new File(Environment.getExternalStorageDirectory(),
 					"temp.jpg");
 			OutputStream os = null;
-			try {
-				os = new BufferedOutputStream(new FileOutputStream(file));
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			os = new BufferedOutputStream(new FileOutputStream(file));
 			bitmap.compress(CompressFormat.JPEG, 100, os);
 			if (file != null) {
 				body = new FileBody(file);
