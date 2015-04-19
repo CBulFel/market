@@ -22,5 +22,7 @@
     <string name="title_activity_my">MyActivity</string>
     <string name="title_activity_gooddetail">Gooddetail</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="share_message_header">[淘二货] 我分享了一个宝贝:</string>
+    <string name="share_message_end">--分享自:矿大人的二手交易平台 http://online.cumt.edu.cn/2</string>
 
 </resources>

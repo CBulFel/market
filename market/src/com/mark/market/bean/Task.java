@@ -28,6 +28,7 @@ public class Task {
 	public static final int GOODS_SEARCH=7;
 	//发布商品
 	public static final int SALE_GOOD=8;
+	public static final int COMMENT=9;
 	//任务ID
 	private int taskID;
 	//任务参数

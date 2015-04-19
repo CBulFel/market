@@ -11,6 +11,16 @@
         android:layout_above="@+id/frameLayout1"
         android:layout_alignParentTop="true"
         android:background="#ffffff" >
+        <TextView 
+            android:id="@+id/loadfailed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="加载失败，请点击重试"
+            android:textColor="#3d59ab"
+            android:visibility="gone"
+            />
     </FrameLayout>
 
     <FrameLayout

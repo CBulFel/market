@@ -8,12 +8,15 @@ package com.mark.market.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.mark.android_util.AsyncImageLoader;
 import com.mark.market.R;
+import com.mark.market.bean.User;
 
 /**
  * @author mazhao
@@ -46,13 +49,22 @@ public class Tools {
 		// 异步图片加载类
 		AsyncImageLoader asyncLoader = new AsyncImageLoader(image, mLruCache,
 				width, height);
+		
 		// 首先从内存缓存中获取图片
-		Bitmap bitmap = asyncLoader.getBitmapFromMemoryCache(urlStr);
+		Bitmap bitmap=null;
+		try {
+			bitmap = asyncLoader.getBitmapFromMemoryCache(urlStr);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			Log.e("tools",e.getMessage());
+		}
+		
 		// 如果缓存中存在这张图片则直接设置给ImageView
 		if (bitmap != null) {
 			image.setImageBitmap(bitmap);
 		} else {
 			image.setImageResource(R.drawable.user_head);// 否则先设置成默认的图片
+			
 			asyncLoader.execute(urlStr);// 然后执行异步任务AsycnTask去网上加载图片
 		}
 	}
@@ -79,8 +91,23 @@ public class Tools {
  * 
  * */
 	public static String formattime(Date date){
-		SimpleDateFormat sdformat=new SimpleDateFormat("yy:mm:dd hh:mm");
+		SimpleDateFormat sdformat=new SimpleDateFormat("yyyy-mm-dd hh:mm");
 		return sdformat.format(date);
 		
+	}
+	
+	
+	
+//判断指定商品是否被当前用户收藏
+	public static boolean iscollected(Context context,String gid){
+		User user=null;
+		if((user=LoginSessionUtil.getLoginUser(context))==null||user.getUgids()==null){
+			return false;
+		}else{
+			for(String id:user.getUgids().split(",")){
+				if(gid.equals(id)) return true;
+			}
+		}
+		return false;
 	}
 }

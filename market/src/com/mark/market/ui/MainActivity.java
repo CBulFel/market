@@ -20,12 +20,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnActionExpandListener;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -34,6 +36,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.mark.market.R;
 import com.mark.market.bean.Good;
 import com.mark.market.bean.Task;
+import com.mark.market.logic.MainService;
 
 @SuppressLint({ "NewApi", "InflateParams" })
 public class MainActivity extends FragmentActivity implements OnClickListener,
@@ -42,6 +45,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 	private static long exitTime = 0;
 	private static long waitTime = 2000;
 	private static final String TAG = "market";
+	private boolean success=true;
 	private Fragment_home fragment_home;
 	private Fragment_my fragment_my;
 	// 定义tab布局
@@ -51,6 +55,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 	// 定义 中间发布商品按钮
 	private Button tab_plus;
 	private SearchView searchView;
+	private TextView loadfailed;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -74,7 +79,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 				R.layout.title, null);
 		actionbar.setDisplayShowCustomEnabled(true);
 		actionbar.setCustomView(actionbarLayout, Lparams);
-
+		// 启动service
+		Intent intent = new Intent();
+		intent.setClass(this, MainService.class);
+		startService(intent);
 		initView();
 		initData();
 
@@ -94,6 +102,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 		image_home = (ImageView) findViewById(R.id.image_home);
 		image_my = (ImageView) findViewById(R.id.image_my);
 		tab_plus = (Button) findViewById(R.id.tab_plus);
+		loadfailed=(TextView)findViewById(R.id.loadfailed);
 
 	}
 
@@ -125,6 +134,18 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 			break;
 		}
 
+	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		// TODO Auto-generated method stub
+		Log.w(TAG, "mainactivity onTouchEvent");
+		if(event.getAction()==MotionEvent.ACTION_DOWN&&!success){
+			Toast.makeText(getApplicationContext(), "reload", Toast.LENGTH_SHORT).show();
+			loadfailed.setVisibility(View.GONE);
+			fragment_home.onRefresh();
+		}
+		return super.onTouchEvent(event);
 	}
 
 	@Override
@@ -213,6 +234,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 	@Override
 	public void refresh(int taskID, Object... objects) {
 		// TODO Auto-generated method stub
+		
+		if (objects[0] == null){
+			Toast.makeText(this, "未得到返回数据", Toast.LENGTH_SHORT).show();
+			success=false;
+			loadfailed.setVisibility(View.VISIBLE);
+			fragment_home.loadfailed();
+			return;}
 		String result = (String) objects[0];
 		Log.w(TAG, "refresh UI!->MainActivity" + result);
 

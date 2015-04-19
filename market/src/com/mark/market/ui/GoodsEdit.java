@@ -27,6 +27,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Gallery;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -37,33 +38,33 @@ import com.mark.market.logic.MainService;
 
 public class GoodsEdit extends Activity implements MarketAcitivity,
 		OnClickListener {
-	private static String TAG="goodedit";
+	private static String TAG = "goodedit";
 	private static int PHOTO_REQUEST_GALLERY = 1;
 	private static int PHOTO_REQUEST_CAREMA = 2;
 	private static int PHOTO_CUT = 3;
 	private static final String PHOTO_FILE_NAME = "temp_photo.jpg";
-	private static final String httpurl = "http://192.168.1.158:8080/market/post/postAction2_postJSON.do";
 	private Gallery Mygallery;
 	private ArrayList<Bitmap> groupbit;
 	private String[] categorys;
+	private String[] places;
 	private Bitmap selectbit;
 	private Button button_addphoto, button_delphoto, sale;
 	private MyAdapter myadapter;
 	private AlertDialog mydialog;
 	private int number;
-	private Map<String,Object> goodinfo;
+	private Map<String, Object> good_info;
 	private File tempFile;
 	private viewholder holder;
-	static class viewholder{
+
+	static class viewholder {
 		public EditText edit_title;
 		public EditText edit_describ;
 		public EditText edit_price;
 		public EditText edit_preprice;
 		public Spinner edit_category;
+		public Spinner edit_palce;
 	}
-	
-	
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -74,21 +75,23 @@ public class GoodsEdit extends Activity implements MarketAcitivity,
 		// actionbar.setHomeAsUpIndicator(R.drawable.actionbar_backbtn);
 		actionbar.setHomeButtonEnabled(true);
 		actionbar.setTitle("编辑宝贝");
-		holder.edit_title=(EditText)findViewById(R.id.title);
-		holder.edit_describ=(EditText)findViewById(R.id.edit_describ);
-		holder.edit_price=(EditText)findViewById(R.id.edit_price);
-		holder.edit_preprice=(EditText)findViewById(R.id.edit_preprice);
-		holder.edit_category=(Spinner)findViewById(R.id.edit_category);
-		
+		holder = new viewholder();
+		holder.edit_title = (EditText) findViewById(R.id.edit_title);
+		holder.edit_describ = (EditText) findViewById(R.id.edit_describ);
+		holder.edit_price = (EditText) findViewById(R.id.edit_price);
+		holder.edit_preprice = (EditText) findViewById(R.id.edit_preprice);
+		holder.edit_category = (Spinner) findViewById(R.id.edit_category);
+		holder.edit_palce = (Spinner) findViewById(R.id.edit_place);
 		button_addphoto = (Button) findViewById(R.id.myadd);
 		Mygallery = (Gallery) findViewById(R.id.mygallery);
 		sale = (Button) findViewById(R.id.good_edit_sale);
 		groupbit = new ArrayList<Bitmap>();
 		myadapter = new MyAdapter(this, groupbit);
-		goodinfo=new HashMap<String, Object>();
+		good_info = new HashMap<String, Object>();
 		Mygallery.setAdapter(myadapter);
-		Resources res=getResources();
-		categorys=res.getStringArray(R.array.category);
+		Resources res = getResources();
+		categorys = res.getStringArray(R.array.category);
+		places = res.getStringArray(R.array.places);
 		Log.w(TAG, holder.edit_category.getSelectedItem().toString());
 		// 添加图片
 		button_addphoto.setOnClickListener(this);
@@ -105,7 +108,8 @@ public class GoodsEdit extends Activity implements MarketAcitivity,
 						.create();
 				alert.show();
 				alert.setTitle("查看");
-				alert.getWindow().setLayout(selectbit.getWidth(), selectbit.getWidth());
+				alert.getWindow().setLayout(selectbit.getWidth(),
+						selectbit.getWidth());
 				alert.getWindow().setGravity(Gravity.CENTER);
 				alert.getWindow().setBackgroundDrawable(
 						new BitmapDrawable(selectbit));
@@ -235,7 +239,7 @@ public class GoodsEdit extends Activity implements MarketAcitivity,
 				Mygallery.setAdapter(myadapter);
 			}
 			try {
-				tempFile.delete();
+				// tempFile.delete();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -279,20 +283,26 @@ public class GoodsEdit extends Activity implements MarketAcitivity,
 		}
 			break;
 		case R.id.good_edit_sale: {
-			goodinfo.put("Gtitle", holder.edit_title.getText());
-			goodinfo.put("Gdescrib", holder.edit_describ.getText());
-			goodinfo.put("Gprice", holder.edit_price.getText());
-			goodinfo.put("Gpreprice", holder.edit_preprice.getText());
-			goodinfo.put("Gcategory", categorys[holder.edit_category.getSelectedItemPosition()]);
-			
-			Map<String,Object>params=new HashMap<String, Object>();
-			params.put("info", goodinfo);
+			if (holder.edit_title.getText() != null)
+				good_info.put("gname", holder.edit_title.getText());
+			if (holder.edit_describ.getText() != null)
+				good_info.put("gdescription", holder.edit_describ.getText());
+			if (holder.edit_price.getText() != null)
+				good_info.put("gprice", holder.edit_price.getText());
+			if (holder.edit_preprice.getText() != null)
+				good_info.put("gprePrice", holder.edit_preprice.getText());
+			good_info.put("gcategory",
+					categorys[holder.edit_category.getSelectedItemPosition()]);
+			good_info.put("gpalce",
+					places[holder.edit_category.getSelectedItemPosition()]);
+
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("info", params);
 			params.put("imgs", groupbit);
-			Task task=new Task(Task.SALE_GOOD, params);
+			Task task = new Task(Task.SALE_GOOD, params);
 			MainService.newTask(this, task);
-			
-			
-			
+			Log.w(TAG, "sale clicked!");
+
 		}
 			break;
 		}

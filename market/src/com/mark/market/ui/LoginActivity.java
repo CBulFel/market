@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -27,7 +28,7 @@ public class LoginActivity extends Activity implements MarketAcitivity,
 	private static final String LOGIN_FAIL = "fail";
 	private static final String TAG = "market";
 	private Login login;
-	private MyprogressDialog progressdialog=null;
+	private MyprogressDialog progressdialog = null;
 
 	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +88,7 @@ public class LoginActivity extends Activity implements MarketAcitivity,
 		// 新开任务：登录操作
 
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("username", login.getUname());
+		params.put("account", login.getUname());
 		params.put("pwd", login.getUpwd());
 		Task task = new Task(Task.MARKET_LOGIN, params);
 		MainService.newTask(this, task);
@@ -103,22 +104,28 @@ public class LoginActivity extends Activity implements MarketAcitivity,
 	public void refresh(int taskID, Object... objects) {
 		// TODO Auto-generated method stub
 		Log.w(TAG, "loginactivity->refresh!");
-		/*
-		 * if (objects != null) { String result = objects.toString(); JSONObject
-		 * json = JSON.parseObject(result); if
-		 * (json.get("msg").toString().equals(LOGIN_SUCCESS)) { Intent intent =
-		 * new Intent(LoginActivity.this, MainActivity.class);
-		 * startActivity(intent); finish(); User user = new User((String)
-		 * json.get("uid"), (String) json.get("uname"), (String)
-		 * json.get("upwd"), (String) json.get("uemail"));
-		 * LoginSessionUtil.SaveLoginUser(this, user); } }
-		 */
-
 		progressdialog.cancel();
+		if (objects != null) {
+			String result = (String) objects[0];
+			JSONObject json = JSON.parseObject(result);
+			if (json.get("msg").toString().equals(LOGIN_SUCCESS)) {
+				finish();
+				User user = new User((String) json.get("uid"),
+						(String) json.get("uname"), (String) json.get("upwd"),
+						(String) json.get("uemail"));
+				LoginSessionUtil.SaveLoginUser(this, user);
+			} else if (json.get("msg").toString().equals(LOGIN_FAIL)) {
+
+				Toast.makeText(this, "用户名或密码错误！", Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(this, "服务器返回数据异常，请重试...", Toast.LENGTH_SHORT)
+						.show();
+			}
+		}
+
 		Log.w(TAG, "object is null,in loginactivity refresh()!");
-		Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-		startActivity(intent);
-		finish();
+		Toast.makeText(this, "网络连接错误，请检查网络", Toast.LENGTH_SHORT).show();
+
 	}
 
 }

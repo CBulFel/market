@@ -6,12 +6,11 @@
 package com.mark.market.logic;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
-
-import org.apache.http.client.ClientProtocolException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -31,7 +30,14 @@ import com.mark.market.util.HttpconnectUtil;
  * @author mazhao Describe
  */
 public class MainService extends Service implements Runnable {
-	private static final String TAG="market";
+	public static final String MARKETHOST = "http://192.168.1.115:8080";
+	public static final String goodUrlhead = "http://online.cumt.edu.cn:8080/2/toItemDetails/toItemDetailsAction_toItemDetails.do?pre=g&id=";
+	private static String url_getByGid = "";
+	private static String url_sale = "http://192.168.1.115:8080/market/post/postAction2_postJSON.do";
+	private static String url_update = "http://192.168.1.115:8080/market/index/indexAction2_indexJSON.do";
+	private static String url_login = "http://192.168.1.115:8080/market/login/loginAction2_loginJSON.do";
+	private static String url_comment = "http://192.168.1.115:8080/market/comment/commentAction2_commentJSON.do";
+	private static final String TAG = "market";
 	private static Queue<Task> tasks = new LinkedList<Task>();
 	private static ArrayList<Activity> appActivity = new ArrayList<Activity>();
 	private boolean isRun;
@@ -47,10 +53,9 @@ public class MainService extends Service implements Runnable {
 		handler = new Handler() {
 
 			@Override
-			
 			public void handleMessage(Message msg) {
 				// TODO Auto-generated method stub
-				Log.w(TAG, "get message"+msg.what);
+				Log.w(TAG, "get message" + msg.what);
 				MarketAcitivity activity = null;
 				switch (msg.what) {
 				case Task.MARKET_LOGIN:
@@ -58,26 +63,30 @@ public class MainService extends Service implements Runnable {
 					activity.refresh(Task.MARKET_LOGIN, msg.obj);
 					break;
 				case Task.GET_DETAIL_BY_GID:
-					activity=(MarketAcitivity)getActivityByName("Gooddetail");
-					activity.refresh(Task.GET_USERINFO,msg.obj);
+					activity = (MarketAcitivity) getActivityByName("Gooddetail");
+					activity.refresh(Task.GET_USERINFO, msg.obj);
 					break;
 				case Task.GET_GOODS:
-					activity=(MarketAcitivity)getActivityByName("MainActivity");
+					activity = (MarketAcitivity) getActivityByName("MainActivity");
 					activity.refresh(Task.GET_GOODS, msg.obj);
 					break;
 				case Task.UPDATE_GOODS:
 					break;
 				case Task.LOADMORE:
-					activity=(MarketAcitivity)getActivityByName("MainActivity");
+					activity = (MarketAcitivity) getActivityByName("MainActivity");
 					activity.refresh(Task.LOADMORE, msg.obj);
 					break;
 				case Task.GOODS_SEARCH:
-					activity=(MarketAcitivity)getActivityByName("SearchActivity");
+					activity = (MarketAcitivity) getActivityByName("SearchActivity");
 					activity.refresh(Task.LOADMORE, msg.obj);
 					break;
 				case Task.SALE_GOOD:
-					activity=(MarketAcitivity)getActivityByName("GoodsEdit");
+					activity = (MarketAcitivity) getActivityByName("GoodsEdit");
 					activity.refresh(Task.SALE_GOOD, msg.obj);
+				case Task.COMMENT:
+					activity = (MarketAcitivity) getActivityByName("Gooddetail");
+					activity.refresh(Task.SALE_GOOD, msg.obj);
+
 				default:
 					break;
 				}
@@ -117,16 +126,17 @@ public class MainService extends Service implements Runnable {
 	}
 
 	// UI线程新开任务的接口,需传入相应activity，方便refresh操作
-	public static void newTask(Activity activity,Task task) {
-		
+	public static void newTask(Activity activity, Task task) {
+
 		tasks.add(task);
 		appActivity.add(activity);
 	}
 
 	// UI新开任务时，需要传入Activity实例，为了refresh操作
-	/*public static void addContext(Context context) {
-		appActivities.add(activity);
-	}*/
+	/*
+	 * public static void addContext(Context context) {
+	 * appActivities.add(activity); }
+	 */
 
 	// 任务完成后，应该remove对应的Activity实例，防止下次同一Activity的不同实例refresh混淆
 	public static void removeActivity(Context context) {
@@ -148,104 +158,86 @@ public class MainService extends Service implements Runnable {
 	/**
 	 * @param task
 	 *            Tasks处理Tasks堆栈中的task
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private void doTask(Task task) {
 		// TODO Auto-generated method stub
 		Message msg = handler.obtainMessage();
 		msg.what = task.getTaskID();
-		switch (task.getTaskID()) {
+		try {
+			switch (task.getTaskID()) {
 
-		case Task.MARKET_LOGIN:
-		{
-			/*
-			 * 登录任务
-			 */
-			Log.w(TAG, "login->do");
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			case Task.MARKET_LOGIN: {
+				/*
+				 * 登录任务
+				 */
+				Log.w(TAG, "login->do");
+				msg.obj = HttpconnectUtil
+						.getResult(url_login, task.getParams());
 			}
-		/*try {
-			msg.obj=HttpconnectUtil.getResult("192.168.1.158/8080/market/login/loginAction2_loginJSON.do", task.getParams());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-
-		}
-			break;
-		case Task.GET_USERINFO:
-			/*
-			 *获得本地存储用户信息
-			 */
-			Log.w(TAG, "get userinfo->do");
-			break;
-		case Task.GET_GOODS:
+				break;
+			case Task.GET_USERINFO:
+				/*
+				 * 获得本地存储用户信息
+				 */
+				Log.w(TAG, "get userinfo->do");
+				break;
+			case Task.GET_GOODS:
 			/*
 			 * 获得商品列表
 			 */
-		{
-			Log.w(TAG, "get goods->do");
-			String url="http://192.168.1.158:8080/market/index/indexAction2_indexJSON.do";
-			try {
-				msg.obj=HttpconnectUtil.getResult(url, null);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				Log.e(TAG, e.getMessage());
+			{
+				Log.w(TAG, "get goods->do");
+				msg.obj = HttpconnectUtil.getResult(url_update, null);
 			}
+
+				break;
+			case Task.GET_DETAIL_BY_GID:
+				/*
+				 * 获取商品详情
+				 */
+				Log.w(TAG, "get detail by Gid->do");
+				{
+					msg.obj = HttpconnectUtil.getResult(url_getByGid,
+							task.getParams());
+				}
+				break;
+			case Task.LOADMORE:
+				/*
+				 * 加载更多
+				 */
+				Log.w(TAG, "loadmore->do");
+				break;
+			case Task.GOODS_SEARCH:
+			// 搜索商品
+			{
+				msg.obj = HttpconnectUtil.getResult("", task.getParams());
+			}
+				break;
+			case Task.SALE_GOOD:
+			// 发布商品
+			{
+				Map<String, Object> params = task.getParams();
+				HttpconnectUtil.postfile(url_sale, params);
+			}
+				break;
+			// 评论
+			case Task.COMMENT:
+				Map<String, Object> params = task.getParams();
+				HttpconnectUtil.getResult(url_comment, params);
+			default:
+				break;
+
+			}
+		} catch (ConnectException e) {
+			// 网络连接错误connect refused异常
+			Log.e(TAG, "catched:" + e.getCause());
+		} catch (Exception e) {
+			Log.e(TAG, "exception:" + e.getMessage());
 		}
+
 		
-
-			break;
-		case Task.GET_DETAIL_BY_GID:
-			Log.w(TAG, "get detail by Gid->do");
-			/*
-			 * 获取商品详情
-			 */
-			break;
-		case Task.LOADMORE:
-			/*
-			 * 加载更多
-			 */
-			Log.w(TAG, "loadmore->do");
-			break;
-		case Task.GOODS_SEARCH:
-		//搜索商品
-		{
-			try {
-				msg.obj=HttpconnectUtil.getResult("", task.getParams());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				Log.e(TAG, e.getMessage());
-			}
-			
-		}
-			break;
-		case Task.SALE_GOOD:
-			//发布商品
-		{
-			Map<String,Object> params=task.getParams();
-			try {
-				HttpconnectUtil.postfile("", params);
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		break;
-		default:
-			break;
-
-		}
 		handler.sendMessage(msg);
 	}
-	
-}		
+
+}

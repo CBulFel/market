@@ -2,7 +2,6 @@ package com.mark.market.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,13 +18,11 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.mark.android_ui.CommentDialog;
 import com.mark.android_ui.MyImgScroll;
 import com.mark.android_ui.MyListView;
-import com.mark.android_ui.MyprogressDialog;
 import com.mark.android_ui.MyListView.MyListViewListener;
+import com.mark.android_ui.MyprogressDialog;
 import com.mark.market.R;
 import com.mark.market.adapter.GoodsAdapter;
 import com.mark.market.bean.Good;
@@ -39,7 +36,7 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 	public static MyListView marketListView;
 	private GoodsAdapter mAdapter;
 	private List<Good> goods = new ArrayList<Good>();
-	private MyprogressDialog progressdialog=null;
+	private MyprogressDialog progressdialog = null;
 	// ImgScroll控件
 	MyImgScroll myPager; // 图片滚动控件
 	LinearLayout ovalLayout; // 下方的小圆点
@@ -55,14 +52,14 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 		View mview = inflater.inflate(R.layout.scrollimg, null);
 		myPager = (MyImgScroll) mview.findViewById(R.id.martket_home_imgscroll);
 		ovalLayout = (LinearLayout) mview.findViewById(R.id.vb);
-		progressdialog=new MyprogressDialog(getActivity());
+		progressdialog = new MyprogressDialog(getActivity());
 		progressdialog.show();
 		// 初始化组件
 		init();
-/*		// 设置imgScroll开始滚动
+		// 设置imgScroll开始滚动
 		myPager.start(getActivity(), listImgs, 4000, ovalLayout,
 				R.layout.ad_bottom_item, R.id.ad_item_v,
-				R.drawable.dot_focused, R.drawable.dot_normal);*/
+				R.drawable.dot_focused, R.drawable.dot_normal);
 		marketListView.addHeaderView(mview);
 		return view;
 
@@ -77,26 +74,23 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 
 	private void init() {
 
-		/*Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("index", "20");
 		Task task = new Task(Task.GET_GOODS, params);
-		MainService.newTask(getActivity(), task);*/
+		MainService.newTask(getActivity(), task);
 		/*
 		 * imgScroll初始化
 		 */
 
 		listImgs = new ArrayList<View>();
-		int[] imageResId = new int[] { R.drawable.banner1,
-				R.drawable.banner2, R.drawable.banner3,
-				R.drawable.banner4 };
+		int[] imageResId = new int[] { R.drawable.banner1, R.drawable.banner2,
+				R.drawable.banner3, R.drawable.banner4 };
 		for (int i = 0; i < imageResId.length; i++) {
 			ImageView imageView = new ImageView(getActivity());
 			imageView.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					// 点击监听事件
-					Toast.makeText(getActivity(),
-							"点击了:" + myPager.getCurIndex(), Toast.LENGTH_SHORT)
-							.show();
+					Log.w(TAG, "点击了" + myPager.getCurIndex());
 				}
 			});
 			imageView.setImageResource(imageResId[i]);
@@ -104,54 +98,38 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 			listImgs.add(imageView);
 		}
 
-		/*
-		 * Listview初始化
-		 */
-		/*for (int i = 0; i <= 12; i++)
-			goods.add(new Good());
-		mAdapter = new GoodsAdapter(getActivity(), goods);
-		marketListView.setPullLoadEnable(true);
-		marketListView.setMyListViewListener(this);
-		marketListView.setAdapter(mAdapter);*/
-		
 	}
 
 	@Override
 	public void onRefresh() {
 		// 下拉刷新操作
-		//progressdialog.show();
+		marketListView.setVisibility(View.VISIBLE);
+		progressdialog.show();
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("index", "20");
 		Task task = new Task(Task.GET_GOODS, params);
 		MainService.newTask(getActivity(), task);
-
-		
 	}
 
 	@Override
 	public void onLoadMore() {
-		
+
 		// 加载更多操作
-		//progressdialog.show();
-		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("index", "20");
 		Task task = new Task(Task.LOADMORE, params);
 		MainService.newTask(getActivity(), task);
-
 	}
 
 	public void refreshcomplete(List<Good> goods_new) {
-		
+
 		// 刷新完成后的操作
-		//开始图片滚动
+		// 开始图片滚动
 		progressdialog.cancel();
 		myPager.start(getActivity(), listImgs, 4000, ovalLayout,
 				R.layout.ad_bottom_item, R.id.ad_item_v,
 				R.drawable.dot_focused, R.drawable.dot_normal);
-		
-
-		goods=goods_new;
+		goods = goods_new;
 		marketListView.setAdapter(new GoodsAdapter(getActivity(), goods));
 		marketListView.stopRefresh();
 		marketListView.stopLoadMore();
@@ -169,4 +147,8 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 		Log.w(TAG, "loadmore success!");
 	}
 
+	public void loadfailed() {
+		progressdialog.cancel();
+		marketListView.setVisibility(View.GONE);
+	}
 }

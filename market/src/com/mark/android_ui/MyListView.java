@@ -1,4 +1,3 @@
-
 package com.mark.android_ui;
 
 import android.content.Context;

@@ -4,16 +4,21 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.mark.market.ui.Gooddetail;
+
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 /**
@@ -34,25 +39,6 @@ public class MyImgScroll extends ViewPager {
 		super(context, attrs);
 	}
 
-	/**
-	 * 
-	 * @param mainActivity
-	 *            ��ʾ����������
-	 * @param imgList
-	 *            ͼƬ�б�, ����Ϊnull ,����һ��
-	 * @param scrollTime
-	 *            ������� ,0Ϊ������
-	 * @param ovalLayout
-	 *            Բ������,��Ϊ��,LinearLayout����
-	 * @param ovalLayoutId
-	 *            ovalLayoutΪ��ʱ д0, Բ��layout XMl
-	 * @param ovalLayoutItemId
-	 *            ovalLayoutΪ��ʱ д0,Բ��layout XMl Բ��XMl��View ID
-	 * @param focusedId
-	 *            ovalLayoutΪ��ʱ д0, Բ��layout XMl ѡ��ʱ�Ķ���
-	 * @param normalId
-	 *            ovalLayoutΪ��ʱ д0, Բ��layout XMl ����ʱ����
-	 */
 	public void start(Activity mainActivity, List<View> imgList,
 			int scrollTime, LinearLayout ovalLayout, int ovalLayoutId,
 			int ovalLayoutItemId, int focusedId, int normalId) {
@@ -61,11 +47,11 @@ public class MyImgScroll extends ViewPager {
 		mScrollTime = scrollTime;
 		setOvalLayout(ovalLayout, ovalLayoutId, ovalLayoutItemId, focusedId,
 				normalId);
-		this.setAdapter(new MyPagerAdapter());// ����������
+		this.setAdapter(new MyPagerAdapter());//设置适配器
 		if (scrollTime != 0 && imgList.size() > 1) {
 
 			startTimer();
-			// ����ʱֹͣ����
+			// 点击停止滚动
 			this.setOnTouchListener(new OnTouchListener() {
 				public boolean onTouch(View v, MotionEvent event) {
 					if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -83,7 +69,7 @@ public class MyImgScroll extends ViewPager {
 		}
 	}
 
-	// ����Բ��
+	// 设置滚动小圆圈图标
 	private void setOvalLayout(final LinearLayout ovalLayout, int ovalLayoutId,
 			final int ovalLayoutItemId, final int focusedId, final int normalId) {
 		if (ovalLayout != null) {
@@ -92,17 +78,18 @@ public class MyImgScroll extends ViewPager {
 				ovalLayout.addView(inflater.inflate(ovalLayoutId, null));
 
 			}
-			// ѡ�е�һ��
-			ovalLayout.getChildAt(0).findViewById(ovalLayoutItemId)
-					.setBackgroundResource(focusedId);
+			if (ovalLayout.getChildAt(0) == null)
+				return;
+			else
+				ovalLayout.getChildAt(0).findViewById(ovalLayoutItemId)
+						.setBackgroundResource(focusedId);
 			this.setOnPageChangeListener(new OnPageChangeListener() {
 				public void onPageSelected(int i) {
 					curIndex = i % mListViews.size();
-					// ȡ��Բ��ѡ��
 					ovalLayout.getChildAt(oldIndex)
 							.findViewById(ovalLayoutItemId)
 							.setBackgroundResource(normalId);
-					// Բ��ѡ��
+					//更换当前滚动位置的图片
 					ovalLayout.getChildAt(curIndex)
 							.findViewById(ovalLayoutItemId)
 							.setBackgroundResource(focusedId);
@@ -126,7 +113,7 @@ public class MyImgScroll extends ViewPager {
 	}
 
 	/**
-	 * ֹͣ����
+	 * ֹͣ停止计时器
 	 */
 	public void stopTimer() {
 		if (timer != null) {
@@ -136,7 +123,7 @@ public class MyImgScroll extends ViewPager {
 	}
 
 	/**
-	 * ��ʼ����
+	 * 开始计时器
 	 */
 	public void startTimer() {
 		timer = new Timer();
@@ -152,7 +139,7 @@ public class MyImgScroll extends ViewPager {
 		}, mScrollTime, mScrollTime);
 	}
 
-	// ������ //ѭ������
+	// 适配器
 	private class MyPagerAdapter extends PagerAdapter {
 		public void finishUpdate(View arg0) {
 		}
@@ -162,21 +149,20 @@ public class MyImgScroll extends ViewPager {
 		}
 
 		public int getCount() {
-			if (mListViews.size() == 1) {// һ��ͼƬʱ��������
+			if (mListViews.size() == 1) {//如果只有一张图片
 				return mListViews.size();
 			}
 			return Integer.MAX_VALUE;
 		}
 
 		public Object instantiateItem(View v, int i) {
-		/*	if (((ViewPager) v).getChildCount() == mListViews.size()) {
-				((ViewPager) v)
-						.removeView(mListViews.get(i % mListViews.size()));
-			}*/
-			((ViewPager) v)
-			.removeView(mListViews.get(i % mListViews.size()));
-				((ViewPager) v).addView(mListViews.get(i % mListViews.size()),
-						0);
+			/*
+			 * if (((ViewPager) v).getChildCount() == mListViews.size()) {
+			 * ((ViewPager) v) .removeView(mListViews.get(i %
+			 * mListViews.size())); }
+			 */
+			((ViewPager) v).removeView(mListViews.get(i % mListViews.size()));
+			((ViewPager) v).addView(mListViews.get(i % mListViews.size()), 0);
 			
 			return mListViews.get(i % mListViews.size());
 		}

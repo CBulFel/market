@@ -1,5 +1,6 @@
 package com.mark.market.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,7 +10,7 @@ import java.util.Set;
  *
  *商品实体类
  */
-public class Good {
+public class Good implements Serializable {
 
 	private static final long serialVersionUID = -8330686296777483266L;
 	private String gid;
