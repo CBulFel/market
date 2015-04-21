@@ -99,35 +99,30 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="¥"
+                        android:text="原价¥"
+                        android:textColor="#dcdcdc"
+                        android:textSize="12sp"
+                        android:textStyle="italic" />
+
+                    <TextView
+                        android:id="@+id/detail_preprice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="12"
+                        android:textColor="#dcdcdc"
+                        android:textSize="14sp"
+                        android:textStyle="italic" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="现价¥"
                         android:textColor="#ff0000"
                         android:textSize="12sp"
                         android:textStyle="italic" />
 
                     <TextView
                         android:id="@+id/detail_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="12"
-                        android:textColor="#ff0000"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="~" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="¥"
-                        android:textColor="#ff0000"
-                        android:textSize="12sp"
-                        android:textStyle="italic" />
-
-                    <TextView
-                        android:id="@+id/detail_preprice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="12"

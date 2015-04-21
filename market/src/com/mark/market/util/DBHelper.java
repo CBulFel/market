@@ -16,7 +16,8 @@ import com.mark.market.bean.User;
  * @describ sqlite数据库操作类
  */
 public class DBHelper extends SQLiteOpenHelper {
-	private static String DB_name = "market";
+	private static String DB_NAME = "market";
+	private static String TB_SUG="suggestions";
 
 	/**
 	 * @param context
@@ -25,7 +26,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	 * @param version
 	 */
 	public DBHelper(Context context) {
-		super(context, DB_name, null, 1);
+		super(context, DB_NAME, null, 1);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -42,7 +43,11 @@ public class DBHelper extends SQLiteOpenHelper {
 		String sql = "CREATE TABLE IF NOT EXISTS  "
 				+ User.TB_USER
 				+ "( _id INTEGER PRIMARY KEY,userId TEXT, userName TEXT, token TEXT,isDefault TEXT,userIcon BLOB)";
-		db.execSQL(sql); // 创建表
+		db.execSQL(sql); // 创建用户表
+		String sql2 = "CREATE TABLE IF NOT EXISTS  "
+				+ TB_SUG
+				+ "( _id INTEGER PRIMARY KEY,sug TEXT)";
+		db.execSQL(sql2); // 创建搜索建议表
 	}
 
 	/*

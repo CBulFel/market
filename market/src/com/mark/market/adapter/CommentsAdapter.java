@@ -29,6 +29,7 @@ public class CommentsAdapter extends BaseAdapter {
 	private List<GComment> comments;
 	private LayoutInflater inflater;
 	private ViewHolder holder;
+	private List<String> uname_list;
 	
 	private class ViewHolder{
 		public CircularImage comment_headimg;
@@ -47,6 +48,19 @@ public class CommentsAdapter extends BaseAdapter {
 		this.context = context;
 		this.comments = comments;
 		this.inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	}
+
+	/**
+	 * @param context
+	 * @param comments
+	 * @param uname_list
+	 */
+	public CommentsAdapter(Context context, List<GComment> comments,
+			ArrayList<String> uname_list) {
+		super();
+		this.context = context;
+		this.comments = comments;
+		this.uname_list = uname_list;
 	}
 
 	/* (non-Javadoc)
@@ -83,6 +97,7 @@ public class CommentsAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		GComment comment=comments.get(position);
+		String uname=uname_list.get(position);
 		if(convertView==null){
 			convertView=inflater.inflate(R.layout.comments_item, null);
 			holder=new ViewHolder();
@@ -97,8 +112,8 @@ public class CommentsAdapter extends BaseAdapter {
 		}
 		
 		holder.comment_headimg.setImageResource(R.drawable.header_img_default);
-		holder.comment_uname.setText("小明");
-		holder.comment_content.setText("评论评论评论评论");
+		holder.comment_uname.setText(uname);
+		holder.comment_content.setText(comment.getGcMsg());
 		
 		
 		

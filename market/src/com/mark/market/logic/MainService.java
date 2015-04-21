@@ -30,13 +30,13 @@ import com.mark.market.util.HttpconnectUtil;
  * @author mazhao Describe
  */
 public class MainService extends Service implements Runnable {
-	public static final String MARKETHOST = "http://192.168.1.115:8080";
+	public static final String MARKETHOST = "http://192.168.1.158:8080";
 	public static final String goodUrlhead = "http://online.cumt.edu.cn:8080/2/toItemDetails/toItemDetailsAction_toItemDetails.do?pre=g&id=";
 	private static String url_getByGid = "";
-	private static String url_sale = "http://192.168.1.115:8080/market/post/postAction2_postJSON.do";
-	private static String url_update = "http://192.168.1.115:8080/market/index/indexAction2_indexJSON.do";
-	private static String url_login = "http://192.168.1.115:8080/market/login/loginAction2_loginJSON.do";
-	private static String url_comment = "http://192.168.1.115:8080/market/comment/commentAction2_commentJSON.do";
+	private static String url_sale = "http://192.168.1.158:8080/market/post/postAction2_postJSON.do";
+	private static String url_update = "http://192.168.1.158:8080/market/index/indexAction2_indexJSON.do";
+	private static String url_login = "http://192.168.1.158:8080/market/login/loginAction2_loginJSON.do";
+	private static String url_comment = "http://192.168.1.158:8080/market/comment/commentAction2_commentJSON.do";
 	private static final String TAG = "market";
 	private static Queue<Task> tasks = new LinkedList<Task>();
 	private static ArrayList<Activity> appActivity = new ArrayList<Activity>();
@@ -84,8 +84,12 @@ public class MainService extends Service implements Runnable {
 					activity = (MarketAcitivity) getActivityByName("GoodsEdit");
 					activity.refresh(Task.SALE_GOOD, msg.obj);
 				case Task.COMMENT:
-					activity = (MarketAcitivity) getActivityByName("Gooddetail");
-					activity.refresh(Task.SALE_GOOD, msg.obj);
+					/*
+					 * activity = (MarketAcitivity)
+					 * getActivityByName("Gooddetail");
+					 * activity.refresh(Task.SALE_GOOD, msg.obj);
+					 */
+					break;
 
 				default:
 					break;
@@ -167,64 +171,40 @@ public class MainService extends Service implements Runnable {
 		try {
 			switch (task.getTaskID()) {
 
-			case Task.MARKET_LOGIN: {
-				/*
-				 * 登录任务
-				 */
+			case Task.MARKET_LOGIN:
+				// 登录任务
 				Log.w(TAG, "login->do");
 				msg.obj = HttpconnectUtil
 						.getResult(url_login, task.getParams());
-			}
 				break;
 			case Task.GET_USERINFO:
-				/*
-				 * 获得本地存储用户信息
-				 */
-				Log.w(TAG, "get userinfo->do");
+				// 获得用户信息,用于用户页
+				msg.obj=HttpconnectUtil.getResult("", task.getParams());
 				break;
 			case Task.GET_GOODS:
-			/*
-			 * 获得商品列表
-			 */
-			{
-				Log.w(TAG, "get goods->do");
+				// 获得商品列表
 				msg.obj = HttpconnectUtil.getResult(url_update, null);
-			}
-
 				break;
 			case Task.GET_DETAIL_BY_GID:
-				/*
-				 * 获取商品详情
-				 */
-				Log.w(TAG, "get detail by Gid->do");
-				{
-					msg.obj = HttpconnectUtil.getResult(url_getByGid,
-							task.getParams());
-				}
+				// 获取商品详情
+				msg.obj = HttpconnectUtil.getResult(url_getByGid,
+						task.getParams());
 				break;
 			case Task.LOADMORE:
-				/*
-				 * 加载更多
-				 */
-				Log.w(TAG, "loadmore->do");
+				// 加载更多
 				break;
 			case Task.GOODS_SEARCH:
-			// 搜索商品
-			{
+				// 搜索商品
 				msg.obj = HttpconnectUtil.getResult("", task.getParams());
-			}
 				break;
 			case Task.SALE_GOOD:
-			// 发布商品
-			{
-				Map<String, Object> params = task.getParams();
-				HttpconnectUtil.postfile(url_sale, params);
-			}
+				// 发布商品
+				HttpconnectUtil.postfile(url_sale, task.getParams());
 				break;
-			// 评论
 			case Task.COMMENT:
-				Map<String, Object> params = task.getParams();
-				HttpconnectUtil.getResult(url_comment, params);
+				// 评论
+				msg.obj = HttpconnectUtil.getResult(url_comment,
+						task.getParams());
 			default:
 				break;
 
@@ -236,7 +216,6 @@ public class MainService extends Service implements Runnable {
 			Log.e(TAG, "exception:" + e.getMessage());
 		}
 
-		
 		handler.sendMessage(msg);
 	}
 

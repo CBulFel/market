@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.mark.market.R;
+import com.mark.market.bean.Task;
+import com.mark.market.logic.MainService;
 
 /**
  * @author mazhao
@@ -47,7 +49,7 @@ public class CommentDialog extends Dialog implements
 	 * @param gid
 	 */
 	public CommentDialog(Context context, String uid, String gid) {
-		super(context);
+		super(context,R.style.comment_dialog_theme);
 		Uid = uid;
 		Gid = gid;
 	}
@@ -92,10 +94,14 @@ public class CommentDialog extends Dialog implements
 			break;
 		case R.id.dialog_send: {
 			Log.e("market", "dialog_send clicked!");
+			
 			Map<String, Object> params=new HashMap<String, Object>();
 			params.put("uid", Uid);
 			params.put("id", Gid);
 			params.put("msg", content.getText());
+			Task task= new Task(Task.COMMENT, params);
+			MainService.newTask(getOwnerActivity(), task);
+			this.cancel();
 			
 		}
 			break;

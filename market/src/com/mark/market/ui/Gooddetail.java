@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.mark.android_ui.CommentDialog;
 import com.mark.android_ui.Login;
@@ -59,8 +60,8 @@ public class Gooddetail extends Activity implements MarketAcitivity,
 	private List<View> listimgs; // 要滚动的 图片组
 	private View headview;
 	private LinkedList<GComment> comments; 
+	private ArrayList<String>unamelist;
 	private ViewHolder holder = new ViewHolder();
-	private String Gid;
 	private CommentsAdapter comment_adapter;
 	private CommentDialog commentdialog;
 	private ActionBar actionbar;
@@ -77,6 +78,8 @@ public class Gooddetail extends Activity implements MarketAcitivity,
 		public CheckBox detail_like;
 		public LinearLayout detail_comment;
 		public LinearLayout detail_share;
+		public TextView detail_comment_text;
+		
 
 	}
 
@@ -114,7 +117,8 @@ public class Gooddetail extends Activity implements MarketAcitivity,
 				.findViewById(R.id.detail_price);
 		holder.detail_preprice = (TextView) headview
 				.findViewById(R.id.detail_preprice);
-
+		
+		holder.detail_comment_text=(TextView)findViewById(R.id.detail_comment);
 		holder.detail_like = (CheckBox) findViewById(R.id.detail_like);
 		holder.detail_comment = (LinearLayout) findViewById(R.id.comment);
 		holder.detail_share = (LinearLayout) findViewById(R.id.share);
@@ -125,11 +129,11 @@ public class Gooddetail extends Activity implements MarketAcitivity,
 		good = (Good) intent.getSerializableExtra("good");
 		init();
 		// 新开任务通过商品ID获取商品详情
-		/*Map<String, Object> params = new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pre","g");
-		params.put("id", Gid);
+		params.put("id", good.getGid());
 		Task task = new Task(Task.GET_DETAIL_BY_GID, params);
-		MainService.newTask(this, task);*/
+		MainService.newTask(this, task);
 
 	}
 
@@ -143,9 +147,11 @@ public class Gooddetail extends Activity implements MarketAcitivity,
 		holder.detail_place.setText(good.getGplace());
 		holder.detail_price.setText(good.getGprice().toString());
 		holder.detail_preprice.setText(good.getGprePrice().toString());
+		holder.detail_like.setText(good.getGcollectNum().toString());
+		holder.detail_comment_text.setText(good.getGcommentNum().toString());
+		holder.detail_like.setChecked(Tools.iscollected(getApplicationContext(), good.getGid()));
 		
-		
-		
+
 		holder.detail_comment.setOnClickListener(this);
 		holder.detail_share.setOnClickListener(this);
 		holder.detail_like
@@ -175,11 +181,12 @@ public class Gooddetail extends Activity implements MarketAcitivity,
 				good.getGimg3(), good.getGimg4(), good.getGimg5(),
 				good.getGimg6() };
 		for (int i = 0; i < imageResId.length; i++) {
-			if (imageResId[i] == null && imageResId[i].isEmpty()) {
+			if (imageResId[i] == null || imageResId[i].isEmpty()) {
 				continue;
 			}
 			ImageView imageView = new ImageView(this);
-			Tools.loadBitmap(imageResId[i], imageView, 0, 0);
+			Tools.loadBitmap(MainService.MARKETHOST+imageResId[i], imageView, 0, 0);
+			Log.w(TAG, "img resID:"+imageResId[i]);
 			imageView.setScaleType(ScaleType.CENTER_INSIDE);
 			imageView.setOnClickListener(new OnClickListener() {
 				@Override
@@ -204,16 +211,13 @@ public class Gooddetail extends Activity implements MarketAcitivity,
 			});
 			listimgs.add(imageView);
 		}
-		GComment comment = new GComment();
-		for (int i = 0; i < 10; i++) {
-			comments.add(comment);
-		}
-		
+		refreshcomments();
+
 	}
 public void refreshcomments(){
 	
 	comments=new LinkedList<GComment>(good.getGcomments());
-	comment_adapter = new CommentsAdapter(this, comments);
+	comment_adapter = new CommentsAdapter(this, comments,unamelist);
 	list_comments.setAdapter(comment_adapter);
 	detail_img.start(this, listimgs, 0, ovalLayout,
 			R.layout.ad_bottom_item, R.id.ad_item_v,
@@ -286,8 +290,10 @@ switch(taskID){
 case Task.GET_DETAIL_BY_GID:
 		String result=(String)objects[0];
 		JSONObject js=JSON.parseObject(result);
-		JSONObject json=js.getJSONObject("goods");
-		good=JSON.parseObject(json.toJSONString(),Good.class);
+		JSONArray json_unamel=js.getJSONArray("userlist");
+		unamelist=(ArrayList<String>) JSON.parseArray(json_unamel.toJSONString(),String.class);
+		JSONObject json_goods=js.getJSONObject("goods");
+		good=JSON.parseObject(json_goods.toJSONString(),Good.class);
 		init();
 		break;
 case Task.COMMENT:

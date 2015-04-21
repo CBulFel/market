@@ -45,7 +45,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 	private static long exitTime = 0;
 	private static long waitTime = 2000;
 	private static final String TAG = "market";
-	private boolean success=true;
+	private boolean success = true;
 	private Fragment_home fragment_home;
 	private Fragment_my fragment_my;
 	// 定义tab布局
@@ -102,7 +102,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 		image_home = (ImageView) findViewById(R.id.image_home);
 		image_my = (ImageView) findViewById(R.id.image_my);
 		tab_plus = (Button) findViewById(R.id.tab_plus);
-		loadfailed=(TextView)findViewById(R.id.loadfailed);
+		loadfailed = (TextView) findViewById(R.id.loadfailed);
 
 	}
 
@@ -140,9 +140,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 	public boolean onTouchEvent(MotionEvent event) {
 		// TODO Auto-generated method stub
 		Log.w(TAG, "mainactivity onTouchEvent");
-		if(event.getAction()==MotionEvent.ACTION_DOWN&&!success){
-			Toast.makeText(getApplicationContext(), "reload", Toast.LENGTH_SHORT).show();
+		if (event.getAction() == MotionEvent.ACTION_DOWN && !success) {
 			loadfailed.setVisibility(View.GONE);
+			success = true;
 			fragment_home.onRefresh();
 		}
 		return super.onTouchEvent(event);
@@ -234,13 +234,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 	@Override
 	public void refresh(int taskID, Object... objects) {
 		// TODO Auto-generated method stub
-		
-		if (objects[0] == null){
+
+		if (objects[0] == null) {
 			Toast.makeText(this, "未得到返回数据", Toast.LENGTH_SHORT).show();
-			success=false;
+			success = false;
 			loadfailed.setVisibility(View.VISIBLE);
 			fragment_home.loadfailed();
-			return;}
+			return;
+		}
 		String result = (String) objects[0];
 		Log.w(TAG, "refresh UI!->MainActivity" + result);
 
@@ -253,17 +254,31 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 		Log.w(TAG, "goods from JSON num->" + goodsjson.size());
 
 		switch (taskID) {
-		case Task.GET_GOODS: {
-			Log.w(TAG, "refresh UI! -> after refresh");
+		case Task.GET_GOODS:
 			fragment_home.refreshcomplete(goodsjson);
-		}
 			break;
-		case Task.LOADMORE: {
-			Log.w(TAG, "refresh UI! -> after loadmore");
+		case Task.LOADMORE:
 			fragment_home.loadmorecomplete(goodsjson);
-		}
+			break;
+		case Task.GET_USERINFO:
+			fragment_my.loadsucess(goodsjson);
 			break;
 		}
+	}
+
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		// TODO Auto-generated method stub
+		switch (item.getItemId()) {
+		case R.id.menu_about:
+			Intent intent = new Intent();
+			intent.setClass(this, AboutActivity.class);
+			startActivity(intent);
+		case R.id.menu_exit:
+			finish();
+			
+		}
+		return super.onMenuItemSelected(featureId, item);
 	}
 
 	@Override

@@ -174,23 +174,15 @@ public class GoodsAdapter extends BaseAdapter implements OnClickListener{
 		holder.item_preprice.setText(good.getGprePrice().toString());
 		holder.item_palce.setText(good.getGplace());
 		holder.item_time.setText(Tools.formattime(good.getGtime()));
-		//判断商品是否收藏，临时使用Gvalid字段作为标志
+		//判断商品是否收藏
 		holder.item_like.setChecked(Tools.iscollected(context, good.getGid()));
 		holder.item_like.setText(good.getGcollectNum().toString());
 		holder.item_comment.setText(good.getGcommentNum().toString());
 		holder.item_content.setText(good.getGdescription());
-		holder.layout_item.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Toast.makeText(context, "item---->"+p, Toast.LENGTH_SHORT).show();
-				Intent intent=new Intent(context,Gooddetail.class);
-				context.startActivity(intent);
-			}
-		});
+		holder.layout_item.setOnClickListener(this);
 		holder.layout_comment.setOnClickListener(this);
 		holder.layout_share.setOnClickListener(this);
+		holder.layout_like.setOnClickListener(this);
 		holder.item_like.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
@@ -217,7 +209,10 @@ public class GoodsAdapter extends BaseAdapter implements OnClickListener{
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch(v.getId()){
+		case R.id.like:
+			break;
 		case R.id.goods_item_layout_item:
+		{
 			Toast.makeText(context, "item---->"+p, Toast.LENGTH_SHORT).show();
 			Intent intent=new Intent(context,Gooddetail.class);
 			Bundle bundle=new Bundle();
@@ -225,6 +220,7 @@ public class GoodsAdapter extends BaseAdapter implements OnClickListener{
 			intent.putExtras(bundle);
 			
 			context.startActivity(intent);
+		}
 			break;
 		case  R.id.comment:
 			Toast.makeText(context, "评论---->待完成", Toast.LENGTH_SHORT).show();

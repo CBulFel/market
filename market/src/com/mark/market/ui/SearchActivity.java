@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnActionExpandListener;
@@ -28,6 +29,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -41,12 +43,13 @@ import com.mark.market.util.SearchSuggestionsProvider;
 
 public class SearchActivity extends Activity implements MarketAcitivity {
 
-	private static String TAG="market searchactivity";
+	private static String TAG = "market searchactivity";
 	private ListView result;
 	private SearchView searchView;
 	private String queryString;
 	private GoodsAdapter madapter;
 	private List<Good> goods = new ArrayList<Good>();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -76,6 +79,7 @@ public class SearchActivity extends Activity implements MarketAcitivity {
 		// 使searchview默认展开
 		MenuItem search = menu.findItem(R.id.menu_search);
 		search.expandActionView();
+		
 		search.setOnActionExpandListener(new OnActionExpandListener() {
 
 			@Override
@@ -143,6 +147,8 @@ public class SearchActivity extends Activity implements MarketAcitivity {
 				LayoutParams.MATCH_PARENT));
 		searchView.setGravity(Gravity.CENTER);
 		searchView.clearFocus();
+		View foot_view=LayoutInflater.from(getApplicationContext()).inflate(R.layout.seatchview_footer,null);
+		searchView.addView(foot_view, new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
 		return true;
 	}
 
@@ -174,6 +180,7 @@ public class SearchActivity extends Activity implements MarketAcitivity {
 		AutoCompleteTextView searchtext = (AutoCompleteTextView) ownField
 				.get(searchView);
 		searchtext.setText(queryString);
+		
 
 	}
 
@@ -199,16 +206,16 @@ public class SearchActivity extends Activity implements MarketAcitivity {
 		if (queryString == null)
 			return;
 		// 保存搜索记录
-		
+
 		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
 				SearchSuggestionsProvider.AUTHORITY,
 				SearchSuggestionsProvider.MODE);
 		suggestions.saveRecentQuery(queryString, null);
-		Map<String,Object> params=new HashMap<String, Object>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("searchtext", queryString);
-		Task task=new Task(Task.GOODS_SEARCH, params);
+		Task task = new Task(Task.GOODS_SEARCH, params);
 		MainService.newTask(this, task);
-			
+
 	}
 
 	/*
@@ -219,7 +226,11 @@ public class SearchActivity extends Activity implements MarketAcitivity {
 	@Override
 	public void refresh(int taskID, Object... objects) {
 		// TODO Auto-generated method stub
-		String res=(String)objects[0];
+		if (objects[0] == null) {
+			Toast.makeText(this, "未得到返回数据", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		String res = (String) objects[0];
 		JSONObject json = JSON.parseObject(res);
 		Log.w(TAG, json.toJSONString());
 		JSONArray jsonarray = json.getJSONArray("goods");
@@ -227,8 +238,8 @@ public class SearchActivity extends Activity implements MarketAcitivity {
 		List<Good> goodsjson = JSON.parseArray(jsonarray.toJSONString(),
 				Good.class);
 		goods.addAll(goodsjson);
-		madapter=new GoodsAdapter(this, goods);
+		madapter = new GoodsAdapter(this, goods);
 		result.setAdapter(madapter);
-		
+
 	}
 }

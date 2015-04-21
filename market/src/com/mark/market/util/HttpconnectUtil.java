@@ -26,12 +26,11 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeaderValueFormatter;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
@@ -62,6 +61,7 @@ public class HttpconnectUtil {
 
 	public static String getResult(String url, Map<String, Object> param)
 			throws IOException {
+		Log.w(TAG, url);
 		String result = null;
 		post = new HttpPost(url);
 		List<NameValuePair> pairList = new ArrayList<NameValuePair>();
@@ -121,25 +121,26 @@ public class HttpconnectUtil {
 		ArrayList<Bitmap> imgs = (ArrayList<Bitmap>) params.get("imgs");
 		Map<String, Object> param = (Map<String, Object>) params.get("info");
 		List<NameValuePair> pairList = new ArrayList<NameValuePair>();
-
+		ContentBody body = null;
+		String result = null;
+		File file = null;
+		MultipartEntity reqentity = new MultipartEntity();
 		if (param != null) {
 			Set<String> set = param.keySet();
 			Iterator<String> iterator = set.iterator();
 			while (iterator.hasNext()) {
 				Object key = iterator.next();
 				Object value = param.get(key);
-				pairList.add(new BasicNameValuePair(key.toString(), value
-						.toString()));
-			}
+				Log.w(TAG, key.toString()+":"+value.toString());
+				reqentity.addPart(key.toString(),
+						new StringBody(value.toString()));
 
-			post.setEntity(new UrlEncodedFormEntity(pairList, "UTF-8"));
+			}
 		}
-		ContentBody body = null;
-		String result = null;
 
 		for (Bitmap bitmap : imgs) {
 			// 把图片存储到本地
-			File file = new File(Environment.getExternalStorageDirectory(),
+			file = new File(Environment.getExternalStorageDirectory(),
 					"temp.jpg");
 			OutputStream os = null;
 			os = new BufferedOutputStream(new FileOutputStream(file));
@@ -147,21 +148,24 @@ public class HttpconnectUtil {
 			if (file != null) {
 				body = new FileBody(file);
 			}
-			String boundary = "-------------" + System.currentTimeMillis();
-			//post.setHeader("Content-type", "multipart/form-data;boundary="
-			MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-			builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-			builder.setBoundary(boundary);
+			// String boundary = "-------------" + System.currentTimeMillis();
+			// post.setHeader("Content-type", "multipart/form-data;boundary="
 
-			builder.addPart("imgs", body);
+			// reqentity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+			// reqentity.setBoundary(boundary);
 
-			response = client.execute(post);
-			Log.w(TAG, response.getStatusLine().toString());
-			if (response.getStatusLine().equals(HttpStatus.SC_OK)) {
-				result = EntityUtils.toString(response.getEntity());
-			}
-			file.delete();
+			reqentity.addPart("imgs", body);
 		}
+
+		post.setEntity(reqentity);
+
+		response = client.execute(post);
+		Log.w(TAG, response.getStatusLine().toString());
+		if (response.getStatusLine().equals(HttpStatus.SC_OK)) {
+			result = EntityUtils.toString(response.getEntity());
+		}
+		file.delete();
+
 		return result;
 	}
 }

@@ -3,6 +3,7 @@
  */
 package com.mark.market.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +13,7 @@ import java.util.Set;
  * 
  *					用户实体类
  */
-public class User {
+public class User implements Serializable{
 
 	public static final String TB_USER="UserInfo";
 	public static final String USERID="uid";

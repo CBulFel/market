@@ -13,4 +13,12 @@
         <item>文昌校区</item>
     </string-array>
 
+    <string-array name="degree">
+        <item>全新</item>
+        <item>九成新</item>
+        <item>八成新</item>
+        <item>七成新</item>
+        <item>六成新</item>
+    </string-array>
+
 </resources>

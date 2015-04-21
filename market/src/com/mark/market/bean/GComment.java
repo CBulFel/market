@@ -1,13 +1,14 @@
 package com.mark.market.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author mazhao
  * 
- * ÉÌÆ·ÆÀÂÛÊµÌåÀà
+ *å•†å“è¯„è®ºå®ä½“ç±» 
  */
-public class GComment {
+public class GComment implements Serializable{
 
 	private static final long serialVersionUID = -9013370444421591452L;
 	private String gcId;

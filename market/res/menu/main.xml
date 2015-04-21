@@ -11,5 +11,16 @@
         android:showAsAction="collapseActionView|ifRoom"
 		android:actionViewClass="android.widget.SearchView"
         />
-		
+	<item 
+	    android:id="@+id/menu_about"
+	    android:title="关于"
+	    android:orderInCategory="99"
+	    android:showAsAction="never"
+	    />
+	<item 
+	    android:id="@+id/menu_exit"
+	    android:title="退出"
+		android:orderInCategory="100"
+		android:showAsAction="never"
+	    />
 </menu>

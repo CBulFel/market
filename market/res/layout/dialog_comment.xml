@@ -25,6 +25,8 @@
 	    android:layout_height="120dp"
 	    android:layout_margin="2dp"
 	    android:background="@drawable/edittext"
+	    android:inputType="textMultiLine"
+	    android:gravity="left|top"
 	    
 	    />
 	<LinearLayout 
