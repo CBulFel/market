@@ -23,9 +23,11 @@ import android.view.MenuItem.OnActionExpandListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +35,8 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.mark.android_ui.MyprogressDialog;
+import com.mark.android_ui.SmoothProgressDrawable;
 import com.mark.market.R;
 import com.mark.market.bean.Good;
 import com.mark.market.bean.Task;
@@ -46,6 +50,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 	private static long waitTime = 2000;
 	private static final String TAG = "market";
 	private boolean success = true;
+	private ProgressBar title_progress;
+	private MyprogressDialog homeprogress;
 	private Fragment_home fragment_home;
 	private Fragment_my fragment_my;
 	// 定义tab布局
@@ -79,10 +85,18 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 				R.layout.title, null);
 		actionbar.setDisplayShowCustomEnabled(true);
 		actionbar.setCustomView(actionbarLayout, Lparams);
+		title_progress = (ProgressBar) findViewById(R.id.title_progress);
+		homeprogress = new MyprogressDialog(this);
+
 		// 启动service
 		Intent intent = new Intent();
 		intent.setClass(this, MainService.class);
 		startService(intent);
+		title_progress
+				.setIndeterminateDrawable(new SmoothProgressDrawable.Builder(
+						this).interpolator(
+						new AccelerateDecelerateInterpolator()).build());
+		title_progress.setVisibility(View.VISIBLE);
 		initView();
 		initData();
 
@@ -140,6 +154,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 	public boolean onTouchEvent(MotionEvent event) {
 		// TODO Auto-generated method stub
 		Log.w(TAG, "mainactivity onTouchEvent");
+		title_progress.setVisibility(View.VISIBLE);
+		homeprogress.show();
 		if (event.getAction() == MotionEvent.ACTION_DOWN && !success) {
 			loadfailed.setVisibility(View.GONE);
 			success = true;
@@ -183,6 +199,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 	private void clickHomeBtn() {
 		// TODO Auto-generated method stub
 		if (!layout_home.isSelected()) {
+			title_progress.setVisibility(View.VISIBLE);
+			homeprogress.show();
 			// 实例化Fragment_home
 			fragment_home = new Fragment_home();
 			// 进行Fragment切换
@@ -207,6 +225,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 	private void clickMyBtn() {
 		// TODO Auto-generated method stub
 		if (!layout_my.isSelected()) {
+			title_progress.setVisibility(View.VISIBLE);
+			homeprogress.show();
 			// 实例化Fragment_home
 			fragment_my = new Fragment_my();
 			// 进行Fragment切换
@@ -234,7 +254,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 	@Override
 	public void refresh(int taskID, Object... objects) {
 		// TODO Auto-generated method stub
-
+		title_progress.setVisibility(View.GONE);
+		homeprogress.cancel();
 		if (objects[0] == null) {
 			Toast.makeText(this, "未得到返回数据", Toast.LENGTH_SHORT).show();
 			success = false;
@@ -276,7 +297,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 			startActivity(intent);
 		case R.id.menu_exit:
 			finish();
-			
+
 		}
 		return super.onMenuItemSelected(featureId, item);
 	}

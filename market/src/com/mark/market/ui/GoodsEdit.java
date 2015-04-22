@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.Base64;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -46,14 +48,16 @@ public class GoodsEdit extends Activity implements MarketAcitivity,
 	private static final String PHOTO_FILE_NAME = "temp_photo.jpg";
 	private Gallery Mygallery;
 	private ArrayList<Bitmap> groupbit;
-	private String[] categorys;
+	private String[] categorys = { "digital", "book", "furniture", "clothes",
+			"tech" };
 	private String[] places = { "nanhu", "wenchang" };
+	private String[] isnew = { "10", "9", "8", "7", "6" };
 	private Bitmap selectbit;
 	private Button button_addphoto, button_delphoto, sale;
 	private MyAdapter myadapter;
 	private AlertDialog mydialog;
 	private int number;
-	private Map<String, Object> good_info;
+	private Map<String, String> good_info;
 	private File tempFile;
 	private viewholder holder;
 	private User user;
@@ -84,7 +88,7 @@ public class GoodsEdit extends Activity implements MarketAcitivity,
 		if ((user = LoginSessionUtil.getLoginUser(getApplicationContext())) == null) {
 
 			Intent intent = new Intent();
-			intent.setClass(this, Login.class);
+			intent.setClass(this, LoginActivity.class);
 			startActivity(intent);
 		}
 
@@ -102,7 +106,7 @@ public class GoodsEdit extends Activity implements MarketAcitivity,
 		sale = (Button) findViewById(R.id.good_edit_sale);
 		groupbit = new ArrayList<Bitmap>();
 		myadapter = new MyAdapter(this, groupbit);
-		good_info = new HashMap<String, Object>();
+		good_info = new HashMap<String, String>();
 		Mygallery.setAdapter(myadapter);
 		/*
 		 * Resources res = getResources(); categorys =
@@ -296,25 +300,42 @@ public class GoodsEdit extends Activity implements MarketAcitivity,
 		}
 			break;
 		case R.id.good_edit_sale: {
+			if(groupbit.size()<1){
+				Toast.makeText(GoodsEdit.this, "至少要为宝贝上传1张图片呦～",
+						Toast.LENGTH_SHORT).show();
+				break;
+			}
 			good_info.put("kind", "g");
 			good_info.put("id", user.getUid());
 			if (holder.edit_title.getText() != null)
-				good_info.put("name", holder.edit_title.getText());
+				good_info.put(
+						"name",
+						new String(Base64.encodeBase64(holder.edit_title
+								.getText().toString().getBytes())));
 			if (holder.edit_describ.getText() != null)
-				good_info.put("description", holder.edit_describ.getText());
+				good_info.put(
+						"description",
+						new String(Base64.encodeBase64(holder.edit_describ
+								.getText().toString().getBytes())));
 			if (holder.edit_price.getText() != null)
-				good_info.put("price", holder.edit_price.getText());
+				good_info.put("price", holder.edit_price.getText().toString());
 			if (holder.edit_preprice.getText() != null)
-				good_info.put("pre_price", holder.edit_preprice.getText());
+				good_info.put("pre_price", holder.edit_preprice.getText()
+						.toString());
 			if (holder.edit_phone.getText() != null)
-				good_info.put("phone", holder.edit_phone.getText());
-			good_info.put("category", holder.edit_category.getSelectedItem()
-					.toString());
-			good_info.put("place", holder.edit_category.getSelectedItem()
-					.toString());
+				good_info.put("phone", holder.edit_phone.getText().toString());
+			good_info.put(
+					"category",
+					new String(Base64.encodeBase64(holder.edit_category
+							.getSelectedItem().toString().getBytes())));
 
-			good_info.put("degree", holder.edit_degree.getSelectedItem()
-					.toString());
+			good_info.put("place",
+					places[holder.edit_category.getSelectedItemPosition()]);
+
+			good_info.put(
+					"degree",
+					new String(Base64.encodeBase64(holder.edit_degree
+							.getSelectedItem().toString().getBytes())));
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("info", good_info);
 			params.put("imgs", groupbit);

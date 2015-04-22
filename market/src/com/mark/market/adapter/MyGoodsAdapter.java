@@ -97,12 +97,12 @@ public class MyGoodsAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		//填充内容
-		/*Tools.loadBitmap(good.getGimg1(), holder.item_img, 0, 0);
+		Tools.loadBitmap(good.getGimg1(), holder.item_img, 0, 0);
 		holder.item_likenum.setText(good.getGcollectNum());
-		holder.item_comnum.setText(good.getGcommentNum());*/
-		holder.item_img.setImageResource(R.drawable.featured_big_b4);
-		holder.item_likenum.setText("12");
-		holder.item_comnum.setText("23");
+		holder.item_comnum.setText(good.getGcommentNum());
+//		holder.item_img.setImageResource(R.drawable.featured_big_b4);
+		holder.item_likenum.setText(good.getGcollectNum().toString());
+		holder.item_comnum.setText(good.getGcommentNum().toString());
 
 		return convertView;
 	}

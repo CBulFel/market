@@ -141,6 +141,7 @@ public class Gooddetail extends Activity implements MarketAcitivity,
 		if (good == null) {
 			return;
 		}
+		try{
 		holder.detail_username.setText(good.getUser().getUname());
 		holder.detail_time.setText(Tools.formattime(good.getGtime()));
 		holder.detail_content.setText(good.getGdescription());
@@ -149,9 +150,14 @@ public class Gooddetail extends Activity implements MarketAcitivity,
 		holder.detail_preprice.setText(good.getGprePrice().toString());
 		holder.detail_like.setText(good.getGcollectNum().toString());
 		holder.detail_comment_text.setText(good.getGcommentNum().toString());
-		holder.detail_like.setChecked(Tools.iscollected(getApplicationContext(), good.getGid()));
+		}
+		catch(Exception e){
+			Log.e(TAG, "返回数据异常");
+			Log.e(TAG, "catched:" + e.getMessage());
+			Log.e(TAG, "cause:" + e.getCause());
+		}
 		
-
+		holder.detail_like.setChecked(Tools.iscollected(getApplicationContext(), good.getGid()));
 		holder.detail_comment.setOnClickListener(this);
 		holder.detail_share.setOnClickListener(this);
 		holder.detail_like

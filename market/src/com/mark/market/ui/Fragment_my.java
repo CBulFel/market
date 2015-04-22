@@ -36,7 +36,7 @@ public class Fragment_my extends Fragment implements OnClickListener,
 	private GridView mygoods;
 	private List<Good> goods;
 	private User user;
-	private MyprogressDialog progress;
+//	private MyprogressDialog progress;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,14 +46,14 @@ public class Fragment_my extends Fragment implements OnClickListener,
 		headerimg = (CircularImage) view.findViewById(R.id.my_headimg);
 		uname = (TextView) view.findViewById(R.id.my_uname);
 		mygoods = (GridView) view.findViewById(R.id.my_goods);
-		progress = new MyprogressDialog(getActivity());
-		progress.show();
+//		progress = new MyprogressDialog(getActivity());
+//		progress.show();
 		if ((user = LoginSessionUtil.getLoginUser(getActivity())) != null) {
 			init();
 		} else {
-			progress.cancel();
+//			progress.cancel();
 			Intent intent = new Intent();
-			intent.setClass(getActivity(), Login.class);
+			intent.setClass(getActivity(), LoginActivity.class);
 			startActivity(intent);
 		}
 
@@ -74,9 +74,10 @@ public class Fragment_my extends Fragment implements OnClickListener,
 	}
 
 	public void loadsucess(List<Good> getedgoods) {
-		progress.cancel();
+//		progress.cancel();
 		goods = getedgoods;
 		mygoods.setVisibility(View.VISIBLE);
+		
 		mygoods.setAdapter(new MyGoodsAdapter(getActivity(), goods));
 
 	}

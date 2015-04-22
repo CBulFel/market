@@ -69,7 +69,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="45dp"
             android:gravity="center|left"
-            android:text="移动互联：简文军、姚成亮、王乐"
+            android:text="移动互联：马广召、简文军、姚成亮、王乐"
             android:textColor="#d2691e" />
 
         <TextView

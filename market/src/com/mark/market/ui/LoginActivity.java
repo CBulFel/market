@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -28,7 +29,7 @@ public class LoginActivity extends Activity implements MarketAcitivity,
 	private static final String LOGIN_FAIL = "fail";
 	private static final String TAG = "market";
 	private Login login;
-	private MyprogressDialog progressdialog = null;
+	private MyprogressDialog loginprogress = null;
 
 	@SuppressLint("NewApi")
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,7 @@ public class LoginActivity extends Activity implements MarketAcitivity,
 		intent.setClass(this, MainService.class);
 		startService(intent);
 		login.setLoginListener(this);
-		progressdialog = new MyprogressDialog(this);
+		loginprogress = new MyprogressDialog(this);
 	}
 
 	/*
@@ -70,11 +71,11 @@ public class LoginActivity extends Activity implements MarketAcitivity,
 		// TODO Auto-generated method stub
 		// 当前如果有登录用户就直接登录
 
-		progressdialog.show();
+		loginprogress.show();
 		if (null != LoginSessionUtil.getLoginUser(this)) {
 			Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 			startActivity(intent);
-			progressdialog.cancel();
+			loginprogress.cancel();
 			finish();
 		}
 
@@ -104,7 +105,7 @@ public class LoginActivity extends Activity implements MarketAcitivity,
 	public void refresh(int taskID, Object... objects) {
 		// TODO Auto-generated method stub
 		Log.w(TAG, "loginactivity->refresh!");
-		progressdialog.cancel();
+		loginprogress.cancel();
 		if (objects != null) {
 			String result = (String) objects[0];
 			JSONObject json = JSON.parseObject(result);
@@ -128,4 +129,12 @@ public class LoginActivity extends Activity implements MarketAcitivity,
 
 	}
 
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		// TODO Auto-generated method stub
+		return super.onMenuItemSelected(featureId, item);
+	}
+
+	
+	
 }

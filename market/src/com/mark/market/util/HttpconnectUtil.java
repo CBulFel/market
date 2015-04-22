@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -119,25 +120,38 @@ public class HttpconnectUtil {
 		post = new HttpPost(url);
 		Log.w(TAG, "postfile()");
 		ArrayList<Bitmap> imgs = (ArrayList<Bitmap>) params.get("imgs");
-		Map<String, Object> param = (Map<String, Object>) params.get("info");
-		List<NameValuePair> pairList = new ArrayList<NameValuePair>();
+		Map<String, String> param = (Map<String, String>) params.get("info");
 		ContentBody body = null;
 		String result = null;
 		File file = null;
 		MultipartEntity reqentity = new MultipartEntity();
 		if (param != null) {
-			Set<String> set = param.keySet();
-			Iterator<String> iterator = set.iterator();
-			while (iterator.hasNext()) {
-				Object key = iterator.next();
-				Object value = param.get(key);
-				Log.w(TAG, key.toString()+":"+value.toString());
-				reqentity.addPart(key.toString(),
-						new StringBody(value.toString()));
-
+			/*
+			 * Set<String> set = param.keySet(); Iterator<String> iterator =
+			 * set.iterator(); while (iterator.hasNext()) { Object key =
+			 * iterator.next(); Object value = param.get(key); Log.w(TAG,
+			 * key.toString() + ":" + value.toString());
+			 * reqentity.addPart(key.toString(), new
+			 * StringBody(value.toString()));
+			 * 
+			 * }
+			 */
+			
+			for (String key : param.keySet()) {
+				Log.w(TAG, key + ":" + param.get(key));
+				System.out.println(key
+						+ ":"
+						+param.get(key));
+				System.out.println(key
+						+ ":"
+						+ new String(Base64.decodeBase64(param.get(key)
+								.toString().getBytes())));
+				reqentity.addPart(key, new StringBody(
+						param.get(key).toString()));
 			}
+		} else {
+			Log.w(TAG, "param is null");
 		}
-
 		for (Bitmap bitmap : imgs) {
 			// 把图片存储到本地
 			file = new File(Environment.getExternalStorageDirectory(),
@@ -147,14 +161,8 @@ public class HttpconnectUtil {
 			bitmap.compress(CompressFormat.JPEG, 100, os);
 			if (file != null) {
 				body = new FileBody(file);
+				reqentity.addPart("imgs", body);
 			}
-			// String boundary = "-------------" + System.currentTimeMillis();
-			// post.setHeader("Content-type", "multipart/form-data;boundary="
-
-			// reqentity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-			// reqentity.setBoundary(boundary);
-
-			reqentity.addPart("imgs", body);
 		}
 
 		post.setEntity(reqentity);
@@ -164,8 +172,8 @@ public class HttpconnectUtil {
 		if (response.getStatusLine().equals(HttpStatus.SC_OK)) {
 			result = EntityUtils.toString(response.getEntity());
 		}
-		file.delete();
-
+		if (file != null)
+			file.delete();
 		return result;
 	}
 }
