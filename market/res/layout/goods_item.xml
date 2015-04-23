@@ -198,7 +198,7 @@
                     android:button="@drawable/btn_item_like"
                     android:clickable="true"
                     android:gravity="center"
-                    android:text="12"
+                    android:text="0"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -219,7 +219,7 @@
                     android:drawableLeft="@drawable/tm_post_mainpage_comment"
                     android:drawableStart="@drawable/tm_post_mainpage_comment"
                     android:gravity="center"
-                    android:text="100"
+                    android:text="0"
                     android:textSize="13sp" />
             </LinearLayout>
             <!-- 分享 -->

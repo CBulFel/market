@@ -5,11 +5,13 @@
  */
 package com.mark.market.util;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Environment;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.widget.ImageView;
@@ -23,6 +25,7 @@ import com.mark.market.bean.User;
  * @describ
  */
 public class Tools {
+	public static final String CACHE_DIR=Environment.getExternalStorageDirectory()+"/market2/cache";
 	// 用于实现商品中的图片缓存
 	// 获取当前应用程序所分配的最大内存
 	private final static int maxMemory = (int) Runtime.getRuntime().maxMemory();
@@ -67,6 +70,19 @@ public class Tools {
 		}
 	}
 
+	
+	
+	
+	
+	public static void initdir(){
+		File file=new File(CACHE_DIR);
+		if(!file.exists()){
+			file.mkdirs();
+		}
+		
+		
+		
+	}
 	/*
 	 * 一个工具方法：作用是把系统时间 转换成当前时间的 前*分钟，前*小时
 	 */

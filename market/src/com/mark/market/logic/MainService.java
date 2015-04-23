@@ -23,7 +23,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.mark.market.bean.Task;
-import com.mark.market.ui.MarketAcitivity;
+import com.mark.market.ui.MarketActivity;
 import com.mark.market.util.HttpconnectUtil;
 
 /**
@@ -32,12 +32,13 @@ import com.mark.market.util.HttpconnectUtil;
 public class MainService extends Service implements Runnable {
 	public static final String MARKETHOST = "http://192.168.1.158:8080";
 	public static final String goodUrlhead = "http://online.cumt.edu.cn:8080/2/toItemDetails/toItemDetailsAction_toItemDetails.do?pre=g&id=";
-	private static String url_getByGid = "";
+	private static String url_getByGid = "http://192.168.1.158:8080/market/toItemDetailsAction2_toItemDetailsJSON.do";
 	private static String url_sale = "http://192.168.1.158:8080/market/post/postAction2_postJSON.do";
 	private static String url_update = "http://192.168.1.158:8080/market/index/indexAction2_indexJSON.do";
 	private static String url_login = "http://192.168.1.158:8080/market/login/loginAction2_loginJSON.do";
 	private static String url_comment = "http://192.168.1.158:8080/market/comment/commentAction2_commentJSON.do";
-	private static final String TAG = "market";
+	private static String url_search="http://192.168.1.158:8080/market/serach/searchAction2_searchJSON.do";
+	private static final String TAG = "market->MainService";
 	private static Queue<Task> tasks = new LinkedList<Task>();
 	private static ArrayList<Activity> appActivity = new ArrayList<Activity>();
 	private boolean isRun;
@@ -56,33 +57,37 @@ public class MainService extends Service implements Runnable {
 			public void handleMessage(Message msg) {
 				// TODO Auto-generated method stub
 				Log.w(TAG, "get message" + msg.what);
-				MarketAcitivity activity = null;
+				Activity activity = null;
 				switch (msg.what) {
 				case Task.MARKET_LOGIN:
-					activity = (MarketAcitivity) getActivityByName("LoginActivity");
-					activity.refresh(Task.MARKET_LOGIN, msg.obj);
+					activity = getActivityByName("LoginActivity");
+					((MarketActivity) activity).refresh(Task.MARKET_LOGIN,
+							msg.obj);
 					break;
 				case Task.GET_DETAIL_BY_GID:
-					activity = (MarketAcitivity) getActivityByName("Gooddetail");
-					activity.refresh(Task.GET_USERINFO, msg.obj);
+					activity = getActivityByName("Gooddetail");
+					((MarketActivity) activity).refresh(Task.GET_USERINFO,
+							msg.obj);
 					break;
 				case Task.GET_GOODS:
-					activity = (MarketAcitivity) getActivityByName("MainActivity");
-					activity.refresh(Task.GET_GOODS, msg.obj);
+					activity = getActivityByName("MainActivity");
+					((MarketActivity) activity)
+							.refresh(Task.GET_GOODS, msg.obj);
 					break;
 				case Task.UPDATE_GOODS:
 					break;
 				case Task.LOADMORE:
-					activity = (MarketAcitivity) getActivityByName("MainActivity");
-					activity.refresh(Task.LOADMORE, msg.obj);
+					activity = getActivityByName("MainActivity");
+					((MarketActivity) activity).refresh(Task.LOADMORE, msg.obj);
 					break;
 				case Task.GOODS_SEARCH:
-					activity = (MarketAcitivity) getActivityByName("SearchActivity");
-					activity.refresh(Task.LOADMORE, msg.obj);
+					activity = getActivityByName("SearchActivity");
+					((MarketActivity) activity).refresh(Task.LOADMORE, msg.obj);
 					break;
 				case Task.SALE_GOOD:
-					activity = (MarketAcitivity) getActivityByName("GoodsEdit");
-					activity.refresh(Task.SALE_GOOD, msg.obj);
+					activity = getActivityByName("GoodsEdit");
+					((MarketActivity) activity)
+							.refresh(Task.SALE_GOOD, msg.obj);
 				case Task.COMMENT:
 					/*
 					 * activity = (MarketAcitivity)
@@ -92,6 +97,7 @@ public class MainService extends Service implements Runnable {
 					break;
 
 				default:
+					removeActivity(activity);
 					break;
 				}
 			}
@@ -133,7 +139,8 @@ public class MainService extends Service implements Runnable {
 	public static void newTask(Activity activity, Task task) {
 
 		tasks.add(task);
-		appActivity.add(activity);
+		if (activity != null)
+			appActivity.add(activity);
 	}
 
 	// UI新开任务时，需要传入Activity实例，为了refresh操作
@@ -143,12 +150,15 @@ public class MainService extends Service implements Runnable {
 	 */
 
 	// 任务完成后，应该remove对应的Activity实例，防止下次同一Activity的不同实例refresh混淆
-	public static void removeActivity(Context context) {
-		appActivity.remove(context);
+	public static void removeActivity(Activity activity) {
+		if (activity != null) {
+			appActivity.remove(activity);
+			Log.w(TAG, activity.getLocalClassName() + "removed!");
+		}
 	}
 
 	// 通过name获取新开任务时传递过来的Activity实例
-	public Object getActivityByName(String name) {
+	public Activity getActivityByName(String name) {
 		if (!appActivity.isEmpty()) {
 			for (Activity activity : appActivity) {
 				if (activity.getClass().getName().indexOf(name) > 0) {
@@ -179,23 +189,24 @@ public class MainService extends Service implements Runnable {
 				break;
 			case Task.GET_USERINFO:
 				// 获得用户信息,用于用户页
-				msg.obj=HttpconnectUtil.getResult("", task.getParams());
+				msg.obj = HttpconnectUtil.getResult("", task.getParams());
 				break;
 			case Task.GET_GOODS:
 				// 获得商品列表
-				msg.obj = HttpconnectUtil.getResult(url_update, null);
+//				msg.obj = HttpconnectUtil.getResult(url_update, null);
 				break;
 			case Task.GET_DETAIL_BY_GID:
 				// 获取商品详情
-				msg.obj = HttpconnectUtil.getResult(url_getByGid,
-						task.getParams());
+				/*msg.obj = HttpconnectUtil.getResult(url_getByGid,
+						task.getParams());*/
 				break;
 			case Task.LOADMORE:
 				// 加载更多
+
 				break;
 			case Task.GOODS_SEARCH:
 				// 搜索商品
-				msg.obj = HttpconnectUtil.getResult("", task.getParams());
+				msg.obj = HttpconnectUtil.getResult(url_search, task.getParams());
 				break;
 			case Task.SALE_GOOD:
 				// 发布商品

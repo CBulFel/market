@@ -139,6 +139,7 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 //		homeprogress.cancel();
 		
 		mAdapter.setgoods(goods_new);
+		mAdapter.notifyDataSetChanged();
 		marketListView.setAdapter(mAdapter);
 		marketListView.stopRefresh();
 		marketListView.stopLoadMore();
@@ -149,8 +150,8 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 	public void loadmorecomplete(List<Good> goods_more) {
 		// 加载更多完成后的操作
 //		homeprogress.cancel();
-		mAdapter = new GoodsAdapter(getActivity());
 		mAdapter.addgoods(goods_more);
+		mAdapter.notifyDataSetChanged();
 		marketListView.setAdapter(mAdapter);
 		marketListView.stopRefresh();
 		marketListView.stopLoadMore();

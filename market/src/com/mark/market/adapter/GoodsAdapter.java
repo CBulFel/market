@@ -6,7 +6,6 @@ package com.mark.market.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,14 +39,13 @@ import com.mark.market.util.Tools;
  * 
  * @describe 商品List的Adapter
  */
-public class GoodsAdapter extends BaseAdapter implements OnClickListener {
+public class GoodsAdapter extends BaseAdapter{
 
 	private static String TAG = "market GoodsAdapter";
 	private Context context;
-	private List<Good> goods=new ArrayList<Good>();
+	private List<Good> goods = new ArrayList<Good>();
 	private LayoutInflater mInflater;
 	private ViewHolder holder;
-	private int p;
 	private Good good;
 
 	static class ViewHolder {
@@ -71,8 +69,6 @@ public class GoodsAdapter extends BaseAdapter implements OnClickListener {
 
 	}
 
-	
-	
 	/**
 	 * @param context
 	 */
@@ -113,11 +109,9 @@ public class GoodsAdapter extends BaseAdapter implements OnClickListener {
 		return 0;
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		p = position;
 		good = goods.get(position);
 		if (convertView == null) {
 			convertView = mInflater.inflate(R.layout.goods_item, null);
@@ -167,27 +161,28 @@ public class GoodsAdapter extends BaseAdapter implements OnClickListener {
 		/*
 		 * 组件填充内容
 		 */
-		holder.item_userimg.setImageResource(R.drawable.header_img_default);
-		holder.item_username.setText(good.getUser().getUname());
-		if (good.getGimg1() != null) {
-			Tools.loadBitmap(MainService.MARKETHOST + good.getGimg1(),
-					holder.item_content_pic1, 0, 0);
-		} else {
-			holder.item_content_pic1.setVisibility(View.GONE);
-		}
-		if (good.getGimg2() != null) {
-			Tools.loadBitmap(MainService.MARKETHOST + good.getGimg2(),
-					holder.item_content_pic2, 0, 0);
-		} else {
-			holder.item_content_pic2.setVisibility(View.GONE);
-		}
-		if (good.getGimg3() != null) {
-			Tools.loadBitmap(MainService.MARKETHOST + good.getGimg3(),
-					holder.item_content_pic3, 0, 0);
-		} else {
-			holder.item_content_pic3.setVisibility(View.GONE);
-		}
 		try {
+			holder.item_userimg.setImageResource(R.drawable.header_img_default);
+			holder.item_username.setText(good.getUser().getUname());
+			if (good.getGimg1() != null) {
+				Tools.loadBitmap(MainService.MARKETHOST + good.getGimg1(),
+						holder.item_content_pic1, 0, 0);
+			} else {
+				holder.item_content_pic1.setVisibility(View.GONE);
+			}
+			if (good.getGimg2() != null) {
+				Tools.loadBitmap(MainService.MARKETHOST + good.getGimg2(),
+						holder.item_content_pic2, 0, 0);
+			} else {
+				holder.item_content_pic2.setVisibility(View.GONE);
+			}
+			if (good.getGimg3() != null) {
+				Tools.loadBitmap(MainService.MARKETHOST + good.getGimg3(),
+						holder.item_content_pic3, 0, 0);
+			} else {
+				holder.item_content_pic3.setVisibility(View.GONE);
+			}
+
 			holder.item_time.setText(Tools.formattime(good.getGtime()));
 			holder.item_price.setText(good.getGprice().toString());
 			holder.item_preprice.setText(good.getGprePrice().toString());
@@ -204,10 +199,10 @@ public class GoodsAdapter extends BaseAdapter implements OnClickListener {
 			Log.e(TAG, "catched:" + e.getMessage());
 			Log.e(TAG, "cause:" + e.getCause());
 		}
-		holder.layout_item.setOnClickListener(this);
-		holder.layout_comment.setOnClickListener(this);
-		holder.layout_share.setOnClickListener(this);
-		holder.layout_like.setOnClickListener(this);
+		holder.layout_item.setOnClickListener(new goodItemClick(context, position, good));
+		holder.layout_comment.setOnClickListener(new goodItemClick(context, position, good));
+		holder.layout_share.setOnClickListener(new goodItemClick(context, position, good));
+		holder.layout_like.setOnClickListener(new goodItemClick(context, position, good));
 		holder.item_like
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -231,23 +226,41 @@ public class GoodsAdapter extends BaseAdapter implements OnClickListener {
 		goods.addAll(goods_more);
 
 	}
-public void setgoods(List<Good> goods_new){
-	goods=goods_new;
+
+	public void setgoods(List<Good> goods_new) {
+		goods = goods_new;
+	}
+
 }
-	/*
-	 * (non-Javadoc)
-	 * 
+
+class goodItemClick implements OnClickListener{
+
+	private int position;
+	private Good good;
+	private Context context;
+	/**
+	 * @param position
+	 */
+	public goodItemClick(Context context,int position,Good good) {
+		super();
+		this.position = position;
+		this.good=good;
+		this.context=context;
+	}
+
+
+	/* (non-Javadoc)
 	 * @see android.view.View.OnClickListener#onClick(android.view.View)
 	 */
-	@SuppressLint("NewApi")
 	@Override
 	public void onClick(View v) {
+
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.like:
 			break;
 		case R.id.goods_item_layout_item: {
-			Toast.makeText(context, "item---->" + p, Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "item---->" + position, Toast.LENGTH_SHORT).show();
 			Intent intent = new Intent(context, Gooddetail.class);
 			Bundle bundle = new Bundle();
 			bundle.putSerializable("good", good);
@@ -257,7 +270,6 @@ public void setgoods(List<Good> goods_new){
 		}
 			break;
 		case R.id.comment:
-			Toast.makeText(context, "评论---->待完成", Toast.LENGTH_SHORT).show();
 			User user = new User();
 			CommentDialog commentdialog = new CommentDialog(context);
 			if ((user = LoginSessionUtil.getLoginUser(context)) != null) {
@@ -271,7 +283,6 @@ public void setgoods(List<Good> goods_new){
 			}
 			break;
 		case R.id.share:
-			Toast.makeText(context, "分享---->待完成", Toast.LENGTH_SHORT).show();
 			String sharemsg = context.getResources().getString(
 					R.string.share_message_header)
 					+ MainService.goodUrlhead + good.getGid();
@@ -281,7 +292,7 @@ public void setgoods(List<Good> goods_new){
 			break;
 		default:
 			break;
-		}
+		}	
 	}
-
+	
 }

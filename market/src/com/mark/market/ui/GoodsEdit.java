@@ -10,16 +10,18 @@ import org.apache.commons.codec.binary.Base64;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.TaskStackBuilder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -31,15 +33,16 @@ import android.widget.Gallery;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.mark.android_ui.Login;
 import com.mark.market.R;
 import com.mark.market.adapter.MyAdapter;
 import com.mark.market.bean.Task;
 import com.mark.market.bean.User;
 import com.mark.market.logic.MainService;
+import com.mark.market.util.Androidstatus;
 import com.mark.market.util.LoginSessionUtil;
+import com.mark.market.util.Tools;
 
-public class GoodsEdit extends Activity implements MarketAcitivity,
+public class GoodsEdit extends Activity implements MarketActivity,
 		OnClickListener {
 	private static String TAG = "goodedit";
 	private static int PHOTO_REQUEST_GALLERY = 1;
@@ -48,10 +51,7 @@ public class GoodsEdit extends Activity implements MarketAcitivity,
 	private static final String PHOTO_FILE_NAME = "temp_photo.jpg";
 	private Gallery Mygallery;
 	private ArrayList<Bitmap> groupbit;
-	private String[] categorys = { "digital", "book", "furniture", "clothes",
-			"tech" };
 	private String[] places = { "nanhu", "wenchang" };
-	private String[] isnew = { "10", "9", "8", "7", "6" };
 	private Bitmap selectbit;
 	private Button button_addphoto, button_delphoto, sale;
 	private MyAdapter myadapter;
@@ -190,9 +190,8 @@ public class GoodsEdit extends Activity implements MarketAcitivity,
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO 自动生成的方法存根
 				Intent i = new Intent("android.media.action.IMAGE_CAPTURE");
-				if (hasSd()) {
-					tempFile = new File(Environment
-							.getExternalStorageDirectory(), PHOTO_FILE_NAME);
+				if (Androidstatus.hasSD()) {
+					tempFile = new File(Tools.CACHE_DIR, PHOTO_FILE_NAME);
 					Uri ui = Uri.fromFile(tempFile);
 					i.putExtra(MediaStore.EXTRA_OUTPUT, ui);
 				}
@@ -201,16 +200,6 @@ public class GoodsEdit extends Activity implements MarketAcitivity,
 		});
 		mydialog = builder.create();
 
-	}
-
-	public Boolean hasSd() {
-
-		if (Environment.getExternalStorageState().equals(
-				Environment.MEDIA_MOUNTED)) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	public void cut(Uri ui) {
@@ -240,7 +229,8 @@ public class GoodsEdit extends Activity implements MarketAcitivity,
 		}
 			break;
 		case 2: {
-			if (hasSd()) {
+			if (Androidstatus.hasSD()) {
+
 				cut(Uri.fromFile(tempFile));
 				// System.out.println(number+"  "+2);
 			} else {
@@ -279,6 +269,25 @@ public class GoodsEdit extends Activity implements MarketAcitivity,
 
 	}
 
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		// TODO Auto-generated method stub
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			Intent upIntent = NavUtils.getParentActivityIntent(this);
+			if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+				TaskStackBuilder.create(this)
+						.addNextIntentWithParentStack(upIntent)
+						.startActivities();
+			} else {
+				upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				NavUtils.navigateUpTo(this, upIntent);
+			}
+			return true;
+		}
+		return super.onMenuItemSelected(featureId, item);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -300,7 +309,7 @@ public class GoodsEdit extends Activity implements MarketAcitivity,
 		}
 			break;
 		case R.id.good_edit_sale: {
-			if(groupbit.size()<1){
+			if (groupbit.size() < 1) {
 				Toast.makeText(GoodsEdit.this, "至少要为宝贝上传1张图片呦～",
 						Toast.LENGTH_SHORT).show();
 				break;

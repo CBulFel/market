@@ -5,7 +5,7 @@ package com.mark.market.ui;
  * @version 1.0
  * @describe 所有应用界面的接口
  */
-public interface MarketAcitivity {
+public interface MarketActivity {
 
 	//初始化界面操作
 	//public void init();

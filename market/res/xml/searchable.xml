@@ -3,6 +3,7 @@
     android:hint="@string/search_hint"
     android:includeInGlobalSearch="true"
     android:label="@string/label"
+    android:imeOptions="actionSearch"
     android:searchSuggestAuthority="com.mark.market.util.SearchSuggestionsProvider"
     android:searchSuggestIntentAction="android.intent.action.SEARCH"
     android:searchSuggestSelection=" ?"

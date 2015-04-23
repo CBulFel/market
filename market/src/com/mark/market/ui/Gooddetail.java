@@ -50,17 +50,17 @@ import com.mark.market.util.LoginSessionUtil;
 import com.mark.market.util.Tools;
 
 @SuppressLint("InflateParams")
-public class Gooddetail extends Activity implements MarketAcitivity,
+public class Gooddetail extends Activity implements MarketActivity,
 		OnClickListener {
-	private static String TAG="market gooddetail";
+	private static String TAG = "market gooddetail";
 	private ListView list_comments;
 	private Good good = null;
 	private MyImgScroll detail_img;
 	private LinearLayout ovalLayout; // 下方的小圆点
 	private List<View> listimgs; // 要滚动的 图片组
 	private View headview;
-	private LinkedList<GComment> comments; 
-	private ArrayList<String>unamelist;
+	private LinkedList<GComment> comments;
+	private ArrayList<String> unamelist;
 	private ViewHolder holder = new ViewHolder();
 	private CommentsAdapter comment_adapter;
 	private CommentDialog commentdialog;
@@ -79,7 +79,6 @@ public class Gooddetail extends Activity implements MarketAcitivity,
 		public LinearLayout detail_comment;
 		public LinearLayout detail_share;
 		public TextView detail_comment_text;
-		
 
 	}
 
@@ -117,8 +116,8 @@ public class Gooddetail extends Activity implements MarketAcitivity,
 				.findViewById(R.id.detail_price);
 		holder.detail_preprice = (TextView) headview
 				.findViewById(R.id.detail_preprice);
-		
-		holder.detail_comment_text=(TextView)findViewById(R.id.detail_comment);
+
+		holder.detail_comment_text = (TextView) findViewById(R.id.detail_comment);
 		holder.detail_like = (CheckBox) findViewById(R.id.detail_like);
 		holder.detail_comment = (LinearLayout) findViewById(R.id.comment);
 		holder.detail_share = (LinearLayout) findViewById(R.id.share);
@@ -130,7 +129,7 @@ public class Gooddetail extends Activity implements MarketAcitivity,
 		init();
 		// 新开任务通过商品ID获取商品详情
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("pre","g");
+		params.put("pre", "g");
 		params.put("id", good.getGid());
 		Task task = new Task(Task.GET_DETAIL_BY_GID, params);
 		MainService.newTask(this, task);
@@ -141,23 +140,24 @@ public class Gooddetail extends Activity implements MarketAcitivity,
 		if (good == null) {
 			return;
 		}
-		try{
-		holder.detail_username.setText(good.getUser().getUname());
-		holder.detail_time.setText(Tools.formattime(good.getGtime()));
-		holder.detail_content.setText(good.getGdescription());
-		holder.detail_place.setText(good.getGplace());
-		holder.detail_price.setText(good.getGprice().toString());
-		holder.detail_preprice.setText(good.getGprePrice().toString());
-		holder.detail_like.setText(good.getGcollectNum().toString());
-		holder.detail_comment_text.setText(good.getGcommentNum().toString());
-		}
-		catch(Exception e){
+		try {
+			holder.detail_username.setText(good.getUser().getUname());
+			holder.detail_time.setText(Tools.formattime(good.getGtime()));
+			holder.detail_content.setText(good.getGdescription());
+			holder.detail_place.setText(good.getGplace());
+			holder.detail_price.setText(good.getGprice().toString());
+			holder.detail_preprice.setText(good.getGprePrice().toString());
+			holder.detail_like.setText(good.getGcollectNum().toString());
+			holder.detail_comment_text
+					.setText(good.getGcommentNum().toString());
+		} catch (Exception e) {
 			Log.e(TAG, "返回数据异常");
 			Log.e(TAG, "catched:" + e.getMessage());
 			Log.e(TAG, "cause:" + e.getCause());
 		}
-		
-		holder.detail_like.setChecked(Tools.iscollected(getApplicationContext(), good.getGid()));
+
+		holder.detail_like.setChecked(Tools.iscollected(
+				getApplicationContext(), good.getGid()));
 		holder.detail_comment.setOnClickListener(this);
 		holder.detail_share.setOnClickListener(this);
 		holder.detail_like
@@ -167,9 +167,9 @@ public class Gooddetail extends Activity implements MarketAcitivity,
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
 						// TODO Auto-generated method stub
-						if(LoginSessionUtil.getLoginUser(getApplicationContext())==null)
-						{
-							Intent intent=new Intent();
+						if (LoginSessionUtil
+								.getLoginUser(getApplicationContext()) == null) {
+							Intent intent = new Intent();
 							intent.setClass(Gooddetail.this, Login.class);
 							startActivity(intent);
 						}
@@ -191,8 +191,9 @@ public class Gooddetail extends Activity implements MarketAcitivity,
 				continue;
 			}
 			ImageView imageView = new ImageView(this);
-			Tools.loadBitmap(MainService.MARKETHOST+imageResId[i], imageView, 0, 0);
-			Log.w(TAG, "img resID:"+imageResId[i]);
+			Tools.loadBitmap(MainService.MARKETHOST + imageResId[i], imageView,
+					0, 0);
+			Log.w(TAG, "img resID:" + imageResId[i]);
 			imageView.setScaleType(ScaleType.CENTER_INSIDE);
 			imageView.setOnClickListener(new OnClickListener() {
 				@Override
@@ -217,19 +218,21 @@ public class Gooddetail extends Activity implements MarketAcitivity,
 			});
 			listimgs.add(imageView);
 		}
-		refreshcomments();
+		// refreshcomments();
 
 	}
-public void refreshcomments(){
-	
-	comments=new LinkedList<GComment>(good.getGcomments());
-	comment_adapter = new CommentsAdapter(this, comments,unamelist);
-	list_comments.setAdapter(comment_adapter);
-	detail_img.start(this, listimgs, 0, ovalLayout,
-			R.layout.ad_bottom_item, R.id.ad_item_v,
-			R.drawable.dot_focused, R.drawable.dot_normal);
-	list_comments.addHeaderView(headview);
-}
+
+	public void refreshcomments() {
+
+		comments = new LinkedList<GComment>(good.getGcomments());
+		comment_adapter = new CommentsAdapter(this, comments, unamelist);
+		list_comments.setAdapter(comment_adapter);
+		detail_img.start(this, listimgs, 0, ovalLayout,
+				R.layout.ad_bottom_item, R.id.ad_item_v,
+				R.drawable.dot_focused, R.drawable.dot_normal);
+		list_comments.addHeaderView(headview);
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
@@ -268,15 +271,18 @@ public void refreshcomments(){
 				commentdialog = new CommentDialog(this, user.getUid(),
 						good.getGid());
 				commentdialog.show();
-			}else {
-				Intent intent=new Intent();
+			} else {
+				Intent intent = new Intent();
 				intent.setClass(this, LoginActivity.class);
 			}
 			break;
 		case R.id.share:
-		Log.w(TAG, "gooddetail->share");
-			String sharemsg=getResources().getString(R.string.share_message_header)+MainService.goodUrlhead+good.getGid();
-			AndroidShare share=new AndroidShare(this,sharemsg, good.getGimg1());
+			Log.w(TAG, "gooddetail->share");
+			String sharemsg = getResources().getString(
+					R.string.share_message_header)
+					+ MainService.goodUrlhead + good.getGid();
+			AndroidShare share = new AndroidShare(this, sharemsg,
+					good.getGimg1());
 			share.show();
 			break;
 		default:
@@ -292,18 +298,24 @@ public void refreshcomments(){
 	@Override
 	public void refresh(int taskID, Object... objects) {
 		// TODO Auto-generated method stub
-switch(taskID){
-case Task.GET_DETAIL_BY_GID:
-		String result=(String)objects[0];
-		JSONObject js=JSON.parseObject(result);
-		JSONArray json_unamel=js.getJSONArray("userlist");
-		unamelist=(ArrayList<String>) JSON.parseArray(json_unamel.toJSONString(),String.class);
-		JSONObject json_goods=js.getJSONObject("goods");
-		good=JSON.parseObject(json_goods.toJSONString(),Good.class);
-		init();
-		break;
-case Task.COMMENT:
-	init();
-			}
+		if (objects[0] == null) {
+			Toast.makeText(getApplicationContext(), "未收到数据", Toast.LENGTH_SHORT)
+					.show();
+			return;
+		}
+		switch (taskID) {
+		case Task.GET_DETAIL_BY_GID:
+			String result = (String) objects[0];
+			JSONObject js = JSON.parseObject(result);
+			JSONArray json_unamel = js.getJSONArray("userList");
+			unamelist = (ArrayList<String>) JSON.parseArray(
+					json_unamel.toJSONString(), String.class);
+			JSONObject json_goods = js.getJSONObject("goods");
+			good = JSON.parseObject(json_goods.toJSONString(), Good.class);
+			init();
+			break;
+		case Task.COMMENT:
+			init();
+		}
 	}
 }

@@ -7,48 +7,47 @@ import java.util.List;
 import java.util.Map;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
+import android.app.TaskStackBuilder;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnActionExpandListener;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.mark.market.R;
-import com.mark.market.adapter.GoodsAdapter;
 import com.mark.market.bean.Good;
 import com.mark.market.bean.Task;
 import com.mark.market.logic.MainService;
 import com.mark.market.util.SearchSuggestionsProvider;
 
-public class SearchActivity extends Activity implements MarketAcitivity {
+public class SearchActivity extends FragmentActivity implements MarketActivity {
 
 	private static String TAG = "market searchactivity";
-	private ListView result;
 	private SearchView searchView;
 	private String queryString;
-	private GoodsAdapter madapter;
-	private List<Good> goods = new ArrayList<Good>();
+	private Fragment_searchsug fragment_suggest;
+	private Fragment_searchres fragment_result;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +59,7 @@ public class SearchActivity extends Activity implements MarketAcitivity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setTitle("搜索");
-		result = (ListView) findViewById(R.id.search_result);
+		gosugfrg();
 		Intent intent = getIntent();
 		// 如果是通过ACTION_SEARCH来调用，即如果通过搜索调用
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -71,6 +70,26 @@ public class SearchActivity extends Activity implements MarketAcitivity {
 		doSearchQuery();
 	}
 
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		// TODO Auto-generated method stub
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			Intent upIntent = NavUtils.getParentActivityIntent(this);
+			if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+				TaskStackBuilder.create(this)
+						.addNextIntentWithParentStack(upIntent)
+						.startActivities();
+			} else {
+				upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				NavUtils.navigateUpTo(this, upIntent);
+			}
+			return true;
+		}
+
+		return super.onMenuItemSelected(featureId, item);
+	}
+
 	@SuppressLint("NewApi")
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -79,7 +98,7 @@ public class SearchActivity extends Activity implements MarketAcitivity {
 		// 使searchview默认展开
 		MenuItem search = menu.findItem(R.id.menu_search);
 		search.expandActionView();
-		
+
 		search.setOnActionExpandListener(new OnActionExpandListener() {
 
 			@Override
@@ -101,8 +120,18 @@ public class SearchActivity extends Activity implements MarketAcitivity {
 		searchView = (SearchView) menu.findItem(R.id.menu_search)
 				.getActionView();
 		searchView.setSubmitButtonEnabled(true);// 显示搜索提交按钮
+		searchView.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				// TODO Auto-generated method stub
+				Log.w(TAG, "onfocuschange:"+hasFocus);
+				if (hasFocus)
+					gosugfrg();
+			}
+		});
 		// 利用反射配置searchview
-		try {
+		/*try {
 			initsearchView();
 		} catch (NoSuchFieldException e) {
 			// TODO Auto-generated catch block
@@ -113,14 +142,19 @@ public class SearchActivity extends Activity implements MarketAcitivity {
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
 
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				// TODO Auto-generated method stub
-				queryString = query;
-				doSearchQuery();
+				if (query == null)
+					return true;
+				else {
+					searchView.clearFocus();
+					queryString = query;
+					doSearchQuery();
+				}
 				return true;
 			}
 
@@ -147,9 +181,27 @@ public class SearchActivity extends Activity implements MarketAcitivity {
 				LayoutParams.MATCH_PARENT));
 		searchView.setGravity(Gravity.CENTER);
 		searchView.clearFocus();
-		View foot_view=LayoutInflater.from(getApplicationContext()).inflate(R.layout.seatchview_footer,null);
-		searchView.addView(foot_view, new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
 		return true;
+	}
+
+	private void gosugfrg() {
+
+		fragment_suggest = new Fragment_searchsug();
+		FragmentTransaction transaction = this.getSupportFragmentManager()
+				.beginTransaction();
+		transaction.replace(R.id.search_content, fragment_suggest);
+		transaction.commit();
+
+	}
+
+	private void goresultfrg() {
+
+		fragment_result = new Fragment_searchres();
+		FragmentTransaction transaction = this.getSupportFragmentManager()
+				.beginTransaction();
+		transaction.replace(R.id.search_content, fragment_result);
+		transaction.commit();
+
 	}
 
 	/**
@@ -180,7 +232,6 @@ public class SearchActivity extends Activity implements MarketAcitivity {
 		AutoCompleteTextView searchtext = (AutoCompleteTextView) ownField
 				.get(searchView);
 		searchtext.setText(queryString);
-		
 
 	}
 
@@ -194,6 +245,7 @@ public class SearchActivity extends Activity implements MarketAcitivity {
 			queryString = intent.getStringExtra(SearchManager.QUERY);
 
 		}
+		
 		doSearchQuery();
 
 	}
@@ -203,16 +255,17 @@ public class SearchActivity extends Activity implements MarketAcitivity {
 	 */
 	private void doSearchQuery() {
 		// TODO Auto-generated method stub
+
 		if (queryString == null)
 			return;
+		goresultfrg();
 		// 保存搜索记录
-
 		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
 				SearchSuggestionsProvider.AUTHORITY,
 				SearchSuggestionsProvider.MODE);
 		suggestions.saveRecentQuery(queryString, null);
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("searchtext", queryString);
+		params.put("searchName", queryString);
 		Task task = new Task(Task.GOODS_SEARCH, params);
 		MainService.newTask(this, task);
 
@@ -226,20 +279,22 @@ public class SearchActivity extends Activity implements MarketAcitivity {
 	@Override
 	public void refresh(int taskID, Object... objects) {
 		// TODO Auto-generated method stub
-		if (objects[0] == null) {
-			Toast.makeText(this, "未得到返回数据", Toast.LENGTH_SHORT).show();
-			return;
-		}
-		String res = (String) objects[0];
-		JSONObject json = JSON.parseObject(res);
-		Log.w(TAG, json.toJSONString());
-		JSONArray jsonarray = json.getJSONArray("goods");
-		Log.w(TAG, jsonarray.toJSONString());
-		List<Good> goodsjson = JSON.parseArray(jsonarray.toJSONString(),
-				Good.class);
-		goods.addAll(goodsjson);
-		madapter = new GoodsAdapter(this, goods);
-		result.setAdapter(madapter);
-
+		/*
+		 * if (objects[0] == null) { Toast.makeText(this, "未得到返回数据",
+		 * Toast.LENGTH_SHORT).show(); return; } List<Good> goodsjson = new
+		 * ArrayList<Good>(); try { String res = (String) objects[0]; JSONObject
+		 * json = JSON.parseObject(res); Log.w(TAG, json.toJSONString());
+		 * JSONArray jsonarray = json.getJSONArray("list"); Log.w(TAG,
+		 * jsonarray.toJSONString()); goodsjson =
+		 * JSON.parseArray(jsonarray.toJSONString(), Good.class); } catch
+		 * (Exception e) { // TODO Auto-generated catch block Log.e(TAG,
+		 * "JSON 解析错误"); Log.e(TAG, "msg:" + e.getMessage()); Log.e(TAG,
+		 * "caused:" + e.getCause()); }
+		 */
+		List<Good> goodsjson = new ArrayList<Good>();
+		for (int i = 0; i < 4; i++)
+			goodsjson.add(new Good());
+		goresultfrg();
+		// fragment_result.searchcomplete(goodsjson);
 	}
 }

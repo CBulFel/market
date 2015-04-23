@@ -13,6 +13,7 @@ import com.mark.market.R;
 import com.mark.market.bean.GComment;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,33 +22,34 @@ import android.widget.TextView;
 
 /**
  * @author mazhao
- * @describ 
+ * @describ
  */
 public class CommentsAdapter extends BaseAdapter {
 
-	private Context context;
+	private static final String TAG="market->comments adapter";
 	private List<GComment> comments;
 	private LayoutInflater inflater;
 	private ViewHolder holder;
 	private List<String> uname_list;
-	
-	private class ViewHolder{
+
+	private class ViewHolder {
 		public CircularImage comment_headimg;
 		public TextView comment_uname;
 		public TextView comment_content;
-		
+
 	}
-	
-	
+
 	/**
-	 * @param context	当前上下文
-	 * @param comments 传入的评论实例
+	 * @param context
+	 *            当前上下文
+	 * @param comments
+	 *            传入的评论实例
 	 */
 	public CommentsAdapter(Context context, List<GComment> comments) {
 		super();
-		this.context = context;
 		this.comments = comments;
-		this.inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	/**
@@ -58,12 +60,15 @@ public class CommentsAdapter extends BaseAdapter {
 	public CommentsAdapter(Context context, List<GComment> comments,
 			ArrayList<String> uname_list) {
 		super();
-		this.context = context;
 		this.comments = comments;
 		this.uname_list = uname_list;
+		this.inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.widget.Adapter#getCount()
 	 */
 	@Override
@@ -72,7 +77,9 @@ public class CommentsAdapter extends BaseAdapter {
 		return comments.size();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.widget.Adapter#getItem(int)
 	 */
 	@Override
@@ -81,7 +88,9 @@ public class CommentsAdapter extends BaseAdapter {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.widget.Adapter#getItemId(int)
 	 */
 	@Override
@@ -90,33 +99,39 @@ public class CommentsAdapter extends BaseAdapter {
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see android.widget.Adapter#getView(int, android.view.View, android.view.ViewGroup)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.widget.Adapter#getView(int, android.view.View,
+	 * android.view.ViewGroup)
 	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		GComment comment=comments.get(position);
-		String uname=uname_list.get(position);
-		if(convertView==null){
-			convertView=inflater.inflate(R.layout.comments_item, null);
-			holder=new ViewHolder();
-			
-			holder.comment_headimg=(CircularImage)convertView.findViewById(R.id.comment_headimg);
-			holder.comment_uname=(TextView)convertView.findViewById(R.id.comment_uname);
-			holder.comment_content=(TextView)convertView.findViewById(R.id.comment_content);
+		try{
+		GComment comment = comments.get(position);
+		String uname = uname_list.get(position);
+		if (convertView == null) {
+			convertView = inflater.inflate(R.layout.comments_item, null);
+			holder = new ViewHolder();
+
+			holder.comment_headimg = (CircularImage) convertView
+					.findViewById(R.id.comment_headimg);
+			holder.comment_uname = (TextView) convertView
+					.findViewById(R.id.comment_uname);
+			holder.comment_content = (TextView) convertView
+					.findViewById(R.id.comment_content);
 			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
 		}
-		else {
-			holder=(ViewHolder)convertView.getTag();
-		}
-		
+
 		holder.comment_headimg.setImageResource(R.drawable.header_img_default);
 		holder.comment_uname.setText(uname);
 		holder.comment_content.setText(comment.getGcMsg());
-		
-		
-		
+		}catch(Exception e){
+			Log.e(TAG, "adapter 设置数据异常");
+		}
 		return convertView;
 	}
 

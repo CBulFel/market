@@ -154,8 +154,8 @@ public class HttpconnectUtil {
 		}
 		for (Bitmap bitmap : imgs) {
 			// 把图片存储到本地
-			file = new File(Environment.getExternalStorageDirectory(),
-					"temp.jpg");
+			file = new File(Tools.CACHE_DIR,
+					System.nanoTime()+".jpg");
 			OutputStream os = null;
 			os = new BufferedOutputStream(new FileOutputStream(file));
 			bitmap.compress(CompressFormat.JPEG, 100, os);
@@ -172,8 +172,7 @@ public class HttpconnectUtil {
 		if (response.getStatusLine().equals(HttpStatus.SC_OK)) {
 			result = EntityUtils.toString(response.getEntity());
 		}
-		if (file != null)
-			file.delete();
+
 		return result;
 	}
 }

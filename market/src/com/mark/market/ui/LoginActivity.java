@@ -6,8 +6,10 @@ import java.util.Map;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -23,7 +25,7 @@ import com.mark.market.bean.User;
 import com.mark.market.logic.MainService;
 import com.mark.market.util.LoginSessionUtil;
 
-public class LoginActivity extends Activity implements MarketAcitivity,
+public class LoginActivity extends Activity implements MarketActivity,
 		LoginListener {
 	private static final String LOGIN_SUCCESS = "success";
 	private static final String LOGIN_FAIL = "fail";
@@ -132,6 +134,19 @@ public class LoginActivity extends Activity implements MarketAcitivity,
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		// TODO Auto-generated method stub
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			Intent upIntent = NavUtils.getParentActivityIntent(this);
+			if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+				TaskStackBuilder.create(this)
+						.addNextIntentWithParentStack(upIntent)
+						.startActivities();
+			} else {
+				upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				NavUtils.navigateUpTo(this, upIntent);
+			}
+			return true;
+		}
 		return super.onMenuItemSelected(featureId, item);
 	}
 

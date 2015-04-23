@@ -4,10 +4,10 @@
     android:layout_height="match_parent"
     tools:context="${relativePackage}.${activityClass}" >
 
-    <ListView 
-        android:id="@+id/search_result"
+    <FrameLayout
+        android:id="@+id/search_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        ></ListView>
+        android:layout_height="match_parent" >
+    </FrameLayout>
 
 </RelativeLayout>

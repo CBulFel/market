@@ -1,7 +1,11 @@
 package com.mark.market.ui;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -41,14 +45,15 @@ import com.mark.market.R;
 import com.mark.market.bean.Good;
 import com.mark.market.bean.Task;
 import com.mark.market.logic.MainService;
+import com.mark.market.util.Tools;
 
 @SuppressLint({ "NewApi", "InflateParams" })
 public class MainActivity extends FragmentActivity implements OnClickListener,
-		MarketAcitivity {
+		MarketActivity {
 
 	private static long exitTime = 0;
 	private static long waitTime = 2000;
-	private static final String TAG = "market";
+	private static final String TAG = "market->MainActivity";
 	private boolean success = true;
 	private ProgressBar title_progress;
 	private MyprogressDialog homeprogress;
@@ -92,6 +97,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 		Intent intent = new Intent();
 		intent.setClass(this, MainService.class);
 		startService(intent);
+		// 初始化文件夹
+		Tools.initdir();
 		title_progress
 				.setIndeterminateDrawable(new SmoothProgressDrawable.Builder(
 						this).interpolator(
@@ -256,23 +263,29 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 		// TODO Auto-generated method stub
 		title_progress.setVisibility(View.GONE);
 		homeprogress.cancel();
-		if (objects[0] == null) {
-			Toast.makeText(this, "未得到返回数据", Toast.LENGTH_SHORT).show();
-			success = false;
-			loadfailed.setVisibility(View.VISIBLE);
-			fragment_home.loadfailed();
-			return;
-		}
-		String result = (String) objects[0];
-		Log.w(TAG, "refresh UI!->MainActivity" + result);
+		/*
+		 * if (objects[0] == null) { Toast.makeText(this, "未得到返回数据",
+		 * Toast.LENGTH_SHORT).show(); success = false;
+		 * loadfailed.setVisibility(View.VISIBLE); fragment_home.loadfailed();
+		 * return; }
+		 */
+		List<Good> goodsjson = new ArrayList<Good>();
+		/*try {
+			String result = (String) objects[0];
+			Log.w(TAG, "refresh UI!->MainActivity" + result);
 
-		JSONObject json = JSON.parseObject(result);
-		Log.w(TAG, json.toJSONString());
-		JSONArray jsonarray = json.getJSONArray("goods");
-		Log.w(TAG, jsonarray.toJSONString());
-		List<Good> goodsjson = JSON.parseArray(jsonarray.toJSONString(),
-				Good.class);
-		Log.w(TAG, "goods from JSON num->" + goodsjson.size());
+			JSONObject json = JSON.parseObject(result);
+			Log.w(TAG, json.toJSONString());
+			JSONArray jsonarray = json.getJSONArray("goods");
+			Log.w(TAG, jsonarray.toJSONString());
+			goodsjson = JSON.parseArray(jsonarray.toJSONString(), Good.class);
+			Log.w(TAG, "goods from JSON num->" + goodsjson.size());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			Log.e(TAG, "MainActivity JSON 解析异常");
+		}*/
+		for (int i = 0; i < 8; i++)
+			goodsjson.add(new Good());
 
 		switch (taskID) {
 		case Task.GET_GOODS:
@@ -324,70 +337,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 				return true;
 			}
 		});
-		// 获取SearchView对象
-		searchView = (SearchView) menu.findItem(R.id.menu_search)
-				.getActionView();
-		if (searchView == null) {
-			Log.e("SearchView", "Fail to get Search View.");
-			return true;
-		}
-		// 简单配置searchview
-		// searchView.setIconified(true);
-		searchView.setSubmitButtonEnabled(true);// 显示搜索提交按钮
-		// 利用反射配置searchview
-		try {
-			initsearchView();
-		} catch (NoSuchFieldException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// 获取搜索服务管理器
-		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		// searchable activity的component name，由此系统可通过intent进行唤起
-		ComponentName cn = new ComponentName(this, SearchActivity.class);
-		// 通过搜索管理器，从searchable
-		// activity中获取相关搜索信息，就是searchable的xml设置。如果返回null，表示该activity不存在，或者不是searchable
-		SearchableInfo info = searchManager.getSearchableInfo(cn);
-		if (info == null) {
-			Log.e("SearchableInfo", "Fail to get search info.");
-		}
-		// 将searchable activity的搜索信息与search view关联
-		searchView.setSearchableInfo(info);
-
 		return true;
 	}
 
-	/**
-	 * @throws NoSuchFieldException
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @describe 利用反射对searchview进行自定义，修改背景等
-	 */
-	@SuppressWarnings("deprecation")
-	private void initsearchView() throws NoSuchFieldException,
-			IllegalAccessException, IllegalArgumentException {
-		// TODO Auto-generated method stub
-		Class<?> argClass = searchView.getClass();
-		// 配置mSearchPlate背景
-		Field ownField = argClass.getDeclaredField("mSearchPlate");
-		// setAccessible 它是用来设置是否有权限访问反射类中的私有属性的，只有设置为true时才可以访问，默认为false
-		ownField.setAccessible(true);
-		View mView = (View) ownField.get(searchView);
-		mView.setBackground(getResources().getDrawable(R.drawable.search_palte));
-		// 配置搜索按钮
-		ownField = argClass.getDeclaredField("mGoButton");
-		ownField.setAccessible(true);
-		ImageView subView = (ImageView) ownField.get(searchView);
-		subView.setImageDrawable(getResources().getDrawable(
-				R.drawable.search_btn));
-
-	}
 
 }

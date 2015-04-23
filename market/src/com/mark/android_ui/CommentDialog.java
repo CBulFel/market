@@ -8,6 +8,8 @@ package com.mark.android_ui;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.Base64;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -98,9 +100,9 @@ public class CommentDialog extends Dialog implements
 			Map<String, Object> params=new HashMap<String, Object>();
 			params.put("uid", Uid);
 			params.put("id", Gid);
-			params.put("msg", content.getText());
+			params.put("msg", new String(Base64.encodeBase64(content.getText().toString().getBytes())));
 			Task task= new Task(Task.COMMENT, params);
-			MainService.newTask(getOwnerActivity(), task);
+			MainService.newTask(null, task);
 			this.cancel();
 			
 		}
