@@ -153,19 +153,35 @@
         </LinearLayout>
     </LinearLayout>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:text="留言"
-        android:textColor="#666666"
-        android:textSize="18sp"
-        android:textStyle="bold|italic" />
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="留言"
+            android:textColor="#666666"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/detail_header_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/call"
+            android:layout_gravity="right"
+            android:gravity="center"
+            android:layout_marginLeft="140dp"
+            android:text="12345678900"
+            android:textColor="#ff6103"
+            android:textSize="16sp"
+            android:textStyle="bold"
+             />
+    </LinearLayout>
 
     <View
         android:layout_width="fill_parent"

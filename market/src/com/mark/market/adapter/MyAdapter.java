@@ -52,13 +52,15 @@ public class MyAdapter extends BaseAdapter {
 		itemButon = (Button) vi.findViewById(R.id.mybutton);
 		itemImg = (ImageView) vi.findViewById(R.id.myimg);
 		itemImg.setImageBitmap(bitset.get(position % bitset.size()));
-	//	vi.setLayoutParams(new Gallery.LayoutParams(200, 200));
-		/*float h,w;  
-	    h = itemImg.getDrawable().getIntrinsicHeight();  
-	    w = itemImg.getDrawable().getIntrinsicWidth();  
-	    
-	    vi.setLayoutParams(new Gallery.LayoutParams((int) (80.0/(h/w)), 190)); */
-		//itemImg.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+		// vi.setLayoutParams(new Gallery.LayoutParams(200, 200));
+		/*
+		 * float h,w; h = itemImg.getDrawable().getIntrinsicHeight(); w =
+		 * itemImg.getDrawable().getIntrinsicWidth();
+		 * 
+		 * vi.setLayoutParams(new Gallery.LayoutParams((int) (80.0/(h/w)),
+		 * 190));
+		 */
+		// itemImg.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
 		return vi;
 	}

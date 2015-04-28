@@ -4,35 +4,53 @@
     android:layout_height="match_parent"
     android:background="#33ffff00"
     android:orientation="vertical" >
-<RelativeLayout 
-    android:layout_width="match_parent"
-    android:layout_height="140dp"
-    android:background="@drawable/tm_bg_profile_banner_savvy"
-    
-    >
-    <com.mark.android_ui.CircularImage 
-        android:id="@+id/my_headimg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        />
-    <TextView 
-        android:id="@+id/my_uname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/my_headimg"
-        android:layout_centerHorizontal="true"
-        android:text="小明"
-		
-        />
-</RelativeLayout>
-<GridView 
-    android:id="@+id/my_goods"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:numColumns="2"
-	android:layout_marginLeft="5dp"
-	android:layout_marginRight="5dp"
-	    ></GridView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:background="@drawable/tm_bg_profile_banner_savvy" >
+
+        <com.mark.android_ui.CircularImage
+            android:id="@+id/my_headimg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/header_img_default"
+             />
+
+        <TextView
+            android:id="@+id/my_uname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/my_headimg"
+            android:layout_centerHorizontal="true"
+            android:text="未知" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <GridView
+            android:id="@+id/my_goods"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:numColumns="2"
+            
+             >
+        </GridView>
+
+        <TextView
+            android:id="@+id/my_null"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="尚未发布商品"
+            android:visibility="gone"
+             />
+    </FrameLayout>
 
 </LinearLayout>

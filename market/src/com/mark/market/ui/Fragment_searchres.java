@@ -5,6 +5,7 @@
  */
 package com.mark.market.ui;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import android.os.Bundle;
@@ -22,14 +23,14 @@ import com.mark.market.bean.Good;
 
 /**
  * @author mazhao
- * @describ 
+ * @describ 搜索结果fragment
  */
 public class Fragment_searchres extends Fragment {
-	private static final String TAG="market->fragment_search_result";
+	private static final String TAG = "market->fragment_search_result";
 	private ListView list_result;
 	private TextView msg;
 	private GoodsAdapter madapter;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -42,26 +43,42 @@ public class Fragment_searchres extends Fragment {
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		Log.w(TAG, "oncreatview");
-		View view=inflater.inflate(R.layout.fragment_searchres, null);
-		list_result=(ListView)view.findViewById(R.id.search_result);
-		msg=(TextView)view.findViewById(R.id.search_res_text);
+		View view = inflater.inflate(R.layout.fragment_searchres, null);
+		list_result = (ListView) view.findViewById(R.id.search_result);
+		msg = (TextView) view.findViewById(R.id.search_res_text);
+		madapter = new GoodsAdapter(getActivity());
+		list_result.setAdapter(madapter);
 		return view;
 	}
-	
-	public void searchcomplete(List<Good> goods){
+
+	@Override
+	public void onDetach() {
+		// TODO Auto-generated method stub
+		super.onDetach();
+		try {
+			Field childFragmentManager = Fragment.class
+					.getDeclaredField("mChildFragmentManager");
+			childFragmentManager.setAccessible(true);
+			childFragmentManager.set(this, null);
+
+		} catch (NoSuchFieldException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void searchcomplete(List<Good> goods) {
 		Log.w(TAG, "searchcomplete");
-		if(getActivity()!=null){
-		madapter=new GoodsAdapter(getActivity(),goods);
-		list_result.setAdapter(madapter);
-		}else {
-			Log.w(TAG, "get context error,null");
-			msg.setText("搜索页面出现错误");
+
+		if (goods == null || goods.isEmpty()) {
+			list_result.setVisibility(View.GONE);
 			msg.setVisibility(View.VISIBLE);
 			return;
 		}
-		if(goods.isEmpty()){
-			msg.setVisibility(View.VISIBLE);
-		}
+		madapter.setgoods(goods);
+		madapter.notifyDataSetChanged();
+
 	}
-	
+
 }

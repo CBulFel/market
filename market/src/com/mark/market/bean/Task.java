@@ -14,7 +14,7 @@ import java.util.Map;
 public class Task {
 	//登录
 	public static final int MARKET_LOGIN=1;
-	//获得登录用户信息
+	//获得登录用户信息,用于用户详情页
 	public static final int GET_USERINFO=2;
 	//获得商品列表，同刷新
 	public static final int GET_GOODS=3;
@@ -28,7 +28,13 @@ public class Task {
 	public static final int GOODS_SEARCH=7;
 	//发布商品
 	public static final int SALE_GOOD=8;
+	//评论
 	public static final int COMMENT=9;
+	//收藏
+	public static final int COLLECT=10;
+	//取消收藏
+	public static final int UCOLLECT=11;
+	public static final int VERSION_UPDATE=12;
 	//任务ID
 	private int taskID;
 	//任务参数

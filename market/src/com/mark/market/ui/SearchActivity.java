@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
@@ -35,6 +37,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.mark.android_ui.MyprogressDialog;
 import com.mark.market.R;
 import com.mark.market.bean.Good;
 import com.mark.market.bean.Task;
@@ -45,9 +48,10 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 
 	private static String TAG = "market searchactivity";
 	private SearchView searchView;
-	private String queryString;
+	private String queryString = null;
 	private Fragment_searchsug fragment_suggest;
 	private Fragment_searchres fragment_result;
+	private MyprogressDialog progress_search;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,7 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setTitle("搜索");
 		gosugfrg();
+		progress_search = new MyprogressDialog(this);
 		Intent intent = getIntent();
 		// 如果是通过ACTION_SEARCH来调用，即如果通过搜索调用
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -119,30 +124,28 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 		// 获取SearchView对象
 		searchView = (SearchView) menu.findItem(R.id.menu_search)
 				.getActionView();
-		searchView.setSubmitButtonEnabled(true);// 显示搜索提交按钮
-		searchView.setOnFocusChangeListener(new OnFocusChangeListener() {
+		if (queryString != null)
+			searchView.setQuery(queryString, false);
+		 searchView.setSubmitButtonEnabled(true);// 显示搜索提交按钮
+		searchView
+				.setOnQueryTextFocusChangeListener(new OnFocusChangeListener() {
 
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				// TODO Auto-generated method stub
-				Log.w(TAG, "onfocuschange:"+hasFocus);
-				if (hasFocus)
-					gosugfrg();
-			}
-		});
+					@Override
+					public void onFocusChange(View v, boolean hasFocus) {
+						// TODO Auto-generated method stub
+						Log.w(TAG, "text onfocuschange:" + hasFocus);
+						if (hasFocus)
+							gosugfrg();
+					}
+				});
 		// 利用反射配置searchview
-		/*try {
-			initsearchView();
-		} catch (NoSuchFieldException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+		/*
+		 * try { initsearchView(); } catch (NoSuchFieldException e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); } catch
+		 * (IllegalAccessException e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); } catch (IllegalArgumentException e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); }
+		 */
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
 
 			@Override
@@ -184,6 +187,18 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 		return true;
 	}
 
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		Log.w(TAG, "onDestory()");
+		if (fragment_result.isResumed()) {
+
+			this.getSupportFragmentManager().beginTransaction()
+					.remove(fragment_result).commitAllowingStateLoss();
+		}
+		super.onDestroy();
+	}
+
 	private void gosugfrg() {
 
 		fragment_suggest = new Fragment_searchsug();
@@ -197,6 +212,7 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 	private void goresultfrg() {
 
 		fragment_result = new Fragment_searchres();
+
 		FragmentTransaction transaction = this.getSupportFragmentManager()
 				.beginTransaction();
 		transaction.replace(R.id.search_content, fragment_result);
@@ -245,7 +261,7 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 			queryString = intent.getStringExtra(SearchManager.QUERY);
 
 		}
-		
+
 		doSearchQuery();
 
 	}
@@ -258,6 +274,16 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 
 		if (queryString == null)
 			return;
+		String regex = "[?;,:.~!@#$%^&*<>]";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(queryString);
+		if (matcher.find()) {
+			Toast.makeText(getApplicationContext(), "含有非法字符!",
+					Toast.LENGTH_SHORT).show();
+			return;
+
+		}
+		progress_search.show();
 		goresultfrg();
 		// 保存搜索记录
 		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
@@ -279,22 +305,28 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 	@Override
 	public void refresh(int taskID, Object... objects) {
 		// TODO Auto-generated method stub
-		/*
-		 * if (objects[0] == null) { Toast.makeText(this, "未得到返回数据",
-		 * Toast.LENGTH_SHORT).show(); return; } List<Good> goodsjson = new
-		 * ArrayList<Good>(); try { String res = (String) objects[0]; JSONObject
-		 * json = JSON.parseObject(res); Log.w(TAG, json.toJSONString());
-		 * JSONArray jsonarray = json.getJSONArray("list"); Log.w(TAG,
-		 * jsonarray.toJSONString()); goodsjson =
-		 * JSON.parseArray(jsonarray.toJSONString(), Good.class); } catch
-		 * (Exception e) { // TODO Auto-generated catch block Log.e(TAG,
-		 * "JSON 解析错误"); Log.e(TAG, "msg:" + e.getMessage()); Log.e(TAG,
-		 * "caused:" + e.getCause()); }
-		 */
+		progress_search.cancel();
+
+		if (objects[0] == null) {
+			Toast.makeText(this, "未得到返回数据", Toast.LENGTH_SHORT).show();
+			return;
+		}
 		List<Good> goodsjson = new ArrayList<Good>();
-		for (int i = 0; i < 4; i++)
-			goodsjson.add(new Good());
-		goresultfrg();
-		// fragment_result.searchcomplete(goodsjson);
+
+		try {
+			String res = (String) objects[0];
+			JSONObject json = JSON.parseObject(res);
+			Log.w(TAG, json.toJSONString());
+			JSONArray jsonarray = json.getJSONArray("list");
+			Log.w(TAG, jsonarray.toJSONString());
+			goodsjson = JSON.parseArray(jsonarray.toJSONString(), Good.class);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			Log.e(TAG, "JSON 解析错误");
+			Log.e(TAG, "msg:" + e.getMessage());
+			Log.e(TAG, "caused:" + e.getCause());
+		}
+
+		fragment_result.searchcomplete(goodsjson);
 	}
 }

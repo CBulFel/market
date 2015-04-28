@@ -1,19 +1,15 @@
 package com.mark.market.ui;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.app.SearchManager;
-import android.app.SearchableInfo;
-import android.content.ComponentName;
-import android.content.Context;
+import android.app.Application;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -32,28 +28,31 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.mark.android_ui.CommentDialog;
 import com.mark.android_ui.MyprogressDialog;
 import com.mark.android_ui.SmoothProgressDrawable;
+import com.mark.android_util.UpdateManager;
 import com.mark.market.R;
 import com.mark.market.bean.Good;
 import com.mark.market.bean.Task;
 import com.mark.market.logic.MainService;
+import com.mark.market.util.Androidstatus;
+import com.mark.market.util.LoginSessionUtil;
 import com.mark.market.util.Tools;
 
-@SuppressLint({ "NewApi", "InflateParams" })
 public class MainActivity extends FragmentActivity implements OnClickListener,
 		MarketActivity {
 
 	private static long exitTime = 0;
 	private static long waitTime = 2000;
 	private static final String TAG = "market->MainActivity";
+	public static int pageNum = 1;
 	private boolean success = true;
 	private ProgressBar title_progress;
 	private MyprogressDialog homeprogress;
@@ -65,7 +64,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 	private ImageView image_home, image_my;
 	// 定义 中间发布商品按钮
 	private Button tab_plus;
-	private SearchView searchView;
 	private TextView loadfailed;
 
 	@SuppressLint("NewApi")
@@ -80,7 +78,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 		actionbar.setDisplayUseLogoEnabled(false);
 		actionbar.setDisplayHomeAsUpEnabled(false);
 		// actionbar.setIcon(R.drawable.actionbar_backbtn);
-
 		setContentView(R.layout.activity_main);
 		// 设置自定义actionbar视图
 		ActionBar.LayoutParams Lparams = new ActionBar.LayoutParams(
@@ -97,6 +94,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 		Intent intent = new Intent();
 		intent.setClass(this, MainService.class);
 		startService(intent);
+		//检查更新
+		MainService.newTask(this, new Task(Task.VERSION_UPDATE, null));
 		// 初始化文件夹
 		Tools.initdir();
 		title_progress
@@ -104,9 +103,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 						this).interpolator(
 						new AccelerateDecelerateInterpolator()).build());
 		title_progress.setVisibility(View.VISIBLE);
+		// 判断是否有网络可用
+		if (Androidstatus.isNetworkAvaliable(getApplicationContext()))
+			Toast.makeText(getApplicationContext(), "没有可用网络",
+					Toast.LENGTH_SHORT).show();
 		initView();
 		initData();
-
 		// 默认进入home页面
 		clickHomeBtn();
 
@@ -160,13 +162,17 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		// TODO Auto-generated method stub
-		Log.w(TAG, "mainactivity onTouchEvent");
-		title_progress.setVisibility(View.VISIBLE);
-		homeprogress.show();
+
 		if (event.getAction() == MotionEvent.ACTION_DOWN && !success) {
+			Log.w(TAG, "mainactivity onTouchEvent.down");
+			title_progress.setVisibility(View.VISIBLE);
+			homeprogress.show();
 			loadfailed.setVisibility(View.GONE);
 			success = true;
-			fragment_home.onRefresh();
+			if (layout_home.isSelected())
+				fragment_home.onRefresh();
+			if (layout_my.isSelected())
+				fragment_my.init();
 		}
 		return super.onTouchEvent(event);
 	}
@@ -263,36 +269,84 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 		// TODO Auto-generated method stub
 		title_progress.setVisibility(View.GONE);
 		homeprogress.cancel();
-		/*
-		 * if (objects[0] == null) { Toast.makeText(this, "未得到返回数据",
-		 * Toast.LENGTH_SHORT).show(); success = false;
-		 * loadfailed.setVisibility(View.VISIBLE); fragment_home.loadfailed();
-		 * return; }
-		 */
+
+		if (objects[0] == null) {
+			Toast.makeText(this, "未得到返回数据", Toast.LENGTH_SHORT).show();
+			success = false;
+			loadfailed.setVisibility(View.VISIBLE);
+			fragment_home.loadfailed();
+			return;
+		}
+
 		List<Good> goodsjson = new ArrayList<Good>();
-		/*try {
+		int pagenum = 0;
+		int version = 0;
+		String url_update = null;
+		try {
 			String result = (String) objects[0];
+
 			Log.w(TAG, "refresh UI!->MainActivity" + result);
 
 			JSONObject json = JSON.parseObject(result);
 			Log.w(TAG, json.toJSONString());
 			JSONArray jsonarray = json.getJSONArray("goods");
+			pagenum = (int) json.getIntValue("pageNum");
+			if (json.containsKey("version"))
+				version = json.getIntValue("version");
+			if (json.containsKey("url"))
+				url_update = json.getString("url");
 			Log.w(TAG, jsonarray.toJSONString());
 			goodsjson = JSON.parseArray(jsonarray.toJSONString(), Good.class);
 			Log.w(TAG, "goods from JSON num->" + goodsjson.size());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) { // TODO Auto-generated catch block
 			Log.e(TAG, "MainActivity JSON 解析异常");
-		}*/
-		for (int i = 0; i < 8; i++)
-			goodsjson.add(new Good());
+			Log.e(TAG, e.getMessage());
+			Log.e(TAG, e.getCause() + "");
+		}
 
 		switch (taskID) {
+		case Task.VERSION_UPDATE:
+			if (version == 0 || url_update == null)
+				return;
+			else {
+				try {
+					Log.w(TAG, "version code:" + version);
+					PackageManager manager = getPackageManager();
+					PackageInfo info = manager.getPackageInfo(getPackageName(),
+							0);
+					if (info.versionCode < version) {
+						Log.w(TAG, "current version code:" + info.versionCode);
+
+						UpdateManager updatemanager = new UpdateManager(this,
+								url_update);
+						updatemanager.checkUpdateInfo();
+					}
+				} catch (NameNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			break;
 		case Task.GET_GOODS:
+			pageNum = 2;
 			fragment_home.refreshcomplete(goodsjson);
 			break;
 		case Task.LOADMORE:
-			fragment_home.loadmorecomplete(goodsjson);
+			if (pagenum == pageNum) {
+				// 页号正常
+				Log.w(TAG, "pagenum right");
+				pageNum++;
+				fragment_home.loadmorecomplete(goodsjson);
+			} else if (pagenum == (pageNum - 1)) {
+				// 最后一页,返回同上一页的页号
+				Log.w(TAG, "pagenum last");
+				fragment_home.loadmore_last();
+			} else {
+				// 其他页号,错误页号,直接丢弃,然后重新获取
+				Log.w(TAG, "pagenum error,reloadmore");
+				fragment_home.onLoadMore();
+			}
+
 			break;
 		case Task.GET_USERINFO:
 			fragment_my.loadsucess(goodsjson);
@@ -308,9 +362,22 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 			Intent intent = new Intent();
 			intent.setClass(this, AboutActivity.class);
 			startActivity(intent);
+			break;
 		case R.id.menu_exit:
 			finish();
+			break;
+		case R.id.menu_ulogin:
+			if (LoginSessionUtil.getLoginUser(getApplicationContext()) != null) {
+				LoginSessionUtil.removeLoginUser(getApplicationContext());
+				Toast.makeText(getApplicationContext(), "已退出登录",
+						Toast.LENGTH_SHORT).show();
+			} else {
+				Intent intentLogin = new Intent();
+				intentLogin.setClass(this, LoginActivity.class);
+				startActivity(intentLogin);
 
+			}
+			break;
 		}
 		return super.onMenuItemSelected(featureId, item);
 	}
@@ -320,6 +387,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		MenuItem search = menu.findItem(R.id.menu_search);
+		MenuItem ulogin = menu.findItem(R.id.menu_ulogin);
+		if (LoginSessionUtil.getLoginUser(getApplicationContext()) != null) {
+			ulogin.setTitle("退出登录");
+		} else {
+			ulogin.setTitle("登录");
+		}
 		search.setOnActionExpandListener(new OnActionExpandListener() {
 
 			@Override
@@ -339,6 +412,5 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 		});
 		return true;
 	}
-
 
 }

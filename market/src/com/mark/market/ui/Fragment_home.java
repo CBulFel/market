@@ -1,6 +1,5 @@
 package com.mark.market.ui;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,29 +16,26 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.mark.android_ui.MyImgScroll;
 import com.mark.android_ui.MyListView;
 import com.mark.android_ui.MyListView.MyListViewListener;
-import com.mark.android_ui.MyprogressDialog;
 import com.mark.market.R;
 import com.mark.market.adapter.GoodsAdapter;
 import com.mark.market.bean.Good;
 import com.mark.market.bean.Task;
 import com.mark.market.logic.MainService;
+import com.mark.market.util.LoginSessionUtil;
 import com.mark.market.util.Tools;
 
 @SuppressLint("InflateParams")
 public class Fragment_home extends Fragment implements MyListViewListener {
-	
-	
-	
-	private static final String TAG = "market";
+
+	private static final String TAG = "market->Fragment_home";
 	// listview控件
 	public static MyListView marketListView;
 	private GoodsAdapter mAdapter;
-	private List<Good> goods = new ArrayList<Good>();
-//	private MyprogressDialog homeprogress;
 	// ImgScroll控件
 	MyImgScroll myPager; // 图片滚动控件
 	LinearLayout ovalLayout; // 下方的小圆点
@@ -84,11 +80,14 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 	}
 
 	private void init() {
-		/*homeprogress = new MyprogressDialog(getActivity());
-		homeprogress.show();*/
 		mAdapter = new GoodsAdapter(getActivity());
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("index", "20");
+		if (LoginSessionUtil.getLoginUser(getActivity()) != null) {
+			params.put("uid", LoginSessionUtil.getLoginUser(getActivity())
+					.getUid());
+			Log.w(TAG, LoginSessionUtil.getLoginUser(getActivity()).getUid());
+		}
+		params.put("pageNum", MainActivity.pageNum);
 		Task task = new Task(Task.GET_GOODS, params);
 		MainService.newTask(getActivity(), task);
 		/*
@@ -117,8 +116,16 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 		// 下拉刷新操作
 		Log.w(TAG, "onRefresh");
 		// marketListView.setVisibility(View.VISIBLE);
-//		homeprogress.show();
-		Task task = new Task(Task.GET_GOODS, null);
+		// homeprogress.show();
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		if (LoginSessionUtil.getLoginUser(getActivity()) != null) {
+			params.put("uid", LoginSessionUtil.getLoginUser(getActivity())
+					.getUid());
+			Log.w(TAG, LoginSessionUtil.getLoginUser(getActivity()).getUid());
+		}
+		params.put("pageNum", MainActivity.pageNum);
+		Task task = new Task(Task.GET_GOODS, params);
 		MainService.newTask(getActivity(), task);
 	}
 
@@ -127,19 +134,19 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 
 		// 加载更多操作
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("index", "20");
+		params.put("pageNum", MainActivity.pageNum);
 		Task task = new Task(Task.LOADMORE, params);
 		MainService.newTask(getActivity(), task);
+		
 	}
 
 	public void refreshcomplete(List<Good> goods_new) {
 
 		// 刷新完成后的操作
 		// 开始图片滚动
-//		homeprogress.cancel();
-		
+		// homeprogress.cancel();
+
 		mAdapter.setgoods(goods_new);
-		mAdapter.notifyDataSetChanged();
 		marketListView.setAdapter(mAdapter);
 		marketListView.stopRefresh();
 		marketListView.stopLoadMore();
@@ -149,17 +156,21 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 
 	public void loadmorecomplete(List<Good> goods_more) {
 		// 加载更多完成后的操作
-//		homeprogress.cancel();
-		mAdapter.addgoods(goods_more);
-		mAdapter.notifyDataSetChanged();
-		marketListView.setAdapter(mAdapter);
+		 mAdapter.addgoods(goods_more);
+		 mAdapter.notifyDataSetChanged();
 		marketListView.stopRefresh();
 		marketListView.stopLoadMore();
 		Log.w(TAG, "loadmore success!");
 	}
 
+	public void loadmore_last(){
+		Log.w(TAG, "loadmore_last");
+		Toast.makeText(getActivity(), "没有更多", Toast.LENGTH_SHORT).show();
+		marketListView.stopRefresh();
+		marketListView.stopLoadMore();
+	}
+	
 	public void loadfailed() {
-//		homeprogress.cancel();
 		marketListView.setVisibility(View.GONE);
 	}
 }

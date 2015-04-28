@@ -11,6 +11,12 @@
         android:showAsAction="collapseActionView|ifRoom"
 		android:actionViewClass="android.widget.SearchView"
         />
+    <item 
+        android:id="@+id/menu_ulogin"
+        android:title="退出登录"
+        android:orderInCategory="98"
+        android:showAsAction="never"
+        />
 	<item 
 	    android:id="@+id/menu_about"
 	    android:title="关于"

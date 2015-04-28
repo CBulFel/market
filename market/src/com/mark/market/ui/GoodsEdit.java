@@ -19,6 +19,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.NavUtils;
+import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -31,9 +34,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Gallery;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mark.android_util.LengthFilter;
 import com.mark.market.R;
+import com.mark.market.R.id;
 import com.mark.market.adapter.MyAdapter;
 import com.mark.market.bean.Task;
 import com.mark.market.bean.User;
@@ -65,6 +71,7 @@ public class GoodsEdit extends Activity implements MarketActivity,
 	static class viewholder {
 		public EditText edit_title;
 		public EditText edit_describ;
+		public TextView edit_descirbnum;
 		public EditText edit_price;
 		public EditText edit_preprice;
 		public EditText edit_phone;
@@ -95,9 +102,14 @@ public class GoodsEdit extends Activity implements MarketActivity,
 		holder = new viewholder();
 		holder.edit_title = (EditText) findViewById(R.id.edit_title);
 		holder.edit_describ = (EditText) findViewById(R.id.edit_describ);
+		holder.edit_descirbnum = (TextView) findViewById(R.id.edit_describnum);
+		holder.edit_describ.setFilters(new InputFilter[] { new LengthFilter(
+				500, holder.edit_descirbnum) });
 		holder.edit_price = (EditText) findViewById(R.id.edit_price);
 		holder.edit_preprice = (EditText) findViewById(R.id.edit_preprice);
 		holder.edit_phone = (EditText) findViewById(R.id.edit_phone);
+		holder.edit_phone
+				.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 		holder.edit_category = (Spinner) findViewById(R.id.edit_category);
 		holder.edit_palce = (Spinner) findViewById(R.id.edit_place);
 		holder.edit_degree = (Spinner) findViewById(R.id.edit_degree);
@@ -321,16 +333,52 @@ public class GoodsEdit extends Activity implements MarketActivity,
 						"name",
 						new String(Base64.encodeBase64(holder.edit_title
 								.getText().toString().getBytes())));
+			else {
+				Toast.makeText(getApplicationContext(), "标题不能为空",
+						Toast.LENGTH_SHORT).show();
+				return;
+			}
 			if (holder.edit_describ.getText() != null)
 				good_info.put(
 						"description",
 						new String(Base64.encodeBase64(holder.edit_describ
 								.getText().toString().getBytes())));
-			if (holder.edit_price.getText() != null)
-				good_info.put("price", holder.edit_price.getText().toString());
-			if (holder.edit_preprice.getText() != null)
-				good_info.put("pre_price", holder.edit_preprice.getText()
-						.toString());
+			else {
+				Toast.makeText(getApplicationContext(), "描述不能为空",
+						Toast.LENGTH_SHORT).show();
+				return;
+			}
+			try {
+				if (holder.edit_price.getText() != null
+						&& Float.parseFloat(holder.edit_price.getText()
+								.toString()) > 0
+						&& Float.parseFloat(holder.edit_price.getText()
+								.toString()) < 20000)
+					good_info.put("price", holder.edit_price.getText()
+							.toString());
+				else {
+					Toast.makeText(getApplicationContext(), "价格输入不规范",
+							Toast.LENGTH_SHORT).show();
+					return;
+				}
+				if (holder.edit_preprice.getText() != null
+						&& Float.parseFloat(holder.edit_preprice.getText()
+								.toString()) > 0
+						&& Float.parseFloat(holder.edit_preprice.getText()
+								.toString()) < 20000)
+					good_info.put("pre_price", holder.edit_preprice.getText()
+							.toString());
+				else {
+					Toast.makeText(getApplicationContext(), "原价输入不规范",
+							Toast.LENGTH_SHORT).show();
+					return;
+				}
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				Toast.makeText(getApplicationContext(), "原价或现价输入不规范",
+						Toast.LENGTH_SHORT).show();
+				return;
+			}
 			if (holder.edit_phone.getText() != null)
 				good_info.put("phone", holder.edit_phone.getText().toString());
 			good_info.put(

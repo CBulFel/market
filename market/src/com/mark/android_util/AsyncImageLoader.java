@@ -21,7 +21,7 @@ import android.widget.Toast;
  */
 public class AsyncImageLoader extends AsyncTask<String, Void, Bitmap> {
 
-	private static String TAG = "mark";
+	private static String TAG = "mark->AsuncImageLoader";
 	private ImageView image;
 	private LruCache<String, Bitmap> lruCache;
 	private int width;

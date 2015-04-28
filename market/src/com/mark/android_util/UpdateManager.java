@@ -23,27 +23,27 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.mark.market.R;
+import com.mark.market.util.Tools;
 
 public class UpdateManager {
 
 	private Context mContext;
 	
-	//ÌáÊ¾Óï
-	private String updateMsg = "ÓĞ×îĞÂµÄÈí¼ş°üÅ¶£¬Ç×¿ìÏÂÔØ°É~";
+	//æç¤ºè¯­
+	private String updateMsg = "æœ‰æœ€æ–°çš„è½¯ä»¶åŒ…å“¦ï¼Œäº²å¿«ä¸‹è½½å§~";
 	
-	//·µ»ØµÄ°²×°°üurl
-	private String apkUrl = "http://softfile.3g.qq.com:8080/msoft/179/24659/43549/qq_hd_mini_1.4.apk";
+	//è¿”å›çš„å®‰è£…åŒ…url
+	private String apkUrl = "";
 	
 	
 	private Dialog noticeDialog;
 	
 	private Dialog downloadDialog;
-	 /* ÏÂÔØ°ü°²×°Â·¾¶ */
-    private static final String savePath = "/sdcard/updatedemo/";
+	 /* ä¸‹è½½åŒ…å®‰è£…è·¯å¾„ */
     
-    private static final String saveFileName = savePath + "UpdateDemoRelease.apk";
+    private static final String saveFileName = Tools.CACHE_DIR + "UpdateMarket2Release.apk";
 
-    /* ½ø¶ÈÌõÓëÍ¨ÖªuiË¢ĞÂµÄhandlerºÍmsg³£Á¿ */
+    /* è¿›åº¦æ¡ä¸é€šçŸ¥uiåˆ·æ–°çš„handlerå’Œmsgå¸¸é‡ */
     private ProgressBar mProgress;
 
     
@@ -73,11 +73,12 @@ public class UpdateManager {
     	};
     };
     
-	public UpdateManager(Context context) {
+	public UpdateManager(Context context,String url) {
 		this.mContext = context;
+		this.apkUrl=url;
 	}
 	
-	//Íâ²¿½Ó¿ÚÈÃÖ÷Activityµ÷ÓÃ
+	//å¤–éƒ¨æ¥å£è®©ä¸»Activityè°ƒç”¨
 	public void checkUpdateInfo(){
 		showNoticeDialog();
 	}
@@ -85,16 +86,16 @@ public class UpdateManager {
 	
 	private void showNoticeDialog(){
 		AlertDialog.Builder builder = new Builder(mContext);
-		builder.setTitle("Èí¼ş°æ±¾¸üĞÂ");
+		builder.setTitle("è½¯ä»¶ç‰ˆæœ¬æ›´æ–°");
 		builder.setMessage(updateMsg);
-		builder.setPositiveButton("ÏÂÔØ", new OnClickListener() {			
+		builder.setPositiveButton("ä¸‹è½½", new OnClickListener() {			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
 				showDownloadDialog();			
 			}
 		});
-		builder.setNegativeButton("ÒÔºóÔÙËµ", new OnClickListener() {			
+		builder.setNegativeButton("ä»¥åå†è¯´", new OnClickListener() {			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();				
@@ -105,15 +106,15 @@ public class UpdateManager {
 	}
 	
 	private void showDownloadDialog(){
-		AlertDialog.Builder builder = new Builder(mContext);
-		builder.setTitle("Èí¼ş°æ±¾¸üĞÂ");
+		AlertDialog.Builder builder = new Builder(mContext,R.style.comment_dialog_theme);
+		builder.setTitle("è½¯ä»¶ç‰ˆæœ¬æ›´æ–°");
 		
 		final LayoutInflater inflater = LayoutInflater.from(mContext);
 		View v = inflater.inflate(R.layout.progress, null);
 		mProgress = (ProgressBar)v.findViewById(R.id.progress);
 		
 		builder.setView(v);
-		builder.setNegativeButton("È¡Ïû", new OnClickListener() {	
+		builder.setNegativeButton("å–æ¶ˆ", new OnClickListener() {	
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.dismiss();
@@ -137,9 +138,9 @@ public class UpdateManager {
 				int length = conn.getContentLength();
 				InputStream is = conn.getInputStream();
 				
-				File file = new File(savePath);
+				File file = new File(Tools.CACHE_DIR);
 				if(!file.exists()){
-					file.mkdir();
+					file.mkdirs();
 				}
 				String apkFile = saveFileName;
 				File ApkFile = new File(apkFile);
@@ -152,15 +153,15 @@ public class UpdateManager {
 		    		int numread = is.read(buf);
 		    		count += numread;
 		    	    progress =(int)(((float)count / length) * 100);
-		    	    //¸üĞÂ½ø¶È
+		    	    //æ›´æ–°è¿›åº¦
 		    	    mHandler.sendEmptyMessage(DOWN_UPDATE);
 		    		if(numread <= 0){	
-		    			//ÏÂÔØÍê³ÉÍ¨Öª°²×°
+		    			//ä¸‹è½½å®Œæˆé€šçŸ¥å®‰è£…
 		    			mHandler.sendEmptyMessage(DOWN_OVER);
 		    			break;
 		    		}
 		    		fos.write(buf,0,numread);
-		    	}while(!interceptFlag);//µã»÷È¡Ïû¾ÍÍ£Ö¹ÏÂÔØ.
+		    	}while(!interceptFlag);//ç‚¹å‡»å–æ¶ˆå°±åœæ­¢ä¸‹è½½.
 				
 				fos.close();
 				is.close();
@@ -174,7 +175,7 @@ public class UpdateManager {
 	};
 	
 	 /**
-     * ÏÂÔØapk
+     * ä¸‹è½½apk
      * @param url
      */
 	
@@ -183,7 +184,7 @@ public class UpdateManager {
 		downLoadThread.start();
 	}
 	 /**
-     * °²×°apk
+     * å®‰è£…apk
      * @param url
      */
 	private void installApk(){

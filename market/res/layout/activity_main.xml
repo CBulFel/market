@@ -4,23 +4,24 @@
     android:layout_height="match_parent"
     tools:context="com.mark.market.ui.MainActivity" >
 
-   <ProgressBar
-            android:id="@+id/title_progress"
-            android:layout_width="fill_parent"
-            android:layout_height="2dp"
-            android:layout_alignParentTop="true"
-            style="@style/ProgressBar.Horizontal"
-            android:indeterminate="true"
-            android:visibility="gone"
-            /> 
+    <ProgressBar
+        android:id="@+id/title_progress"
+        style="@style/ProgressBar.Horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="3dp"
+        android:layout_alignParentTop="true"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
     <FrameLayout
         android:id="@+id/frame_content"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/title_progress"
         android:layout_above="@+id/frameLayout1"
+        android:layout_below="@+id/title_progress"
         android:background="#ffffff" >
-        <TextView 
+
+        <TextView
             android:id="@+id/loadfailed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,8 +29,7 @@
             android:gravity="center"
             android:text="加载失败，请点击重试"
             android:textColor="#3d59ab"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
     </FrameLayout>
 
     <FrameLayout
@@ -64,17 +64,42 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center"
-                    android:layout_marginBottom="3dp"
-                    android:text="首页"
+                    android:layout_marginBottom="2dp"
+                    android:text="首  页"
                     android:textColor="#000000"
                     android:textSize="12sp" />
             </FrameLayout>
 
             <FrameLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:visibility="invisible" >
+                android:layout_height="50dp"
+                android:layout_weight="1" >
+
+                <Button
+                    android:id="@+id/tab_plus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@drawable/tab_sale" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="top"
+                    android:text="+"
+                    android:textColor="#ffffff"
+                    android:textSize="32sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginBottom="2dp"
+                    android:text="我想卖"
+                    android:textColor="#ffffff"
+                    android:textSize="12sp" />
             </FrameLayout>
 
             <FrameLayout
@@ -96,41 +121,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center"
-                    android:layout_marginBottom="3dp"
-                    android:text="我的"
+                    android:layout_marginBottom="2dp"
+                    android:text="我  的"
                     android:textColor="#000000"
                     android:textSize="12sp" />
             </FrameLayout>
         </LinearLayout>
     </FrameLayout>
-
-    <Button
-        android:id="@+id/tab_plus"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignTop="@+id/frameLayout1"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/tab_sale" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignTop="@+id/frameLayout1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="18dp"
-        android:gravity="top"
-        android:text=" + "
-        android:textColor="#ffffff"
-        android:textSize="40sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/frameLayout1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="2dp"
-        android:text="我想卖"
-        android:textColor="#ffffff"
-        android:textSize="12sp" />
 
 </RelativeLayout>

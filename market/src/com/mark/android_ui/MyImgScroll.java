@@ -4,21 +4,15 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.mark.market.ui.Gooddetail;
-
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 /**
@@ -27,13 +21,13 @@ import android.widget.LinearLayout;
  * 
  */
 public class MyImgScroll extends ViewPager {
-	Activity mActivity; // ������
-	List<View> mListViews; // ͼƬ��
+	Activity mActivity; //activity实例 
+	List<View> mListViews; //要滚动的图片控件list
 	int mScrollTime = 0;
 	Timer timer;
 	int oldIndex = 0;
 	int curIndex = 0;
-	private static String TAG = "market imgScroll";
+	private static String TAG = "market->MyImgScroll";
 
 	public MyImgScroll(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -65,7 +59,7 @@ public class MyImgScroll extends ViewPager {
 		}
 		if (mListViews.size() > 1) {
 			this.setCurrentItem((Integer.MAX_VALUE / 2)
-					- (Integer.MAX_VALUE / 2) % mListViews.size());// ����ѡ��Ϊ�м�/ͼƬΪ�͵�0��һ��
+					- (Integer.MAX_VALUE / 2) % mListViews.size());
 		}
 	}
 

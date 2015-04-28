@@ -6,13 +6,10 @@
 package com.mark.market.util;
 
 import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -37,7 +34,6 @@ import org.apache.http.util.EntityUtils;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.os.Environment;
 import android.util.Log;
 
 /**
@@ -65,9 +61,11 @@ public class HttpconnectUtil {
 		Log.w(TAG, url);
 		String result = null;
 		post = new HttpPost(url);
+
 		List<NameValuePair> pairList = new ArrayList<NameValuePair>();
 
 		if (param != null) {
+
 			Set<String> set = param.keySet();
 			Iterator<String> iterator = set.iterator();
 			while (iterator.hasNext()) {
@@ -75,39 +73,36 @@ public class HttpconnectUtil {
 				Object value = param.get(key);
 				pairList.add(new BasicNameValuePair(key.toString(), value
 						.toString()));
+				Log.w(TAG,
+						"key:" + key.toString() + " value:" + value.toString());
 			}
 
 			post.setEntity(new UrlEncodedFormEntity(pairList, "UTF-8"));
+
+			/*
+			 * for (String key : param.keySet()) { Log.w(TAG, key + ":" +
+			 * param.get(key)); pairList.add(new BasicNameValuePair(key,
+			 * param.get(key) .toString())); } post.setEntity(new
+			 * UrlEncodedFormEntity(pairList, "UTF-8"));
+			 */
+		} else {
+			Log.w(TAG, "param is null");
 		}
+
 		response = client.execute(post);
 		if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+			Log.w(TAG, "getresult httpstatus:"
+					+ response.getStatusLine().getStatusCode());
 			result = EntityUtils.toString(response.getEntity());
-			// result = Base64.decodeBase64(result.getBytes()).toString();
-			System.out.println("HttpconnectUtil get " + result);
+			Log.w(TAG, "httpconnectutil getresult:" + result);
 
 		} else {
-			System.out.println("http error");
+			Log.w(TAG, "getresult httpstatus:"
+					+ response.getStatusLine().getStatusCode());
+			Log.w(TAG, "http error!");
 		}
+
 		return result;
-	}
-
-	// 利用流上传文件
-	public static boolean upload(String url1, File file) throws IOException {
-		URL url = new URL(url1);
-		HttpURLConnection connect = (HttpURLConnection) url.openConnection();
-		connect.setDoInput(true);
-		connect.setDoOutput(true);
-		connect.setUseCaches(false);
-		connect.setConnectTimeout(TIMEOUT);
-		connect.setRequestMethod("POST");
-		connect.setRequestProperty("Charset", CHARSET);
-		if (file != null) {
-			DataOutputStream dos = new DataOutputStream(
-					connect.getOutputStream());
-			StringBuffer strbuf = new StringBuffer();
-
-		}
-		return false;
 	}
 
 	/*
@@ -126,36 +121,22 @@ public class HttpconnectUtil {
 		File file = null;
 		MultipartEntity reqentity = new MultipartEntity();
 		if (param != null) {
-			/*
-			 * Set<String> set = param.keySet(); Iterator<String> iterator =
-			 * set.iterator(); while (iterator.hasNext()) { Object key =
-			 * iterator.next(); Object value = param.get(key); Log.w(TAG,
-			 * key.toString() + ":" + value.toString());
-			 * reqentity.addPart(key.toString(), new
-			 * StringBody(value.toString()));
-			 * 
-			 * }
-			 */
-			
 			for (String key : param.keySet()) {
 				Log.w(TAG, key + ":" + param.get(key));
-				System.out.println(key
-						+ ":"
-						+param.get(key));
+				System.out.println(key + ":" + param.get(key));
 				System.out.println(key
 						+ ":"
 						+ new String(Base64.decodeBase64(param.get(key)
 								.toString().getBytes())));
-				reqentity.addPart(key, new StringBody(
-						param.get(key).toString()));
+				reqentity.addPart(key,
+						new StringBody(param.get(key).toString()));
 			}
 		} else {
 			Log.w(TAG, "param is null");
 		}
 		for (Bitmap bitmap : imgs) {
 			// 把图片存储到本地
-			file = new File(Tools.CACHE_DIR,
-					System.nanoTime()+".jpg");
+			file = new File(Tools.CACHE_DIR, System.nanoTime() + ".jpg");
 			OutputStream os = null;
 			os = new BufferedOutputStream(new FileOutputStream(file));
 			bitmap.compress(CompressFormat.JPEG, 100, os);
@@ -170,7 +151,14 @@ public class HttpconnectUtil {
 		response = client.execute(post);
 		Log.w(TAG, response.getStatusLine().toString());
 		if (response.getStatusLine().equals(HttpStatus.SC_OK)) {
+			Log.w(TAG, "postfile httpstatus:"
+					+ response.getStatusLine().getStatusCode());
 			result = EntityUtils.toString(response.getEntity());
+			Log.w(TAG, "httpconnectutil postfile result:" + result);
+		} else {
+			Log.w(TAG, "postfile httpstatus:"
+					+ response.getStatusLine().getStatusCode());
+			Log.w(TAG, "http error!");
 		}
 
 		return result;

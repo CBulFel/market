@@ -21,6 +21,7 @@
             android:id="@+id/login_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:hint="输入账号" />
     </LinearLayout>
 
@@ -33,13 +34,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/tmall_icon_more_about_us" />
+            android:src="@drawable/ico_locked_gray" />
 
         <EditText
             android:id="@+id/login_passwd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dip"
+            android:maxLength="16"
             android:hint="输入密码"
             android:password="true" />
     </LinearLayout>

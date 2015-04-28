@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|left"
-            android:text="小明"
+            android:text="未知"
             android:textColor="#ff9912"
             android:textStyle="bold" />
     </LinearLayout>
@@ -37,7 +37,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="28dp"
             android:text="评论评论评论"
-            android:textColor="#808a87" />
+            android:textColor="#808a87"
+            android:textSize="12sp" />
     </LinearLayout>
 
 </LinearLayout>

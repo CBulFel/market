@@ -9,7 +9,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.support.v4.util.LruCache;
@@ -17,15 +16,14 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.mark.android_util.AsyncImageLoader;
-import com.mark.market.R;
-import com.mark.market.bean.User;
 
 /**
  * @author mazhao
  * @describ
  */
 public class Tools {
-	public static final String CACHE_DIR=Environment.getExternalStorageDirectory()+"/market2/cache";
+	public static final String CACHE_DIR = Environment
+			.getExternalStorageDirectory() + "/market2/cache";
 	// 用于实现商品中的图片缓存
 	// 获取当前应用程序所分配的最大内存
 	private final static int maxMemory = (int) Runtime.getRuntime().maxMemory();
@@ -64,25 +62,22 @@ public class Tools {
 		if (bitmap != null) {
 			image.setImageBitmap(bitmap);
 		} else {
-			image.setImageResource(R.drawable.user_head);// 否则先设置成默认的图片
-
-			asyncLoader.execute(urlStr);// 然后执行异步任务AsycnTask去网上加载图片
+			// 否则先设置成默认的图片
+			// image.setImageResource(R.drawable.header_img_default);
+			// 然后执行异步任务AsycnTask去网上加载图片
+			asyncLoader.execute(urlStr);
 		}
 	}
 
-	
-	
-	
-	
-	public static void initdir(){
-		File file=new File(CACHE_DIR);
-		if(!file.exists()){
+	// 初始化文件目录
+	public static void initdir() {
+		File file = new File(CACHE_DIR);
+		if (!file.exists()) {
 			file.mkdirs();
 		}
-		
-		
-		
+
 	}
+
 	/*
 	 * 一个工具方法：作用是把系统时间 转换成当前时间的 前*分钟，前*小时
 	 */
@@ -109,23 +104,6 @@ public class Tools {
 		return sdformat.format(date);
 
 	}
-
-	// 判断指定商品是否被当前用户收藏
-	public static boolean iscollected(Context context, String gid) {
-
-		User user = null;
-		if ((user = LoginSessionUtil.getLoginUser(context)) == null
-				|| user.getUgids() == null) {
-			return false;
-		} else {
-			if (user.getUgids().isEmpty() || user.getUgids() == null)
-				return false;
-			else
-				for (String id : user.getUgids().split(",")) {
-					if (gid.equals(id))
-						return true;
-				}
-		}
-		return false;
-	}
+	
+	
 }

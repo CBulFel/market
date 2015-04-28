@@ -9,13 +9,11 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
@@ -30,14 +28,20 @@ import com.mark.market.util.HttpconnectUtil;
  * @author mazhao Describe
  */
 public class MainService extends Service implements Runnable {
-	public static final String MARKETHOST = "http://192.168.1.158:8080";
+	// 给链接用于分享页面,为固定值
 	public static final String goodUrlhead = "http://online.cumt.edu.cn:8080/2/toItemDetails/toItemDetailsAction_toItemDetails.do?pre=g&id=";
-	private static String url_getByGid = "http://192.168.1.158:8080/market/toItemDetailsAction2_toItemDetailsJSON.do";
-	private static String url_sale = "http://192.168.1.158:8080/market/post/postAction2_postJSON.do";
-	private static String url_update = "http://192.168.1.158:8080/market/index/indexAction2_indexJSON.do";
-	private static String url_login = "http://192.168.1.158:8080/market/login/loginAction2_loginJSON.do";
-	private static String url_comment = "http://192.168.1.158:8080/market/comment/commentAction2_commentJSON.do";
-	private static String url_search="http://192.168.1.158:8080/market/serach/searchAction2_searchJSON.do";
+
+	public static final String MARKETHOST = "http://192.168.1.126:8088";
+	private static String url_getByGid = "http://192.168.1.126:8088/market/toItemDetails/toItemDetailsAction2_toItemDetailsJSON.do";
+	private static String url_sale = "http://192.168.1.126:8088/market/post/postAction2_postJSON.do";
+	private static String url_update = "http://192.168.1.126:8088/market/index/indexAction2_indexJSON.do";
+	private static String url_login = "http://192.168.1.126:8088/market/login/loginAction2_loginJSON.do";
+	private static String url_comment = "http://192.168.1.126:8088/market/comment/commentAction2_commentJSON.do";
+	private static String url_search = "http://192.168.1.126:8088/market/search/searchAction2_searchJSON.do";
+	private static String url_collect = "http://192.168.1.126:8088/market/collect/collectAction2_collectJSON.do";
+	private static String url_ucollect = "http://192.168.1.126:8088/market/unCollect/unCollectAction2_unCollectJSON.do";
+	private static String url_my = "http://192.168.1.126:8088/market/toHomePage/toHomePageAction2_toHomePageJSON.do";
+	private static String url_versionupdate="http://192.168.1.126:8088/market/update";
 	private static final String TAG = "market->MainService";
 	private static Queue<Task> tasks = new LinkedList<Task>();
 	private static ArrayList<Activity> appActivity = new ArrayList<Activity>();
@@ -64,17 +68,20 @@ public class MainService extends Service implements Runnable {
 					((MarketActivity) activity).refresh(Task.MARKET_LOGIN,
 							msg.obj);
 					break;
+				case Task.GET_USERINFO:
+					activity = getActivityByName("MainActivity");
+					((MarketActivity) activity).refresh(Task.GET_USERINFO,
+							msg.obj);
+					break;
 				case Task.GET_DETAIL_BY_GID:
 					activity = getActivityByName("Gooddetail");
-					((MarketActivity) activity).refresh(Task.GET_USERINFO,
+					((MarketActivity) activity).refresh(Task.GET_DETAIL_BY_GID,
 							msg.obj);
 					break;
 				case Task.GET_GOODS:
 					activity = getActivityByName("MainActivity");
 					((MarketActivity) activity)
 							.refresh(Task.GET_GOODS, msg.obj);
-					break;
-				case Task.UPDATE_GOODS:
 					break;
 				case Task.LOADMORE:
 					activity = getActivityByName("MainActivity");
@@ -89,17 +96,21 @@ public class MainService extends Service implements Runnable {
 					((MarketActivity) activity)
 							.refresh(Task.SALE_GOOD, msg.obj);
 				case Task.COMMENT:
-					/*
-					 * activity = (MarketAcitivity)
-					 * getActivityByName("Gooddetail");
-					 * activity.refresh(Task.SALE_GOOD, msg.obj);
-					 */
-					break;
 
+					break;
+				case Task.COLLECT:
+
+					break;
+				case Task.VERSION_UPDATE:
+					activity = getActivityByName("MainActivity");
+					((MarketActivity) activity).refresh(Task.VERSION_UPDATE,
+							msg.obj);
+					break;
 				default:
-					removeActivity(activity);
 					break;
 				}
+				if (activity != null)
+					removeActivity(activity);
 			}
 
 		};
@@ -143,12 +154,6 @@ public class MainService extends Service implements Runnable {
 			appActivity.add(activity);
 	}
 
-	// UI新开任务时，需要传入Activity实例，为了refresh操作
-	/*
-	 * public static void addContext(Context context) {
-	 * appActivities.add(activity); }
-	 */
-
 	// 任务完成后，应该remove对应的Activity实例，防止下次同一Activity的不同实例refresh混淆
 	public static void removeActivity(Activity activity) {
 		if (activity != null) {
@@ -189,24 +194,27 @@ public class MainService extends Service implements Runnable {
 				break;
 			case Task.GET_USERINFO:
 				// 获得用户信息,用于用户页
-				msg.obj = HttpconnectUtil.getResult("", task.getParams());
+				msg.obj = HttpconnectUtil.getResult(url_my, task.getParams());
 				break;
 			case Task.GET_GOODS:
 				// 获得商品列表
-//				msg.obj = HttpconnectUtil.getResult(url_update, null);
+				msg.obj = HttpconnectUtil.getResult(url_update,
+						task.getParams());
 				break;
 			case Task.GET_DETAIL_BY_GID:
 				// 获取商品详情
-				/*msg.obj = HttpconnectUtil.getResult(url_getByGid,
-						task.getParams());*/
+				msg.obj = HttpconnectUtil.getResult(url_getByGid,
+						task.getParams());
 				break;
 			case Task.LOADMORE:
 				// 加载更多
-
+				msg.obj = HttpconnectUtil.getResult(url_update,
+						task.getParams());
 				break;
 			case Task.GOODS_SEARCH:
 				// 搜索商品
-				msg.obj = HttpconnectUtil.getResult(url_search, task.getParams());
+				msg.obj = HttpconnectUtil.getResult(url_search,
+						task.getParams());
 				break;
 			case Task.SALE_GOOD:
 				// 发布商品
@@ -216,6 +224,17 @@ public class MainService extends Service implements Runnable {
 				// 评论
 				msg.obj = HttpconnectUtil.getResult(url_comment,
 						task.getParams());
+			case Task.COLLECT:
+				// 收藏
+				msg.obj = HttpconnectUtil.getResult(url_collect,
+						task.getParams());
+			case Task.UCOLLECT:
+				// 取消收藏
+				msg.obj = HttpconnectUtil.getResult(url_ucollect,
+						task.getParams());
+			case Task.VERSION_UPDATE:
+				//版本更新
+				msg.obj=HttpconnectUtil.getResult(url_versionupdate, null);
 			default:
 				break;
 
