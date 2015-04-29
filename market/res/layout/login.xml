@@ -21,8 +21,8 @@
             android:id="@+id/login_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            android:hint="输入账号" />
+            android:hint="不超过15字符"
+            android:singleLine="true" />
     </LinearLayout>
 
     <LinearLayout
@@ -41,8 +41,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dip"
+            android:hint="不超过16字符"
             android:maxLength="16"
-            android:hint="输入密码"
             android:password="true" />
     </LinearLayout>
 

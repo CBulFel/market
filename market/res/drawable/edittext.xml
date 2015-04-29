@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle" >
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <stroke
-        android:width="0.2dp"
-        android:color="#dcdcdc" />
+    <item android:drawable="@drawable/edittext_normal" android:state_checked="false"></item>
+    <item android:drawable="@drawable/edittext_error" android:state_checked="true"></item>
 
-    <solid android:color="#ffffff" />
-    <corners 
-        android:radius="0.2dp"
-        />
-
-</shape>
+</selector>

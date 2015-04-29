@@ -89,13 +89,16 @@ public class LoginActivity extends Activity implements MarketActivity,
 		 */
 
 		// 新开任务：登录操作
-
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("account", login.getUname());
-		params.put("pwd", login.getUpwd());
-		Task task = new Task(Task.MARKET_LOGIN, params);
-		MainService.newTask(this, task);
-		Log.w(TAG, "new task!");
+		if (login.getUname() != null && login.getUpwd() != null) {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("account", login.getUname());
+			params.put("pwd", login.getUpwd());
+			Task task = new Task(Task.MARKET_LOGIN, params);
+			MainService.newTask(this, task);
+			Log.w(TAG, "new task!");
+		} else {
+			Toast.makeText(this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	/*
@@ -150,6 +153,4 @@ public class LoginActivity extends Activity implements MarketActivity,
 		return super.onMenuItemSelected(featureId, item);
 	}
 
-	
-	
 }

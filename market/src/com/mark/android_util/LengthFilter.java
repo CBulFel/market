@@ -20,7 +20,7 @@ public class LengthFilter implements InputFilter {
 
 	private int maxlength = 0;
 	private TextView length;
-
+	private boolean isphone;
 	/**
 	 * @param maxlength
 	 */
@@ -51,7 +51,7 @@ public class LengthFilter implements InputFilter {
 			Log.e("filter", String.valueOf(destLen + sourceLen));
 			if (length != null)
 				length.setText(String.valueOf(destLen + sourceLen));
-			// 如果超过100个字符
+			// 如果超过maxlength个字符
 			if (destLen + sourceLen >= maxlength) {
 				return "";
 			}

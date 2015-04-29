@@ -1,5 +1,3 @@
-
-
 package com.mark.android_ui;
 
 import android.annotation.SuppressLint;
@@ -7,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.text.InputFilter;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +15,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.mark.android_util.EditWatcher;
+import com.mark.android_util.LengthFilter;
 import com.mark.android_util.MD5Util;
 import com.mark.market.R;
 import com.mark.market.bean.User;
@@ -52,23 +53,23 @@ public class Login extends LinearLayout implements OnClickListener {
 		LayoutInflater inflater = LayoutInflater.from(getContext());
 		View view = inflater.inflate(R.layout.login, this);
 		login_name = (EditText) view.findViewById(R.id.login_name);
+		login_name
+				.addTextChangedListener(new EditWatcher(login_name, 15, true));
 		login_pwd = (EditText) view.findViewById(R.id.login_passwd);
+		login_pwd
+				.setFilters(new InputFilter[] { new LengthFilter(16, login_pwd) });
 		login_reg = (TextView) view.findViewById(R.id.login_register);
 		login_btn = (Button) view.findViewById(R.id.login_btn);
 		login_btn.setOnClickListener(this);
 		login_reg.setOnClickListener(this);
 
 	}
-	
-	public static User getUser(){
-		User user=new User();
-		return user;
-		
-		
-	}
 
 	public String getUname() {
-		return login_name.getText().toString();
+		if (login_name.getId() == EditWatcher.INPUT_NORM)
+			return login_name.getText().toString();
+		else
+			return null;
 	}
 
 	public String getUpwd() {
@@ -82,6 +83,7 @@ public class Login extends LinearLayout implements OnClickListener {
 	public void setLoginListener(LoginListener l) {
 		this.mloginlistener = l;
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -98,9 +100,9 @@ public class Login extends LinearLayout implements OnClickListener {
 			getContext().startActivity(intent);
 			break;
 		case R.id.login_btn:
-			
+
 			mloginlistener.loginauth();
-			
+
 			break;
 		default:
 			break;

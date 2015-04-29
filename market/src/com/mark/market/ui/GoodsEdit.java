@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,11 +16,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.NavUtils;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.telephony.PhoneNumberUtils;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
@@ -37,6 +40,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mark.android_util.EditWatcher;
 import com.mark.android_util.LengthFilter;
 import com.mark.market.R;
 import com.mark.market.R.id;
@@ -48,6 +52,7 @@ import com.mark.market.util.Androidstatus;
 import com.mark.market.util.LoginSessionUtil;
 import com.mark.market.util.Tools;
 
+@SuppressLint("NewApi")
 public class GoodsEdit extends Activity implements MarketActivity,
 		OnClickListener {
 	private static String TAG = "goodedit";
@@ -98,18 +103,26 @@ public class GoodsEdit extends Activity implements MarketActivity,
 			intent.setClass(this, LoginActivity.class);
 			startActivity(intent);
 		}
-
+		// 初始化各个组件,并添加文本输入观察器
 		holder = new viewholder();
 		holder.edit_title = (EditText) findViewById(R.id.edit_title);
+		holder.edit_title.addTextChangedListener(new EditWatcher(
+				holder.edit_title, 8));
 		holder.edit_describ = (EditText) findViewById(R.id.edit_describ);
 		holder.edit_descirbnum = (TextView) findViewById(R.id.edit_describnum);
 		holder.edit_describ.setFilters(new InputFilter[] { new LengthFilter(
 				500, holder.edit_descirbnum) });
 		holder.edit_price = (EditText) findViewById(R.id.edit_price);
+		holder.edit_price.addTextChangedListener(new EditWatcher(
+				holder.edit_price, false, true));
 		holder.edit_preprice = (EditText) findViewById(R.id.edit_preprice);
+		holder.edit_preprice.addTextChangedListener(new EditWatcher(
+				holder.edit_preprice, false, true));
 		holder.edit_phone = (EditText) findViewById(R.id.edit_phone);
 		holder.edit_phone
 				.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+		holder.edit_phone.addTextChangedListener(new EditWatcher(
+				holder.edit_phone, true, false));
 		holder.edit_category = (Spinner) findViewById(R.id.edit_category);
 		holder.edit_palce = (Spinner) findViewById(R.id.edit_place);
 		holder.edit_degree = (Spinner) findViewById(R.id.edit_degree);
@@ -328,13 +341,14 @@ public class GoodsEdit extends Activity implements MarketActivity,
 			}
 			good_info.put("kind", "g");
 			good_info.put("id", user.getUid());
-			if (holder.edit_title.getText() != null)
+			if (holder.edit_title.getText() != null
+					&& holder.edit_title.getId() == EditWatcher.INPUT_NORM)
 				good_info.put(
 						"name",
 						new String(Base64.encodeBase64(holder.edit_title
 								.getText().toString().getBytes())));
 			else {
-				Toast.makeText(getApplicationContext(), "标题不能为空",
+				Toast.makeText(getApplicationContext(), "标题不合法",
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
@@ -344,43 +358,32 @@ public class GoodsEdit extends Activity implements MarketActivity,
 						new String(Base64.encodeBase64(holder.edit_describ
 								.getText().toString().getBytes())));
 			else {
-				Toast.makeText(getApplicationContext(), "描述不能为空",
+				Toast.makeText(getApplicationContext(), "描述不合法",
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
-			try {
-				if (holder.edit_price.getText() != null
-						&& Float.parseFloat(holder.edit_price.getText()
-								.toString()) > 0
-						&& Float.parseFloat(holder.edit_price.getText()
-								.toString()) < 20000)
-					good_info.put("price", holder.edit_price.getText()
-							.toString());
-				else {
-					Toast.makeText(getApplicationContext(), "价格输入不规范",
-							Toast.LENGTH_SHORT).show();
-					return;
-				}
-				if (holder.edit_preprice.getText() != null
-						&& Float.parseFloat(holder.edit_preprice.getText()
-								.toString()) > 0
-						&& Float.parseFloat(holder.edit_preprice.getText()
-								.toString()) < 20000)
-					good_info.put("pre_price", holder.edit_preprice.getText()
-							.toString());
-				else {
-					Toast.makeText(getApplicationContext(), "原价输入不规范",
-							Toast.LENGTH_SHORT).show();
-					return;
-				}
-			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
-				Toast.makeText(getApplicationContext(), "原价或现价输入不规范",
+			if (holder.edit_price.getText() != null
+					&& holder.edit_price.getId() == EditWatcher.INPUT_NORM)
+				good_info.put("price", holder.edit_price.getText().toString());
+			else {
+				Toast.makeText(getApplicationContext(), "价格输入不合法",
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
-			if (holder.edit_phone.getText() != null)
-				good_info.put("phone", holder.edit_phone.getText().toString());
+			if (holder.edit_preprice.getText() != null
+					&& holder.edit_preprice.getId() == EditWatcher.INPUT_NORM)
+				good_info.put("pre_price", holder.edit_preprice.getText()
+						.toString());
+			else {
+				Toast.makeText(getApplicationContext(), "原价输入不合法",
+						Toast.LENGTH_SHORT).show();
+				return;
+			}
+			if (holder.edit_phone.getText() != null
+					&& holder.edit_phone.getId() == EditWatcher.INPUT_NORM)
+				good_info.put("phone",
+						PhoneNumberUtils.stripSeparators(holder.edit_phone
+								.getText().toString()));
 			good_info.put(
 					"category",
 					new String(Base64.encodeBase64(holder.edit_category

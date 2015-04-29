@@ -126,7 +126,7 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 				.getActionView();
 		if (queryString != null)
 			searchView.setQuery(queryString, false);
-		 searchView.setSubmitButtonEnabled(true);// 显示搜索提交按钮
+		searchView.setSubmitButtonEnabled(true);// 显示搜索提交按钮
 		searchView
 				.setOnQueryTextFocusChangeListener(new OnFocusChangeListener() {
 
@@ -139,13 +139,20 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 					}
 				});
 		// 利用反射配置searchview
-		/*
-		 * try { initsearchView(); } catch (NoSuchFieldException e) { // TODO
-		 * Auto-generated catch block e.printStackTrace(); } catch
-		 * (IllegalAccessException e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); } catch (IllegalArgumentException e) { // TODO
-		 * Auto-generated catch block e.printStackTrace(); }
-		 */
+
+		try {
+			initsearchView();
+		} catch (NoSuchFieldException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODOAuto-generated catch block
+			e.printStackTrace();
+		}
+
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
 
 			@Override
