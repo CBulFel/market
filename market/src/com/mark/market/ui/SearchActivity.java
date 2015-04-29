@@ -30,6 +30,7 @@ import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
@@ -127,6 +128,11 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 		if (queryString != null)
 			searchView.setQuery(queryString, false);
 		searchView.setSubmitButtonEnabled(true);// 显示搜索提交按钮
+		//找到搜索按钮对应的LinearLayout
+        int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/submit_area", null, null);
+        LinearLayout searchPlate = (LinearLayout)searchView.findViewById(searchPlateId);
+        //拿到搜索图标的imageview,这样就可以修改图片了
+        ((ImageView)searchPlate.getChildAt(0)).setImageResource(R.drawable.search_btn);  
 		searchView
 				.setOnQueryTextFocusChangeListener(new OnFocusChangeListener() {
 
@@ -138,7 +144,7 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 							gosugfrg();
 					}
 				});
-		// 利用反射配置searchview
+	/*	// 利用反射配置searchview
 
 		try {
 			initsearchView();
@@ -152,7 +158,7 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 			// TODOAuto-generated catch block
 			e.printStackTrace();
 		}
-
+*/
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
 
 			@Override
