@@ -29,7 +29,7 @@ public class LoginActivity extends Activity implements MarketActivity,
 		LoginListener {
 	private static final String LOGIN_SUCCESS = "success";
 	private static final String LOGIN_FAIL = "fail";
-	private static final String TAG = "market";
+	private static final String TAG = "market->LoginActivity";
 	private Login login;
 	private MyprogressDialog loginprogress = null;
 
@@ -127,11 +127,10 @@ public class LoginActivity extends Activity implements MarketActivity,
 				Toast.makeText(this, "服务器返回数据异常，请重试...", Toast.LENGTH_SHORT)
 						.show();
 			}
+		} else {
+			Log.w(TAG, "object is null,in loginactivity refresh()!");
+			Toast.makeText(this, "网络连接错误，请检查网络", Toast.LENGTH_SHORT).show();
 		}
-
-		Log.w(TAG, "object is null,in loginactivity refresh()!");
-		Toast.makeText(this, "网络连接错误，请检查网络", Toast.LENGTH_SHORT).show();
-
 	}
 
 	@Override

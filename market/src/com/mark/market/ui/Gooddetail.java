@@ -58,8 +58,8 @@ public class Gooddetail extends Activity implements MarketActivity,
 	private LinearLayout ovalLayout; // 下方的小圆点
 	private List<View> listimgs; // 要滚动的 图片组
 	private View headview;
-	private LinkedList<GComment> comments;
-	private ArrayList<String> unamelist;
+	private ArrayList<GComment> comments = new ArrayList<GComment>();
+	private ArrayList<String> unamelist = new ArrayList<String>();
 	private ViewHolder holder = new ViewHolder();
 	private CommentsAdapter comment_adapter;
 	private CommentDialog commentdialog;
@@ -212,30 +212,30 @@ public class Gooddetail extends Activity implements MarketActivity,
 
 	public void refreshcomments() {
 
-		comments = new LinkedList<GComment>(good.getGcomments());
+		Log.w(TAG, "refreshcomments()-comments:" + comments.size());
 		comment_adapter = new CommentsAdapter(this, comments, unamelist);
 		list_comments.setAdapter(comment_adapter);
-
 		list_comments.addHeaderView(headview);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-		/*switch (item.getItemId()) {
+
+		switch (item.getItemId()) {
 		case android.R.id.home:
-			Intent upIntent = NavUtils.getParentActivityIntent(this);
-			if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-				TaskStackBuilder.create(this)
-						.addNextIntentWithParentStack(upIntent)
-						.startActivities();
-			} else {
-				upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				NavUtils.navigateUpTo(this, upIntent);
-			}
-			return true;
-		}*/
-		finish();
+			finish();
+			/*
+			 * Intent upIntent = NavUtils.getParentActivityIntent(this); if
+			 * (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+			 * TaskStackBuilder.create(this)
+			 * .addNextIntentWithParentStack(upIntent) .startActivities(); }
+			 * else { upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			 * NavUtils.navigateUpTo(this, upIntent); } return true;
+			 */
+			break;
+		}
+
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -258,7 +258,7 @@ public class Gooddetail extends Activity implements MarketActivity,
 			holder.detail_header_phone.performClick();
 			break;
 		case R.id.comment:
-			Log.w(TAG, "gooddetail->share");
+			Log.w(TAG, "gooddetail->comment");
 			User user = new User();
 			if ((user = LoginSessionUtil.getLoginUser(this)) != null) {
 				commentdialog = new CommentDialog(this, user.getUid(),
@@ -267,6 +267,7 @@ public class Gooddetail extends Activity implements MarketActivity,
 			} else {
 				Intent intent = new Intent();
 				intent.setClass(this, LoginActivity.class);
+				startActivity(intent);
 			}
 			break;
 		case R.id.share:
@@ -306,8 +307,10 @@ public class Gooddetail extends Activity implements MarketActivity,
 				JSONArray json_unamel = js.getJSONArray("userList");
 				unamelist = (ArrayList<String>) JSON.parseArray(
 						json_unamel.toJSONString(), String.class);
-				JSONObject json_goods = js.getJSONObject("goods");
-				good = JSON.parseObject(json_goods.toJSONString(), Good.class);
+				Log.w(TAG, json_unamel.toJSONString());
+				JSONArray json_comments = js.getJSONArray("gCommentList");
+				comments = (ArrayList<GComment>) JSON.parseArray(
+						json_comments.toJSONString(), GComment.class);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				Log.w(TAG, "JSON数据解析异常");

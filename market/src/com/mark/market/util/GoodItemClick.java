@@ -23,16 +23,14 @@ import android.widget.Toast;
 
 /**
  * @author mazhao
- * @describ 
+ * @describ
  */
 public class GoodItemClick implements OnClickListener {
-	
-	
+
 	private int position;
 	private Good good;
 	private Context context;
-	
-	
+
 	/**
 	 * @param position
 	 */
@@ -43,16 +41,17 @@ public class GoodItemClick implements OnClickListener {
 		this.context = context;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.view.View.OnClickListener#onClick(android.view.View)
 	 */
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		
+
 		switch (v.getId()) {
-		case R.id.like:
-			break;
+
 		case R.id.goods_item_layout_item: {
 			Toast.makeText(context, "item---->" + position, Toast.LENGTH_SHORT)
 					.show();
@@ -87,7 +86,7 @@ public class GoodItemClick implements OnClickListener {
 		default:
 			break;
 		}
-	
+
 	}
 
 }

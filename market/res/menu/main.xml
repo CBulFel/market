@@ -2,31 +2,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.mark.market.MainActivity" >
-    
-    <item 
+
+    <item
         android:id="@+id/menu_search"
-        android:orderInCategory="1"
+        android:actionViewClass="android.widget.SearchView"
         android:icon="@drawable/icon_search"
-        android:title="search"
+        android:orderInCategory="1"
         android:showAsAction="collapseActionView|ifRoom"
-		android:actionViewClass="android.widget.SearchView"
-        />
-    <item 
+        android:title="search"/>
+    <item
         android:id="@+id/menu_ulogin"
-        android:title="退出登录"
         android:orderInCategory="98"
         android:showAsAction="never"
-        />
-	<item 
-	    android:id="@+id/menu_about"
-	    android:title="关于"
-	    android:orderInCategory="99"
-	    android:showAsAction="never"
-	    />
-	<item 
-	    android:id="@+id/menu_exit"
-	    android:title="退出"
-		android:orderInCategory="100"
-		android:showAsAction="never"
-	    />
+        android:title="退出登录"/>
+    <item
+        android:id="@+id/menu_about"
+        android:orderInCategory="98"
+        android:showAsAction="never"
+        android:title="关于"/>
+    <item
+        android:id="@+id/menu_update"
+        android:orderInCategory="99"
+        android:showAsAction="never"
+        android:title="检查更新"/>
+    <item
+        android:id="@+id/menu_exit"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="退出"/>
+
 </menu>

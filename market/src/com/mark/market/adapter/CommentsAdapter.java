@@ -26,7 +26,7 @@ import android.widget.TextView;
  */
 public class CommentsAdapter extends BaseAdapter {
 
-	private static final String TAG="market->comments adapter";
+	private static final String TAG = "market->comments adapter";
 	private List<GComment> comments;
 	private LayoutInflater inflater;
 	private ViewHolder holder;
@@ -108,28 +108,30 @@ public class CommentsAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		try{
-		GComment comment = comments.get(position);
-		String uname = uname_list.get(position);
-		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.comments_item, null);
-			holder = new ViewHolder();
+		try {
+			GComment comment = comments.get(position);
+			String uname = uname_list.get(position);
+			if (convertView == null) {
+				convertView = inflater.inflate(R.layout.comments_item, null);
+				holder = new ViewHolder();
 
-			holder.comment_headimg = (CircularImage) convertView
-					.findViewById(R.id.comment_headimg);
-			holder.comment_uname = (TextView) convertView
-					.findViewById(R.id.comment_uname);
-			holder.comment_content = (TextView) convertView
-					.findViewById(R.id.comment_content);
-			convertView.setTag(holder);
-		} else {
-			holder = (ViewHolder) convertView.getTag();
-		}
+				holder.comment_headimg = (CircularImage) convertView
+						.findViewById(R.id.comment_headimg);
+				holder.comment_uname = (TextView) convertView
+						.findViewById(R.id.comment_uname);
+				holder.comment_content = (TextView) convertView
+						.findViewById(R.id.comment_content);
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolder) convertView.getTag();
+			}
 
-		holder.comment_headimg.setImageResource(R.drawable.header_img_default);
-		holder.comment_uname.setText(uname);
-		holder.comment_content.setText(comment.getGcMsg());
-		}catch(Exception e){
+			holder.comment_headimg
+					.setImageResource(R.drawable.header_img_default);
+			holder.comment_uname.setText(uname);
+			holder.comment_content.setText(comment.getGcMsg());
+			Log.w(TAG, comment.getGcMsg());
+		} catch (Exception e) {
 			Log.e(TAG, "adapter 设置数据异常");
 		}
 		return convertView;

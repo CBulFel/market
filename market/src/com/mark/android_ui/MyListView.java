@@ -2,7 +2,6 @@ package com.mark.android_ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -266,11 +265,9 @@ public class MyListView extends ListView implements OnScrollListener {
 
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_DOWN:
-			Log.e("list", "TOUCH DOWN");
 			mLastY = ev.getRawY();
 			break;
 		case MotionEvent.ACTION_MOVE:
-			Log.e("list", "TOUCH MOVE");
 			final float deltaY = ev.getRawY() - mLastY;
 			mLastY = ev.getRawY();
 			if (getFirstVisiblePosition() == 0

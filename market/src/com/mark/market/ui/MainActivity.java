@@ -94,7 +94,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 		Intent intent = new Intent();
 		intent.setClass(this, MainService.class);
 		startService(intent);
-		//检查更新
+		// 检查更新
 		MainService.newTask(this, new Task(Task.VERSION_UPDATE, null));
 		// 初始化文件夹
 		Tools.initdir();
@@ -164,7 +164,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 		// TODO Auto-generated method stub
 
 		if (event.getAction() == MotionEvent.ACTION_DOWN && !success) {
-			Log.w(TAG, "mainactivity onTouchEvent.down");
 			title_progress.setVisibility(View.VISIBLE);
 			homeprogress.show();
 			loadfailed.setVisibility(View.GONE);
@@ -284,20 +283,20 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 		String url_update = null;
 		try {
 			String result = (String) objects[0];
-
-			Log.w(TAG, "refresh UI!->MainActivity" + result);
-
+			JSONArray jsonarray = null;
 			JSONObject json = JSON.parseObject(result);
-			Log.w(TAG, json.toJSONString());
-			JSONArray jsonarray = json.getJSONArray("goods");
-			pagenum = (int) json.getIntValue("pageNum");
+			if (json.containsKey("goods")) {
+				jsonarray = json.getJSONArray("goods");
+				goodsjson = JSON.parseArray(jsonarray.toJSONString(),
+						Good.class);
+			}
+			if (json.containsKey("pageNum"))
+				pagenum = (int) json.getIntValue("pageNum");
 			if (json.containsKey("version"))
 				version = json.getIntValue("version");
 			if (json.containsKey("url"))
 				url_update = json.getString("url");
-			Log.w(TAG, jsonarray.toJSONString());
-			goodsjson = JSON.parseArray(jsonarray.toJSONString(), Good.class);
-			Log.w(TAG, "goods from JSON num->" + goodsjson.size());
+
 		} catch (Exception e) { // TODO Auto-generated catch block
 			Log.e(TAG, "MainActivity JSON 解析异常");
 			Log.e(TAG, e.getMessage());
@@ -320,6 +319,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 						UpdateManager updatemanager = new UpdateManager(this,
 								url_update);
 						updatemanager.checkUpdateInfo();
+					} else {
+						Toast.makeText(this, "已是最新版本~", Toast.LENGTH_SHORT)
+								.show();
 					}
 				} catch (NameNotFoundException e) {
 					// TODO Auto-generated catch block
@@ -365,6 +367,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 			break;
 		case R.id.menu_exit:
 			finish();
+			break;
+		case R.id.menu_update:
+			MainService.newTask(this, new Task(Task.VERSION_UPDATE, null));
 			break;
 		case R.id.menu_ulogin:
 			if (LoginSessionUtil.getLoginUser(getApplicationContext()) != null) {

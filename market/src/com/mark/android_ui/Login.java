@@ -56,8 +56,7 @@ public class Login extends LinearLayout implements OnClickListener {
 		login_name
 				.addTextChangedListener(new EditWatcher(login_name, 15, true));
 		login_pwd = (EditText) view.findViewById(R.id.login_passwd);
-		login_pwd
-				.setFilters(new InputFilter[] { new LengthFilter(16, login_pwd) });
+		login_pwd.setFilters(new InputFilter[] { new LengthFilter(16, null) });
 		login_reg = (TextView) view.findViewById(R.id.login_register);
 		login_btn = (Button) view.findViewById(R.id.login_btn);
 		login_btn.setOnClickListener(this);

@@ -85,7 +85,6 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 		if (LoginSessionUtil.getLoginUser(getActivity()) != null) {
 			params.put("uid", LoginSessionUtil.getLoginUser(getActivity())
 					.getUid());
-			Log.w(TAG, LoginSessionUtil.getLoginUser(getActivity()).getUid());
 		}
 		params.put("pageNum", MainActivity.pageNum);
 		Task task = new Task(Task.GET_GOODS, params);
@@ -122,7 +121,6 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 		if (LoginSessionUtil.getLoginUser(getActivity()) != null) {
 			params.put("uid", LoginSessionUtil.getLoginUser(getActivity())
 					.getUid());
-			Log.w(TAG, LoginSessionUtil.getLoginUser(getActivity()).getUid());
 		}
 		params.put("pageNum", MainActivity.pageNum);
 		Task task = new Task(Task.GET_GOODS, params);
@@ -137,7 +135,7 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 		params.put("pageNum", MainActivity.pageNum);
 		Task task = new Task(Task.LOADMORE, params);
 		MainService.newTask(getActivity(), task);
-		
+
 	}
 
 	public void refreshcomplete(List<Good> goods_new) {
@@ -156,20 +154,20 @@ public class Fragment_home extends Fragment implements MyListViewListener {
 
 	public void loadmorecomplete(List<Good> goods_more) {
 		// 加载更多完成后的操作
-		 mAdapter.addgoods(goods_more);
-		 mAdapter.notifyDataSetChanged();
+		mAdapter.addgoods(goods_more);
+		mAdapter.notifyDataSetChanged();
 		marketListView.stopRefresh();
 		marketListView.stopLoadMore();
 		Log.w(TAG, "loadmore success!");
 	}
 
-	public void loadmore_last(){
+	public void loadmore_last() {
 		Log.w(TAG, "loadmore_last");
 		Toast.makeText(getActivity(), "没有更多", Toast.LENGTH_SHORT).show();
 		marketListView.stopRefresh();
 		marketListView.stopLoadMore();
 	}
-	
+
 	public void loadfailed() {
 		marketListView.setVisibility(View.GONE);
 	}

@@ -58,7 +58,7 @@ public class HttpconnectUtil {
 
 	public static String getResult(String url, Map<String, Object> param)
 			throws IOException {
-		Log.w(TAG, url);
+		// Log.w(TAG, url);
 		String result = null;
 		post = new HttpPost(url);
 
@@ -73,8 +73,8 @@ public class HttpconnectUtil {
 				Object value = param.get(key);
 				pairList.add(new BasicNameValuePair(key.toString(), value
 						.toString()));
-				Log.w(TAG,
-						"key:" + key.toString() + " value:" + value.toString());
+				// Log.w(TAG,"key:" + key.toString() + " value:" +
+				// value.toString());
 			}
 
 			post.setEntity(new UrlEncodedFormEntity(pairList, "UTF-8"));
@@ -94,7 +94,7 @@ public class HttpconnectUtil {
 			Log.w(TAG, "getresult httpstatus:"
 					+ response.getStatusLine().getStatusCode());
 			result = EntityUtils.toString(response.getEntity());
-			Log.w(TAG, "httpconnectutil getresult:" + result);
+			// Log.w(TAG, "httpconnectutil getresult:" + result);
 
 		} else {
 			Log.w(TAG, "getresult httpstatus:"
@@ -113,7 +113,7 @@ public class HttpconnectUtil {
 	public static String postfile(String url, Map<String, Object> params)
 			throws ClientProtocolException, IOException {
 		post = new HttpPost(url);
-		Log.w(TAG, "postfile()");
+		// Log.w(TAG, "postfile()");
 		ArrayList<Bitmap> imgs = (ArrayList<Bitmap>) params.get("imgs");
 		Map<String, String> param = (Map<String, String>) params.get("info");
 		ContentBody body = null;
@@ -122,7 +122,7 @@ public class HttpconnectUtil {
 		MultipartEntity reqentity = new MultipartEntity();
 		if (param != null) {
 			for (String key : param.keySet()) {
-				Log.w(TAG, key + ":" + param.get(key));
+				// Log.w(TAG, key + ":" + param.get(key));
 				System.out.println(key + ":" + param.get(key));
 				System.out.println(key
 						+ ":"
@@ -154,7 +154,7 @@ public class HttpconnectUtil {
 			Log.w(TAG, "postfile httpstatus:"
 					+ response.getStatusLine().getStatusCode());
 			result = EntityUtils.toString(response.getEntity());
-			Log.w(TAG, "httpconnectutil postfile result:" + result);
+			// Log.w(TAG, "httpconnectutil postfile result:" + result);
 		} else {
 			Log.w(TAG, "postfile httpstatus:"
 					+ response.getStatusLine().getStatusCode());

@@ -81,7 +81,7 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 		// TODO Auto-generated method stub
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			Intent upIntent = NavUtils.getParentActivityIntent(this);
+			/*Intent upIntent = NavUtils.getParentActivityIntent(this);
 			if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
 				TaskStackBuilder.create(this)
 						.addNextIntentWithParentStack(upIntent)
@@ -89,7 +89,8 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 			} else {
 				upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				NavUtils.navigateUpTo(this, upIntent);
-			}
+			}*/
+			finish();
 			return true;
 		}
 
@@ -128,11 +129,14 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 		if (queryString != null)
 			searchView.setQuery(queryString, false);
 		searchView.setSubmitButtonEnabled(true);// 显示搜索提交按钮
-		//找到搜索按钮对应的LinearLayout
-        int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/submit_area", null, null);
-        LinearLayout searchPlate = (LinearLayout)searchView.findViewById(searchPlateId);
-        //拿到搜索图标的imageview,这样就可以修改图片了
-        ((ImageView)searchPlate.getChildAt(0)).setImageResource(R.drawable.search_btn);  
+		// 找到搜索按钮对应的LinearLayout
+		int searchPlateId = searchView.getContext().getResources()
+				.getIdentifier("android:id/submit_area", null, null);
+		LinearLayout searchPlate = (LinearLayout) searchView
+				.findViewById(searchPlateId);
+		// 拿到搜索图标的imageview,这样就可以修改图片了
+		((ImageView) searchPlate.getChildAt(0))
+				.setImageResource(R.drawable.search_btn);
 		searchView
 				.setOnQueryTextFocusChangeListener(new OnFocusChangeListener() {
 
@@ -144,21 +148,15 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 							gosugfrg();
 					}
 				});
-	/*	// 利用反射配置searchview
-
-		try {
-			initsearchView();
-		} catch (NoSuchFieldException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODOAuto-generated catch block
-			e.printStackTrace();
-		}
-*/
+		/*
+		 * // 利用反射配置searchview
+		 * 
+		 * try { initsearchView(); } catch (NoSuchFieldException e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); } catch
+		 * (IllegalAccessException e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); } catch (IllegalArgumentException e) { //
+		 * TODOAuto-generated catch block e.printStackTrace(); }
+		 */
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
 
 			@Override
@@ -204,11 +202,11 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		Log.w(TAG, "onDestory()");
-		if (fragment_result.isResumed()) {
+		/*if (fragment_result.isResumed()) {
 
 			this.getSupportFragmentManager().beginTransaction()
 					.remove(fragment_result).commitAllowingStateLoss();
-		}
+		}*/
 		super.onDestroy();
 	}
 
@@ -218,7 +216,7 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 		FragmentTransaction transaction = this.getSupportFragmentManager()
 				.beginTransaction();
 		transaction.replace(R.id.search_content, fragment_suggest);
-		transaction.commit();
+		transaction.commitAllowingStateLoss();
 
 	}
 
@@ -229,7 +227,7 @@ public class SearchActivity extends FragmentActivity implements MarketActivity {
 		FragmentTransaction transaction = this.getSupportFragmentManager()
 				.beginTransaction();
 		transaction.replace(R.id.search_content, fragment_result);
-		transaction.commit();
+		transaction.commitAllowingStateLoss();
 
 	}
 

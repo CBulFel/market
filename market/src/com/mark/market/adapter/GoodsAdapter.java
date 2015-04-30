@@ -194,8 +194,6 @@ public class GoodsAdapter extends BaseAdapter {
 				position, good));
 		holder.layout_share.setOnClickListener(new GoodItemClick(context,
 				position, good));
-		holder.layout_like.setOnClickListener(new GoodItemClick(context,
-				position, good));
 		holder.item_like
 				.setOnCheckedChangeListener(new DoCollect(context, good));
 		return convertView;
@@ -211,4 +209,3 @@ public class GoodsAdapter extends BaseAdapter {
 	}
 
 }
-

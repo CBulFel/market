@@ -28,7 +28,7 @@ public class Tools {
 	// 获取当前应用程序所分配的最大内存
 	private final static int maxMemory = (int) Runtime.getRuntime().maxMemory();
 	// 只分5分之一用来做图片缓存
-	private final static int cacheSize = maxMemory / 5;
+	private final static int cacheSize = maxMemory / 8;
 
 	private static LruCache<String, Bitmap> mLruCache = new LruCache<String, Bitmap>(
 			cacheSize) {
@@ -36,6 +36,14 @@ public class Tools {
 			// 复写sizeof()方法
 			return bitmap.getRowBytes() * bitmap.getHeight() / 1024; // 这里是按多少KB来算
 		}
+
+		@Override
+		protected void entryRemoved(boolean evicted, String key,
+				Bitmap oldValue, Bitmap newValue) {
+			// TODO Auto-generated method stub
+			super.entryRemoved(evicted, key, oldValue, newValue);
+		}
+		
 	};
 
 	/*

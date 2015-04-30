@@ -31,17 +31,17 @@ public class MainService extends Service implements Runnable {
 	// 给链接用于分享页面,为固定值
 	public static final String goodUrlhead = "http://online.cumt.edu.cn:8080/2/toItemDetails/toItemDetailsAction_toItemDetails.do?pre=g&id=";
 
-	public static final String MARKETHOST = "http://192.168.1.126:8088";
-	private static String url_getByGid = "http://192.168.1.126:8088/market/toItemDetails/toItemDetailsAction2_toItemDetailsJSON.do";
-	private static String url_sale = "http://192.168.1.126:8088/market/post/postAction2_postJSON.do";
-	private static String url_update = "http://192.168.1.126:8088/market/index/indexAction2_indexJSON.do";
-	private static String url_login = "http://192.168.1.126:8088/market/login/loginAction2_loginJSON.do";
-	private static String url_comment = "http://192.168.1.126:8088/market/comment/commentAction2_commentJSON.do";
-	private static String url_search = "http://192.168.1.126:8088/market/search/searchAction2_searchJSON.do";
-	private static String url_collect = "http://192.168.1.126:8088/market/collect/collectAction2_collectJSON.do";
-	private static String url_ucollect = "http://192.168.1.126:8088/market/unCollect/unCollectAction2_unCollectJSON.do";
-	private static String url_my = "http://192.168.1.126:8088/market/toHomePage/toHomePageAction2_toHomePageJSON.do";
-	private static String url_versionupdate="http://192.168.1.126:8088/market/update";
+	public static final String MARKETHOST = "http://online.cumt.edu.cn:8080/";
+	private static String url_getByGid = "http://online.cumt.edu.cn:8080/2/toItemDetails/toItemDetailsAction2_toItemDetailsJSON.do";
+	private static String url_sale = "http://online.cumt.edu.cn:8080/2/post/postAction2_postJSON.do";
+	private static String url_update = "http://online.cumt.edu.cn:8080/2/index/indexAction2_indexJSON.do";
+	private static String url_login = "http://online.cumt.edu.cn:8080/2/login/loginAction2_loginJSON.do";
+	private static String url_comment = "http://online.cumt.edu.cn:8080/2/comment/commentAction2_commentJSON.do";
+	private static String url_search = "http://online.cumt.edu.cn:8080/2/search/searchAction2_searchJSON.do";
+	private static String url_collect = "http://online.cumt.edu.cn:8080/2/collect/collectAction2_collectJSON.do";
+	private static String url_ucollect = "http://online.cumt.edu.cn:8080/2/unCollect/unCollectAction2_unCollectJSON.do";
+	private static String url_my = "http://online.cumt.edu.cn:8080/2/toHomePage/toHomePageAction2_toHomePageJSON.do";
+	private static String url_versionupdate="http://online.cumt.edu.cn:8080/2/update";
 	private static final String TAG = "market->MainService";
 	private static Queue<Task> tasks = new LinkedList<Task>();
 	private static ArrayList<Activity> appActivity = new ArrayList<Activity>();

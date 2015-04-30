@@ -10,9 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.support.v4.util.LruCache;
-import android.util.Log;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 /**
  * @author mazhao
@@ -21,7 +19,7 @@ import android.widget.Toast;
  */
 public class AsyncImageLoader extends AsyncTask<String, Void, Bitmap> {
 
-	private static String TAG = "mark->AsuncImageLoader";
+	private static String TAG = "mark->AsyncImageLoader";
 	private ImageView image;
 	private LruCache<String, Bitmap> lruCache;
 	private int width;
@@ -45,12 +43,9 @@ public class AsyncImageLoader extends AsyncTask<String, Void, Bitmap> {
 
 	protected Bitmap doInBackground(String... params) {
 		Bitmap bitmap = null;
-		Log.w(TAG, "doinbackground url:" + params[0]);
 		bitmap = getBitmap(params[0]);
-		Log.w(TAG, "doinbackground img:" + bitmap);
 		if (width != 0 & height != 0)
 			bitmap = scaleImg(bitmap, width, height);
-		Log.w(TAG, "doinbackground after scaleimg img:" + bitmap);
 		addBitmapToMemoryCache(params[0], bitmap);
 		return bitmap;
 	}
@@ -63,11 +58,10 @@ public class AsyncImageLoader extends AsyncTask<String, Void, Bitmap> {
 	// 调用LruCache的put 方法将图片加入内存缓存中，要给这个图片一个key 方便下次从缓存中取出来
 	private void addBitmapToMemoryCache(String key, Bitmap bitmap) {
 		if (key == null || bitmap == null) {
-			Log.w(TAG, "lrucache put img error :" + key.toString() + "<>"
-					+ bitmap);
+			// Log.w(TAG, "lrucache put img error :" + key.toString() + "<>"
+			// + bitmap);
 			return;
 		} else if (getBitmapFromMemoryCache(key) == null) {
-			Log.w("market lrucache", key);
 			lruCache.put(key, bitmap);
 		}
 	}
@@ -87,7 +81,7 @@ public class AsyncImageLoader extends AsyncTask<String, Void, Bitmap> {
 			bitmap = BitmapFactory.decodeStream(new BufferedInputStream(in));
 
 		} catch (Exception e) {
-			Log.w(TAG, "getBitmap error:"+e.getMessage());
+			// Log.w(TAG, "getBitmap error:" + e.getMessage());
 		}
 		return bitmap;
 	}
